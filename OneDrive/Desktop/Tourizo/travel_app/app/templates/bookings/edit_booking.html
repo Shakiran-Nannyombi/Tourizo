@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card border-0 shadow-lg rounded-3 overflow-hidden">
+        <!-- Card Header -->
+        <div class="card-header py-3 text-white" style="background: linear-gradient(to right, #3a5a40, #588157);">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-calendar-edit me-3 fs-4"></i>
+            <div>
+              <h4 class="mb-0">Edit Booking – {{ booking.reference }}</h4>
+              <small class="opacity-75">Adjust your adventure details</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card Body -->
+        <div class="card-body bg-light-green">
+          <form method="POST" action="{{ url_for('bookings.edit_booking', booking_id=booking.id) }}">
+            {{ form.hidden_tag() }}
+
+            <!-- Personal Information Section -->
+            <div class="mb-4 p-3 bg-white rounded-3 border-start border-4 border-leaf">
+              <h5 class="mb-3 text-forest">
+                <i class="fas fa-user-circle me-2"></i>Personal Information
+              </h5>
+              
+              <div class="mb-3">
+                {{ form.full_name.label(class="form-label text-muted") }}
+                {{ form.full_name(class="form-control border-muted") }}
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  {{ form.email.label(class="form-label text-muted") }}
+                  {{ form.email(class="form-control border-muted") }}
+                </div>
+                <div class="col-md-6 mb-3">
+                  {{ form.phone.label(class="form-label text-muted") }}
+                  {{ form.phone(class="form-control border-muted") }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Tour Details Section -->
+            <div class="mb-4 p-3 bg-white rounded-3 border-start border-4 border-forest">
+              <h5 class="mb-3 text-forest">
+                <i class="fas fa-map-marked-alt me-2"></i>Tour Details
+              </h5>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  {{ form.num_people.label(class="form-label text-muted") }}
+                  {{ form.num_people(class="form-control border-muted") }}
+                </div>
+                <div class="col-md-6 mb-3">
+                  {{ form.package_id.label(class="form-label text-muted") }}
+                  {{ form.package_id(class="form-select border-muted") }}
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  {{ form.booking_date.label(class="form-label text-muted") }}
+                  {{ form.booking_date(class="form-control border-muted", type="date") }}
+                </div>
+                <div class="col-md-6 mb-3">
+                  {{ form.booking_time.label(class="form-label text-muted") }}
+                  {{ form.booking_time(class="form-control border-muted", type="time") }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Payment Information -->
+            <div class="mb-4 p-3 bg-white rounded-3 border-start border-4 border-clay">
+              <h5 class="mb-3 text-forest">
+                <i class="fas fa-receipt me-2"></i>Payment Information
+              </h5>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label text-muted">Payment Method</label>
+                  <div class="form-control bg-light border-muted text-forest">
+                    {% if booking.payment_reference and booking.payment_reference.startswith('card') %}
+                      <i class="far fa-credit-card me-2"></i>Credit/Debit Card
+                    {% elif booking.payment_reference %}
+                      <i class="fas fa-mobile-alt me-2"></i>Mobile Money
+                    {% else %}
+                      <i class="fas fa-question-circle me-2"></i>Not specified
+                    {% endif %}
+                  </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label text-muted">Payment Status</label>
+                  <div class="form-control bg-light border-muted text-forest">
+                    <i class="fas fa-circle me-2 fs-6 text-{% if booking.payment_status == 'paid' %}success{% elif booking.payment_status == 'cancelled' %}danger{% else %}secondary{% endif %}"></i>
+                    {{ booking.payment_status|capitalize }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="d-flex justify-content-between mt-4">
+              <a href="{{ url_for('bookings.list_my_bookings') }}" class="btn btn-light-green text-forest">
+                <i class="fas fa-arrow-left me-2"></i>Back to List
+              </a>
+              <button type="submit" class="btn btn-forest text-white">
+                <i class="far fa-save me-2"></i>Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .bg-light-green { background-color: #f8fbf6; }
+  .bg-forest { background-color: #3a5a40; }
+  .btn-forest { background-color: #588157; }
+  .btn-light-green { background-color: #e0e6dc; }
+  .text-forest { color: #3a5a40; }
+  .border-forest { border-color: #588157 !important; }
+  .border-leaf { border-color: #a5c4a0 !important; }
+  .border-clay { border-color: #d4a59a !important; }
+  .border-muted { border-color: #c8d5b9 !important; }
+  
+  .form-control:focus, .form-select:focus {
+    border-color: #a5c4a0;
+    box-shadow: 0 0 0 0.25rem rgba(93, 138, 87, 0.25);
+  }
+</style>
+{% endblock %}

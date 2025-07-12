@@ -1,0 +1,414 @@
+<!-- Updated booking form template (book.html) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book Tour</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+  body {
+    background-color: #f4f9f4;
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  h1, h3, h5 {
+    color: #2c5f2d; /* earthy green */
+  }
+
+  .booking-section {
+    border: 1px solid #cfe0c3;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(46, 125, 50, 0.1);
+  }
+
+  #total-price {
+    font-weight: bold;
+    color: #4CAF50;
+  }
+
+  .payment-details {
+    border: 1px solid #dcedc8;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 15px;
+    background-color: #f1f8e9;
+  }
+
+  .form-control:focus {
+    border-color: #81c784;
+    box-shadow: 0 0 0 0.2rem rgba(129, 199, 132, 0.25);
+  }
+
+  .btn-primary {
+    background-color: #4CAF50;
+    border-color: #4CAF50;
+  }
+
+  .btn-primary:hover {
+    background-color: #388e3c;
+    border-color: #388e3c;
+  }
+
+  .btn-outline-secondary {
+    border-color: #81c784;
+    color: #4CAF50;
+  }
+
+  .btn-outline-secondary:hover {
+    background-color: #c8e6c9;
+    color: #2e7d32;
+  }
+
+  .payment-icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    color: #388e3c;
+  }
+</style>
+
+</head>
+<body>
+  <div class="container mt-4">
+    <h1 class="mb-4">Book Tour</h1>
+    
+    
+<div class="container mt-4">
+  <div class="text-center mb-4">
+    <img src="https://source.unsplash.com/1200x300/?safari,wildlife" alt="Safari Banner" class="img-fluid rounded shadow-sm">
+
+  </div>
+  <!-- Your form starts here -->
+
+
+    <form id="bookingForm" method="post" class="mb-4">
+      {{ form.hidden_tag() }}
+
+      <div class="booking-section">
+        <h3>Personal Information</h3>
+        
+        <div class="mb-3">
+          {{ form.full_name.label(class="form-label") }}
+          {{ form.full_name(class="form-control", placeholder="Your full name") }}
+        </div>
+        
+        <div class="mb-3">
+          {{ form.email.label(class="form-label") }}
+          {{ form.email(class="form-control", placeholder="example@domain.com") }}
+        </div>
+        
+        <div class="mb-3">
+          {{ form.phone.label(class="form-label") }}
+          {{ form.phone(class="form-control", placeholder="+256 XXX XXX XXX") }}
+        </div>
+        
+        <div class="mb-3">
+          {{ form.num_people.label(class="form-label") }}
+          {{ form.num_people(class="form-control", min=1, id="num_people") }}
+        </div>
+
+        <div class="mb-3">
+          {{ form.package_id.label(class="form-label") }}
+          {{ form.package_id(class="form-select", id="package_id") }}
+        </div>
+        
+        <div class="mb-3">
+          {{ form.booking_date.label(class="form-label") }}
+          {{ form.booking_date(class="form-control") }}
+        </div>
+
+        <div class="mb-3">
+          {{ form.booking_time.label(class="form-label") }}
+          {{ form.booking_time(class="form-control") }}
+        </div>
+
+        <div class="mb-3">
+          <p>Total Price: <strong><span id="total-price">0.00</span> UGX</strong></p>
+        </div>
+      </div>
+
+      <!-- Payment Section -->
+      <div class="booking-section">
+        <h3>Payment Information</h3>
+        
+        <div class="mb-3">
+          {{ form.payment_method.label(class="form-label") }}
+          {{ form.payment_method(class="form-select", id="payment_method") }}
+        </div>
+
+        <!-- Mobile Money Payment Details -->
+        <div id="momo-details" class="payment-details d-none">
+          <h5><i class="fas fa-mobile-alt payment-icon"></i>Mobile Money Details</h5>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="momo_provider" class="form-label">Provider *</label>
+                <select class="form-select" id="momo_provider" name="momo_provider">
+                  <option value="">Select Provider</option>
+                  <option value="mtn">MTN Mobile Money</option>
+                  <option value="airtel">Airtel Money</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="momo_number" class="form-label">Phone Number *</label>
+                <input type="tel" class="form-control" id="momo_number" name="momo_number" 
+                       placeholder="+256 XXX XXX XXX" pattern="^\+256[0-9]{9}$">
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="momo_name" class="form-label">Account Name *</label>
+            <input type="text" class="form-control" id="momo_name" name="momo_name" 
+                   placeholder="Name on mobile money account">
+          </div>
+        </div>
+
+        <!-- Credit Card Payment Details -->
+        <div id="card-details" class="payment-details d-none">
+          <h5><i class="fas fa-credit-card payment-icon"></i>Credit Card Details</h5>
+          <div class="mb-3">
+            <label for="card_number" class="form-label">Card Number *</label>
+            <input type="text" class="form-control" id="card_number" name="card_number" 
+                   placeholder="1234 5678 9012 3456" maxlength="19">
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="card_expiry" class="form-label">Expiry Date *</label>
+                <input type="text" class="form-control" id="card_expiry" name="card_expiry" 
+                       placeholder="MM/YY" maxlength="5">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="card_cvv" class="form-label">CVV *</label>
+                <input type="text" class="form-control" id="card_cvv" name="card_cvv" 
+                       placeholder="123" maxlength="4">
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="card_name" class="form-label">Cardholder Name *</label>
+            <input type="text" class="form-control" id="card_name" name="card_name" 
+                   placeholder="Name as on card">
+          </div>
+        </div>
+
+        <!-- Bank Transfer Payment Details -->
+        <div id="bank-details" class="payment-details d-none">
+          <h5><i class="fas fa-university payment-icon"></i>Bank Transfer Details</h5>
+          <div class="mb-3">
+            <label for="bank_name" class="form-label">Bank Name *</label>
+            <select class="form-select" id="bank_name" name="bank_name">
+              <option value="">Select Bank</option>
+              <option value="centenary">Centenary Bank</option>
+              <option value="stanbic">Stanbic Bank</option>
+              <option value="dfcu">DFCU Bank</option>
+              <option value="equity">Equity Bank</option>
+              <option value="standard_chartered">Standard Chartered</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="account_number" class="form-label">Account Number *</label>
+            <input type="text" class="form-control" id="account_number" name="account_number" 
+                   placeholder="Enter account number">
+          </div>
+          <div class="mb-3">
+            <label for="account_name" class="form-label">Account Name *</label>
+            <input type="text" class="form-control" id="account_name" name="account_name" 
+                   placeholder="Name on bank account">
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <button type="submit" class="btn btn-primary w-100 py-2" id="submitBtn">Book Now & Pay</button>
+      </div>
+
+      <div id="formMessages">
+        <div id="formError" class="alert alert-danger d-none" role="alert"></div>
+        <div id="formSuccess" class="alert alert-success d-none" role="alert"></div>
+      </div>
+    </form>
+
+    <a href="{{ url_for('bookings.list_my_bookings') }}" class="btn btn-outline-secondary">My bookings</a>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+  <script>
+    // Package prices calculation
+    const packagePrices = {{ package_prices | tojson | safe }} || {};
+    const packageSelect = document.getElementById("package_id");
+    const numPeopleInput = document.getElementById("num_people");
+    const totalPriceEl = document.getElementById("total-price");
+
+    function updateTotal() {
+      const packageId = parseInt(packageSelect.value);
+      const numPeople = parseInt(numPeopleInput.value) || 1;
+      const total = (packagePrices[packageId] || 0) * numPeople;
+      totalPriceEl.textContent = total.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    packageSelect.addEventListener('change', updateTotal);
+    numPeopleInput.addEventListener('input', updateTotal);
+    updateTotal();
+
+    // Payment method selection
+    const paymentMethodSelect = document.getElementById('payment_method');
+    const momoDetails = document.getElementById('momo-details');
+    const cardDetails = document.getElementById('card-details');
+    const bankDetails = document.getElementById('bank-details');
+
+    paymentMethodSelect.addEventListener('change', function() {
+      // Hide all payment details
+      momoDetails.classList.add('d-none');
+      cardDetails.classList.add('d-none');
+      bankDetails.classList.add('d-none');
+
+      // Clear required attributes
+      clearRequiredFields();
+
+      // Show relevant payment details and set required fields
+      switch(this.value) {
+        case 'momo':
+          momoDetails.classList.remove('d-none');
+          setRequiredFields(['momo_provider', 'momo_number', 'momo_name']);
+          break;
+        case 'card':
+          cardDetails.classList.remove('d-none');
+          setRequiredFields(['card_number', 'card_expiry', 'card_cvv', 'card_name']);
+          break;
+        case 'bank':
+          bankDetails.classList.remove('d-none');
+          setRequiredFields(['bank_name', 'account_number', 'account_name']);
+          break;
+      }
+    });
+
+    function clearRequiredFields() {
+      const fields = ['momo_provider', 'momo_number', 'momo_name', 
+                     'card_number', 'card_expiry', 'card_cvv', 'card_name',
+                     'bank_name', 'account_number', 'account_name'];
+      fields.forEach(field => {
+        const element = document.getElementById(field);
+        if (element) {
+          element.removeAttribute('required');
+        }
+      });
+    }
+
+    function setRequiredFields(fields) {
+      fields.forEach(field => {
+        const element = document.getElementById(field);
+        if (element) {
+          element.setAttribute('required', 'required');
+        }
+      });
+    }
+
+    // Card number formatting
+    document.getElementById('card_number').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\s/g, '');
+      let formattedValue = value.replace(/(.{4})/g, '$1 ').trim();
+      if (formattedValue.length > 19) {
+        formattedValue = formattedValue.substring(0, 19);
+      }
+      e.target.value = formattedValue;
+    });
+
+    // Expiry date formatting
+    document.getElementById('card_expiry').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length >= 2) {
+        value = value.substring(0, 2) + '/' + value.substring(2, 4);
+      }
+      e.target.value = value;
+    });
+
+    // CVV numeric only
+    document.getElementById('card_cvv').addEventListener('input', function(e) {
+      e.target.value = e.target.value.replace(/\D/g, '');
+    });
+
+    // Form submission
+    document.getElementById('bookingForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing Payment...';
+
+      // Clear previous messages
+      const formError = document.getElementById('formError');
+      const formSuccess = document.getElementById('formSuccess');
+      formError.classList.add('d-none');
+      formSuccess.classList.add('d-none');
+      formError.textContent = '';
+      formSuccess.textContent = '';
+
+      try {
+        const formData = new FormData(this);
+        const response = await fetch('{{ url_for("bookings.book") }}', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          let message = result.message || 'Booking failed';
+
+          // Append field-specific errors if any
+          if (result.errors) {
+            const fieldErrors = Object.entries(result.errors)
+              .map(([field, errors]) => `${field}: ${errors.join(", ")}`)
+              .join('\n');
+            message += '\n' + fieldErrors;
+          }
+
+          throw new Error(message);
+        }
+
+        showSuccess('Payment successful! Booking confirmed. Redirecting...');
+        setTimeout(() => {
+          window.location.href = "{{ url_for('bookings.list_my_bookings') }}";
+        }, 2000);
+
+      } catch (error) {
+        showError(error.message);
+        console.error('Booking error:', error);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Book Now & Pay';
+      }
+    });
+
+    function showError(message) {
+      const errorEl = document.getElementById('formError');
+      errorEl.textContent = message;
+      errorEl.classList.remove('d-none');
+      errorEl.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function showSuccess(message) {
+      const successEl = document.getElementById('formSuccess');
+      successEl.textContent = message;
+      successEl.classList.remove('d-none');
+      successEl.scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
