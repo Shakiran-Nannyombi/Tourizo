@@ -1,0 +1,136 @@
+<!-- templates/welcome.html -->
+{% extends "base.html" %}
+
+{% block title %}Welcome - Tour Management{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: white;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 80vh;
+        padding: 60px 40px;
+        text-align: center;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .display-4 {
+        font-size: 4.5rem;
+        font-weight: 300;
+        margin-bottom: 30px;
+        line-height: 1.1;
+        color: white;
+    }
+
+    .lead {
+        font-size: 1.5rem;
+        margin-bottom: 60px;
+        font-weight: 300;
+        opacity: 0.9;
+        color: white;
+    }
+
+    .mt-4 {
+        margin-top: 2rem;
+    }
+
+    .btn {
+        padding: 18px 35px;
+        border: none;
+        border-radius: 30px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.1rem;
+        margin: 0 10px;
+    }
+
+    .btn-dark {
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        backdrop-filter: blur(10px);
+    }
+
+    .btn-dark:hover {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.5);
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-primary {
+        background: white;
+        color: #667eea;
+        border: 2px solid white;
+    }
+
+    .btn-primary:hover {
+        background: #f8f9fa;
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-lg {
+        padding: 18px 35px;
+        font-size: 1.1rem;
+    }
+
+    .me-3 {
+        margin-right: 1rem;
+    }
+
+    .fas {
+        font-size: 1.1rem;
+    }
+
+    @media (max-width: 768px) {
+        .display-4 {
+            font-size: 2.5rem;
+        }
+
+        .lead {
+            font-size: 1.2rem;
+        }
+
+        .btn {
+            margin: 10px 5px;
+            padding: 15px 25px;
+        }
+
+        .container {
+            padding: 40px 20px;
+        }
+    }
+</style>
+
+<div class="container text-center mt-5">
+    <h1 class="display-4">Welcome to Tour Management System</h1>
+    <p class="lead">Discover, explore, and book amazing tours around the world.</p>
+
+    <div class="mt-4">
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-dark btn-lg me-3">
+            <i class="fas fa-user-shield"></i> Login
+        </a>
+        <a href="{{ url_for('tours') }}" class="btn btn-primary btn-lg">
+            <i class="fas fa-map-marked-alt"></i> View Public Site
+        </a>
+    </div>
+</div>
+{% endblock %}
