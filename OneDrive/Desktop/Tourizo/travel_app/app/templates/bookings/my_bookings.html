@@ -46,8 +46,7 @@
               <span class="text-primary">{{ b.booking_time.strftime('%H:%M') }}</span><br>
             {% endif %}
 
-            <!-- Debug status -->
-            <small class="text-muted">Debug: <code>{{ b.payment_status }}</code></small>
+            
           </div>
 
           <!-- Right side: Action buttons -->
@@ -65,11 +64,11 @@
               <form method="post" action="{{ url_for('bookings.cancel', booking_id=b.id) }}"
                     onsubmit="return confirm('Are you sure you want to cancel this booking?');">
                 {{ cancel_form.csrf_token }}
-                <button class="btn btn-sm"
-                        style="background-color: #d4a59a; color: white; border: none;"
-                        type="submit">
-                  <i class="fas fa-ban me-1"></i> Cancel
-                </button>
+                <button type="button" class="btn btn-sm"
+        style="background-color: #d4a59a; color: white; border: none;"
+        data-bs-toggle="modal" data-bs-target="#cancelModal{{ b.id }}">
+  <i class="fas fa-ban me-1"></i> Cancel
+</button>
               </form>
             {% endif %}
 
@@ -97,6 +96,38 @@
             {% endif %}
           </div>
         </li>
+        <!-- Cancel Modal per booking -->
+<div class="modal fade" id="cancelModal{{ b.id }}" tabindex="-1" aria-labelledby="cancelModalLabel{{ b.id }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="POST" action="{{ url_for('bookings.cancel', booking_id=b.id) }}">
+      {{ cancel_form.hidden_tag() }}
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="cancelModalLabel{{ b.id }}">Cancel Booking</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to cancel booking <strong>{{ b.reference }}</strong>?</p>
+          <div class="mb-3">
+            <label for="reason" class="form-label">Reason</label>
+            <select class="form-select" name="reason" required>
+              <option value="">Select reason...</option>
+              <option value="plans_changed">My plans changed</option>
+              <option value="found_better">Found a better option</option>
+              <option value="unhappy_service">Unhappy with service</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-danger">Confirm Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
       {% endfor %}
     </ul>
   {% else %}

@@ -350,8 +350,17 @@ def cancel(booking_id):
         flash("Unauthorized access.", "danger")
         return redirect(url_for("bookings.list_my_bookings"))
 
+    reason = request.form.get("reason")
+    if not reason:
+        flash("Please select a reason for cancellation.", "warning")
+        return redirect(url_for("bookings.list_my_bookings"))
+
     try:
         booking.payment_status = 'cancelled'
+
+        # Optional: store reason if you have a column for it
+        # booking.cancel_reason = reason
+
         db.session.commit()
 
         try:
@@ -361,7 +370,8 @@ def cancel(booking_id):
                 booking_reference=booking.reference,
                 total_amount=booking.total_amount,
                 date=booking.booking_date.strftime('%Y-%m-%d') if booking.booking_date else None,
-                time=booking.booking_time.strftime('%H:%M') if booking.booking_time else None
+                time=booking.booking_time.strftime('%H:%M') if booking.booking_time else None,
+                reason=reason  # include in the email if supported
             )
         except Exception as e:
             current_app.logger.warning(f"Cancellation email failed: {str(e)}")
