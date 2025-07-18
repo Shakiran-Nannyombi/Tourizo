@@ -28,7 +28,7 @@ def upgrade():
     with op.batch_alter_table('tour', schema=None) as batch_op:
         batch_op.add_column(sa.Column('destination_id', sa.Integer(), nullable=False))
         batch_op.create_foreign_key(None, 'destination', ['destination_id'], ['id'])
-        batch_op.drop_column('destination')
+        # batch_op.drop_column('destination')  # Commented out: column may not exist in fresh DB
 
     # ### end Alembic commands ###
 

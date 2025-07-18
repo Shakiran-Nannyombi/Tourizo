@@ -57,9 +57,10 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     with op.batch_alter_table('package', schema=None) as batch_op:
-        batch_op.drop_index(batch_op.f('name'))
+        # batch_op.drop_index(batch_op.f('name'))  # Commented out: index may not exist in fresh DB
+        pass
 
-    op.drop_table('package')
+    op.execute('DROP TABLE IF EXISTS package CASCADE')
     with op.batch_alter_table('booking', schema=None) as batch_op:
         batch_op.add_column(sa.Column('tour_id', sa.Integer(), nullable=False))
         batch_op.create_foreign_key(None, 'tour', ['tour_id'], ['id'])
