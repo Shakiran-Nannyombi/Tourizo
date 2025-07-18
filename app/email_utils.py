@@ -1,7 +1,7 @@
 # app/email_utils.py
 from flask import current_app
 from flask_mail import Message
-from extensions import mail
+from app.extensions import mail
 #from main import mail
 
 
