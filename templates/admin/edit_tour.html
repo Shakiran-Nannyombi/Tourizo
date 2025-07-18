@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Tour - Admin{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Edit Tour: {{ tour.title }}</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.title.label(class="form-label") }}
+                                    {{ form.title(class="form-control") }}
+                                    {% if form.title.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.title.errors %}
+                                        <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.destination.label(class="form-label") }}
+                                    {{ form.destination(class="form-control") }}
+                                    {% if form.destination.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.destination.errors %}
+                                        <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.description.label(class="form-label") }}
+                            {{ form.description(class="form-control", rows="4") }}
+                            {% if form.description.errors %}
+                            <div class="text-danger">
+                                {% for error in form.description.errors %}
+                                <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ form.duration.label(class="form-label") }}
+                                    {{ form.duration(class="form-control") }}
+                                    {% if form.duration.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.duration.errors %}
+                                        <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ form.price.label(class="form-label") }}
+                                    {{ form.price(class="form-control") }}
+                                    {% if form.price.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.price.errors %}
+                                        <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ form.max_participants.label(class="form-label") }}
+                                    {{ form.max_participants(class="form-control") }}
+                                    {% if form.max_participants.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.max_participants.errors %}
+                                        <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.available_from.label(class="form-label") }}
+                                    {{ form.available_from(class="form-control") }}
+                                    {% if form.available_from.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.available_from.errors %}
+                                        <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.available_to.label(class="form-label") }}
+                                    {{ form.available_to(class="form-control") }}
+                                    {% if form.available_to.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.available_to.errors %}
+                                        <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.category_id.label(class="form-label") }}
+                                    {{ form.category_id(class="form-control") }}
+                                    {% if form.category_id.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.category_id.errors %}
+                                        <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.featured_image.label(class="form-label") }}
+                                    {{ form.featured_image(class="form-control") }}
+                                    {% if form.featured_image.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.featured_image.errors %}
+                                        <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                    {% if tour.featured_image %}
+                                    <small class="form-text text-muted">
+                                        Current image: <a href="{{ tour.featured_image }}" target="_blank">View</a>
+                                    </small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.itinerary.label(class="form-label") }}
+                            {{ form.itinerary(class="form-control", rows="6") }}
+                            <small class="form-text text-muted">
+                                Describe the day-by-day itinerary. You can use HTML for formatting.
+                            </small>
+                            {% if form.itinerary.errors %}
+                            <div class="text-danger">
+                                {% for error in form.itinerary.errors %}
+                                <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.inclusions.label(class="form-label") }}
+                            {{ form.inclusions(class="form-control", rows="4") }}
+                            <small class="form-text text-muted">
+                                List what's included in the tour package.
+                            </small>
+                            {% if form.inclusions.errors %}
+                            <div class="text-danger">
+                                {% for error in form.inclusions.errors %}
+                                <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.exclusions.label(class="form-label") }}
+                            {{ form.exclusions(class="form-control", rows="4") }}
+                            <small class="form-text text-muted">
+                                List what's NOT included in the tour package.
+                            </small>
+                            {% if form.exclusions.errors %}
+                            <div class="text-danger">
+                                {% for error in form.exclusions.errors %}
+                                <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-check">
+                                {{ form.is_active(class="form-check-input") }}
+                                {{ form.is_active.label(class="form-check-label") }}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Update Tour
+                            </button>
+                            <a href="{{ url_for('admin_tours') }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                            <a href="{{ url_for('tour_detail', tour_id=tour.id) }}" class="btn btn-info">
+                                <i class="fas fa-eye"></i> View Tour
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

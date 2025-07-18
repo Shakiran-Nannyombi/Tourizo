@@ -18,4 +18,8 @@ def create_app():
     app.register_blueprint(admin_bp)
     app.register_blueprint(reviews_bp)
 
+    @app.route('/')
+    def home():
+        return "Welcome to Tourizo! (Home page to be implemented)"
+
     return app

@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %}{{ tour.title }} - Tour Details{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <!-- Image Gallery -->
+        <div class="col-lg-8">
+            <div class="mb-4">
+                {% set images = image_list %}
+
+                {% if images %}
+                <div id="tourCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        {% for image in images %}
+                        <div class="carousel-item {% if loop.first %}active{% endif %}">
+                            <img src="{{ url_for('static', filename='uploads/tours/' ~ image) }}"
+                                class="d-block w-100 rounded" alt="{{ tour.title }}"
+                                style="height: 400px; object-fit: cover;">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% if images|length > 1 %}
+                    <button class="carousel-control-prev" type="button" data-bs-target="#tourCarousel"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#tourCarousel"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                    </button>
+                    {% endif %}
+                </div>
+
+                <div class="row mt-3">
+                    {% for image in images %}
+                    <div class="col-2">
+                        <img src="{{ url_for('static', filename='uploads/tours/' ~ image) }}"
+                            class="img-thumbnail thumbnail-image" data-bs-target="#tourCarousel"
+                            data-bs-slide-to="{{ loop.index0 }}" style="height: 60px; object-fit: cover;">
+                    </div>
+                    {% endfor %}
+                </div>
+                {% elif tour.featured_image %}
+                <img src="{{ url_for('static', filename='uploads/tours/' ~ tour.featured_image) }}"
+                    class="img-fluid rounded" alt="{{ tour.title }}"
+                    style="height: 400px; width: 100%; object-fit: cover;">
+                {% else %}
+                <img src="{{ url_for('static', filename='uploads/tours/default.jpg') }}" class="img-fluid rounded"
+                    alt="{{ tour.title }}" style="height: 400px; width: 100%; object-fit: cover;">
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Sidebar Info -->
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="text-primary">${{ "%.2f"|format(tour.price) }}</h3>
+                    <p class="text-muted mb-3">per person</p>
+
+                    <div class="mb-3">
+                        <small class="text-muted">Duration</small>
+                        <p class="mb-0"><i class="bi bi-calendar"></i> {{ tour.duration }} {{ tour.duration_type }}</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <small class="text-muted">Destination</small>
+                        <p class="mb-0"><i class="bi bi-geo-alt"></i> {{ tour.destination }}</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <small class="text-muted">Category</small>
+                        <p class="mb-0"><i class="bi bi-tag"></i> {{ tour.category.name }}</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <small class="text-muted">Group Size</small>
+                        <p class="mb-0"><i class="bi bi-people"></i> Max {{ tour.max_participants }} people</p>
+                    </div>
+
+                    <a href="{{ url_for('book', tour_id=tour.id) }}" class="btn btn-primary w-100 mb-2">
+                        <i class="bi bi-calendar-check"></i> Book Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overview -->
+    <div class="card mt-4">
+        <div class="card-body">
+            <h4>Overview</h4>
+            <p class="lead">{{ tour.description }}</p>
+        </div>
+    </div>
+
+    <!-- Itinerary -->
+    {% if tour.itinerary %}
+    <div class="card mt-4">
+        <div class="card-body">
+            <h4>Itinerary</h4>
+            <div>{{ tour.itinerary | safe }}</div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Inclusions -->
+    {% if tour.inclusions %}
+    <div class="card mt-4">
+        <div class="card-body">
+            <h4>What's Included</h4>
+            <div>{{ tour.inclusions | safe }}</div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Exclusions -->
+    {% if tour.exclusions %}
+    <div class="card mt-4">
+        <div class="card-body">
+            <h4>What's Not Included</h4>
+            <div>{{ tour.exclusions | safe }}</div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
