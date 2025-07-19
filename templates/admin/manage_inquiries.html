@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Manage Inquiries{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4">User Inquiries</h2>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>User</th>
+                    <th>Subject</th>
+                    <th>Message</th>
+                    <th>Submitted</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for inquiry in inquiries %}
+                <tr>
+                    <td>{{ inquiry.user.username if inquiry.user else 'Guest' }}</td>
+                    <td>{{ inquiry.subject }}</td>
+                    <td class="text-truncate" style="max-width: 300px;">{{ inquiry.message }}</td>
+                    <td>{{ inquiry.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td class="text-center" style="min-width: 140px;">
+                        <a href="{{ url_for('admin_inquiry_detail', inquiry_id=inquiry.id) }}"
+                            class="btn btn-sm btn-info me-2" title="View Inquiry">
+                            <i class="bi bi-eye"></i> View
+                        </a>
+                        <a href="{{ url_for('admin_inquiry_delete', inquiry_id=inquiry.id) }}"
+                            class="btn btn-sm btn-danger"
+                            onclick="return confirm('Are you sure you want to delete this inquiry?');"
+                            title="Delete Inquiry">
+                            <i class="bi bi-trash"></i> Delete
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center py-4">No inquiries found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Popular Destinations{% endblock %}
+{% block content %}
+<h2>Top 10 Popular Destinations</h2>
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Destination</th>
+            <th>Number of Bookings</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for dest in popular_destinations %}
+        <tr>
+            <td>{{ dest.destination }}</td>
+            <td>{{ dest.booking_count }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="2" class="text-center">No data available.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

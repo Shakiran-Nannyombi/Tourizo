@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+
+{% block title %}Add New Tour - Admin{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-sm border-success">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0"><i class="fas fa-plus-circle me-2"></i>Add New Tour</h4>
+                </div>
+                <div class="card-body bg-light">
+                    <form method="POST" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.title.label(class="form-label") }}
+                                    {{ form.title(class="form-control") }}
+                                    {% for error in form.title.errors %}
+                                    <small class="text-danger">{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="form-group mt-3">
+                                    {{ form.short_description.label(class="form-label") }}
+                                    {{ form.short_description(class="form-control", rows="2") }}
+                                    {% for error in form.short_description.errors %}
+                                    <small class="text-danger">{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.destination.label(class="form-label") }}
+                                    {{ form.destination(class="form-control") }}
+                                    {% for error in form.destination.errors %}
+                                    <small class="text-danger">{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="form-group mt-3">
+                                    {{ form.departure_location.label(class="form-label") }}
+                                    {{ form.departure_location(class="form-control") }}
+                                    {% for error in form.departure_location.errors %}
+                                    <small class="text-danger">{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.duration_type.label(class="form-label") }}
+                                    {{ form.duration_type(class="form-select") }}
+                                    {% for error in form.duration_type.errors %}
+                                    <small class="text-danger">{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.difficulty_level.label(class="form-label") }}
+                                    {{ form.difficulty_level(class="form-select") }}
+                                    {% for error in form.difficulty_level.errors %}
+                                    <small class="text-danger">{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            {{ form.description.label(class="form-label") }}
+                            {{ form.description(class="form-control", rows="4") }}
+                            {% for error in form.description.errors %}
+                            <small class="text-danger">{{ error }}</small>
+                            {% endfor %}
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ form.duration.label(class="form-label") }}
+                                    {{ form.duration(class="form-control") }}
+                                    {% for error in form.duration.errors %}
+                                    <small class="text-danger">{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ form.price.label(class="form-label") }}
+                                    {{ form.price(class="form-control") }}
+                                    {% for error in form.price.errors %}
+                                    <small class="text-danger">{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ form.max_participants.label(class="form-label") }}
+                                    {{ form.max_participants(class="form-control") }}
+                                    {% for error in form.max_participants.errors %}
+                                    <small class="text-danger">{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            {{ form.min_participants.label(class="form-label") }}
+                            {{ form.min_participants(class="form-control") }}
+                            {% for error in form.min_participants.errors %}
+                            <small class="text-danger">{{ error }}</small>
+                            {% endfor %}
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.available_from.label(class="form-label") }}
+                                    {{ form.available_from(class="form-control") }}
+                                    {% for error in form.available_from.errors %}
+                                    <small class="text-danger">{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.available_to.label(class="form-label") }}
+                                    {{ form.available_to(class="form-control") }}
+                                    {% for error in form.available_to.errors %}
+                                    <small class="text-danger">{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.category_id.label(class="form-label") }}
+                                    {{ form.category_id(class="form-control") }}
+                                    {% for error in form.category_id.errors %}
+                                    <small class="text-danger">{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.featured_image.label(class="form-label") }}
+                                    {{ form.featured_image(class="form-control") }}
+                                    {% for error in form.featured_image.errors %}
+                                    <small class="text-danger">{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            {{ form.gallery_images.label(class="form-label") }}
+                            {{ form.gallery_images(class="form-control", multiple=true) }}
+                            {% for error in form.gallery_images.errors %}
+                            <small class="text-danger">{{ error }}</small>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-group mb-3">
+                            {{ form.itinerary.label(class="form-label") }}
+                            {{ form.itinerary(class="form-control", rows="6") }}
+                            {% for error in form.itinerary.errors %}
+                            <small class="text-danger">{{ error }}</small>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-group mb-3">
+                            {{ form.inclusions.label(class="form-label") }}
+                            {{ form.inclusions(class="form-control", rows="4") }}
+                            {% for error in form.inclusions.errors %}
+                            <small class="text-danger">{{ error }}</small>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-group mb-3">
+                            {{ form.exclusions.label(class="form-label") }}
+                            {{ form.exclusions(class="form-control", rows="4") }}
+                            {% for error in form.exclusions.errors %}
+                            <small class="text-danger">{{ error }}</small>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-group mb-3">
+                            {{ form.meta_title.label(class="form-label") }}
+                            {{ form.meta_title(class="form-control") }}
+                            {% for error in form.meta_title.errors %}
+                            <small class="text-danger">{{ error }}</small>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-group mb-3">
+                            {{ form.meta_description.label(class="form-label") }}
+                            {{ form.meta_description(class="form-control", rows="3") }}
+                            {% for error in form.meta_description.errors %}
+                            <small class="text-danger">{{ error }}</small>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-check form-switch mb-3">
+                            {{ form.is_active(class="form-check-input") }}
+                            {{ form.is_active.label(class="form-check-label") }}
+                        </div>
+
+                        <div class="form-check form-switch mb-4">
+                            {{ form.is_featured(class="form-check-input") }}
+                            {{ form.is_featured.label(class="form-check-label") }}
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save"></i> Save Tour
+                            </button>
+                            <a href="{{ url_for('admin_tours') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

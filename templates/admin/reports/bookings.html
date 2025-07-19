@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Booking Report{% endblock %}
+{% block content %}
+<h2>Bookings Per Month</h2>
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Year</th>
+            <th>Month</th>
+            <th>Total Bookings</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in bookings_by_month %}
+        <tr>
+            <td>{{ row.year }}</td>
+            <td>{{ row.month }}</td>
+            <td>{{ row.total_bookings }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="3" class="text-center">No bookings data available.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block title %}{{ tour.title }} - Tour Details{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Image Gallery -->
+        <div class="col-lg-8">
+            <div class="mb-4 shadow rounded bg-white p-3">
+                {% set images = image_list %}
+                {% if images %}
+                <div id="tourCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner rounded">
+                        {% for image in images %}
+                        <div class="carousel-item {% if loop.first %}active{% endif %}">
+                            <img src="{{ url_for('static', filename='uploads/tours/' ~ image) }}"
+                                class="d-block w-100 rounded" alt="{{ tour.title }}"
+                                style="height: 400px; object-fit: cover;">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% if images|length > 1 %}
+                    <button class="carousel-control-prev" type="button" data-bs-target="#tourCarousel"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#tourCarousel"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                    </button>
+                    {% endif %}
+                </div>
+                <div class="row mt-3">
+                    {% for image in images %}
+                    <div class="col-2">
+                        <img src="{{ url_for('static', filename='uploads/tours/' ~ image) }}"
+                            class="img-thumbnail thumbnail-image" data-bs-target="#tourCarousel"
+                            data-bs-slide-to="{{ loop.index0 }}" style="height: 60px; object-fit: cover;">
+                    </div>
+                    {% endfor %}
+                </div>
+                {% elif tour.featured_image %}
+                <img src="{{ url_for('static', filename='uploads/tours/' ~ tour.featured_image) }}"
+                    class="img-fluid rounded shadow-sm" alt="{{ tour.title }}"
+                    style="height: 400px; width: 100%; object-fit: cover;">
+                {% else %}
+                <img src="{{ url_for('static', filename='uploads/tours/default.jpg') }}"
+                    class="img-fluid rounded shadow-sm" alt="{{ tour.title }}"
+                    style="height: 400px; width: 100%; object-fit: cover;">
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Sidebar Info -->
+        <div class="col-lg-4">
+            <div class="card bg-light border-success shadow">
+                <div class="card-body">
+                    <h3 class="text-success">${{ "%.2f"|format(tour.price) }}</h3>
+                    <p class="text-muted mb-3">Per Person</p>
+
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><strong><i class="bi bi-calendar text-success"></i></strong> {{ tour.duration
+                            }} {{ tour.duration_type }}</li>
+                        <li class="mb-2"><strong><i class="bi bi-geo-alt text-success"></i></strong> {{ tour.destination
+                            }}</li>
+                        <li class="mb-2"><strong><i class="bi bi-tag text-success"></i></strong> {{ tour.category.name
+                            }}</li>
+                        <li class="mb-2"><strong><i class="bi bi-people text-success"></i></strong> Max {{
+                            tour.max_participants }} people</li>
+                    </ul>
+
+                    {% if current_user.is_authenticated and current_user.role == 'user' %}
+                    <a href="{{ url_for('book', tour_id=tour.id) }}" class="btn btn-success w-100 mb-2">
+                        <i class="bi bi-calendar-check"></i> Book Now
+                    </a>
+                    {% elif not current_user.is_authenticated %}
+                    <small class="text-muted d-block mb-2">Please log in to book this tour.</small>
+                    <a href="{{ url_for('auth.login') }}?next={{ url_for('book', tour_id=tour.id) }}"
+                        class="btn btn-outline-success w-100 mb-2">
+                        <i class="bi bi-box-arrow-in-right"></i> Login to Book
+                    </a>
+                    {% else %}
+                    <small class="text-muted d-block mb-2">Admins cannot book tours.</small>
+                    <button class="btn btn-secondary w-100 mb-2" disabled>
+                        <i class="bi bi-person-lock"></i> Booking Disabled
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overview -->
+    <div class="card mt-5 shadow-sm border-success">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">Overview</h5>
+        </div>
+        <div class="card-body">
+            <p class="lead">{{ tour.description }}</p>
+        </div>
+    </div>
+
+    {% if tour.itinerary %}
+    <div class="card mt-4 shadow-sm border-success">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">Itinerary</h5>
+        </div>
+        <div class="card-body">
+            <div>{{ tour.itinerary | safe }}</div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if tour.inclusions %}
+    <div class="card mt-4 shadow-sm border-success">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">What's Included</h5>
+        </div>
+        <div class="card-body">
+            <div>{{ tour.inclusions | safe }}</div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if tour.exclusions %}
+    <div class="card mt-4 shadow-sm border-success">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">What's Not Included</h5>
+        </div>
+        <div class="card-body">
+            <div>{{ tour.exclusions | safe }}</div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
