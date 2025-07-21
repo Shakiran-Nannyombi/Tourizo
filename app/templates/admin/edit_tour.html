@@ -216,7 +216,7 @@
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-save"></i> Update Tour
                             </button>
-                            <a href="{{ url_for('admin_tours') }}" class="btn btn-secondary">
+                            <a href="{{ url_for('admin.manage_tours') }}" class="btn btn-secondary">
                                 <i class="fas fa-times"></i> Cancel
                             </a>
                             <a href="{{ url_for('tours.tour_detail', tour_id=tour.id) }}" class="btn btn-info">
