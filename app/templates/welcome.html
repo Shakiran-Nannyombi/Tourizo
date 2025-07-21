@@ -1,454 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Welcome - Tour Management{% endblock %}
 {% block content %}
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: #000;
-        color: white;
-        overflow-x: hidden;
-    }
-
-    /* UPDATED HERO SECTION WITH WILDLIFE BACKGROUND */
-    .hero-section {
-        position: relative;
-        height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-    }
-
-    .hero-background {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), 
-                    url('https://images.unsplash.com/photo-1485738422979-f5c462d49f74?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover;
-        z-index: -1;
-    }
-
-    .hero-content {
-        text-align: center;
-        z-index: 2;
-        max-width: 900px;
-        padding: 0 20px;
-        animation: fadeInUp 1s ease-out;
-    }
-
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .hero-title {
-        font-size: 4.5rem;
-        font-weight: 300;
-        margin-bottom: 20px;
-        line-height: 1.2;
-        background: linear-gradient(45deg, #fff, #e0e7ff);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        text-shadow: 0 0 30px rgba(0,0,0,0.7);
-    }
-
-    .hero-subtitle {
-        font-size: 1.8rem;
-        margin-bottom: 15px;
-        font-weight: 400;
-        color: #ffd700;
-        text-shadow: 0 0 20px rgba(0,0,0,0.7);
-    }
-
-    .hero-description {
-        font-size: 1.3rem;
-        margin-bottom: 50px;
-        font-weight: 300;
-        opacity: 0.9;
-        line-height: 1.6;
-        color: #e2e8f0;
-        text-shadow: 0 0 10px rgba(0,0,0,0.7);
-    }
-
-    .btn-container {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        flex-wrap: wrap;
-        margin-top: 40px;
-    }
-
-    .btn {
-        padding: 18px 35px;
-        border: none;
-        border-radius: 50px;
-        font-weight: 600;
-        text-decoration: none;
-        transition: all 0.4s ease;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-        font-size: 1.1rem;
-        position: relative;
-        overflow: hidden;
-        backdrop-filter: blur(10px);
-    }
-
-    .btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-        transition: left 0.6s;
-    }
-
-    .btn:hover::before {
-        left: 100%;
-    }
-
-    .btn-primary {
-        background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
-        color: white;
-        border: 2px solid rgba(255,255,255,0.3);
-        box-shadow: 0 8px 25px rgba(255,107,107,0.3);
-    }
-
-    .btn-primary:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 15px 35px rgba(255,107,107,0.4);
-        background: linear-gradient(45deg, #ff5252, #ff7979);
-    }
-
-    .btn-secondary {
-        background: rgba(255,255,255,0.1);
-        border: 2px solid rgba(255,255,255,0.3);
-        color: white;
-    }
-
-    .btn-secondary:hover {
-        background: rgba(255,255,255,0.2);
-        border-color: rgba(255,255,255,0.5);
-        transform: translateY(-3px);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-    }
-
-    .btn-accent {
-        background: linear-gradient(45deg, #4ecdc4, #44a08d);
-        color: white;
-        border: 2px solid rgba(255,255,255,0.3);
-        box-shadow: 0 8px 25px rgba(78,205,196,0.3);
-    }
-
-    .btn-accent:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 15px 35px rgba(78,205,196,0.4);
-        background: linear-gradient(45deg, #26d0ce, #38a08d);
-    }
-
-    .features-section {
-        padding: 100px 20px;
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-        position: relative;
-    }
-
-    .features-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        text-align: center;
-    }
-
-    .features-title {
-        font-size: 3rem;
-        margin-bottom: 20px;
-        background: linear-gradient(45deg, #ffd700, #ffed4a);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-
-    .features-subtitle {
-        font-size: 1.2rem;
-        margin-bottom: 60px;
-        opacity: 0.8;
-        color: #e2e8f0;
-    }
-
-    .features-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-        gap: 40px;
-        margin-top: 60px;
-    }
-
-    .feature-card {
-        background: rgba(255,255,255,0.05);
-        padding: 40px 30px;
-        border-radius: 20px;
-        border: 1px solid rgba(255,255,255,0.1);
-        transition: all 0.3s ease;
-        backdrop-filter: blur(10px);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .feature-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #ffd700);
-        transform: scaleX(0);
-        transition: transform 0.3s ease;
-    }
-
-    .feature-card:hover::before {
-        transform: scaleX(1);
-    }
-
-    .feature-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        background: rgba(255,255,255,0.08);
-    }
-
-    .feature-icon {
-        font-size: 3rem;
-        margin-bottom: 20px;
-        background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-
-    .feature-title {
-        font-size: 1.5rem;
-        margin-bottom: 15px;
-        color: #ffd700;
-    }
-
-    .feature-description {
-        font-size: 1rem;
-        opacity: 0.8;
-        line-height: 1.6;
-        color: #e2e8f0;
-    }
-
-    .destinations-preview {
-        padding: 100px 20px;
-        background: linear-gradient(135deg, #0f3460 0%, #1a1a2e 100%);
-    }
-
-    .destinations-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        text-align: center;
-    }
-
-    .destinations-title {
-        font-size: 3rem;
-        margin-bottom: 60px;
-        background: linear-gradient(45deg, #4ecdc4, #44a08d);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-
-    .destinations-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 30px;
-        margin-bottom: 60px;
-    }
-
-    .destination-card {
-        height: 350px;
-        border-radius: 15px;
-        overflow: hidden;
-        position: relative;
-        cursor: pointer;
-        transition: all 0.4s ease;
-        background-size: cover;
-        background-position: center;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-    }
-
-    .destination-card:hover {
-        transform: scale(1.03);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.4);
-    }
-
-    .destination-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.4);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        text-align: center;
-        padding: 20px;
-        transition: all 0.4s ease;
-    }
-
-    .destination-card:hover .destination-overlay {
-        background: rgba(0, 0, 0, 0.2);
-    }
-
-    .destination-icon {
-        font-size: 4rem;
-        margin-bottom: 15px;
-        color: #ffd700;
-        text-shadow: 0 0 15px rgba(0,0,0,0.5);
-        transition: all 0.3s ease;
-    }
-
-    .destination-card:hover .destination-icon {
-        transform: scale(1.1);
-    }
-
-    .destination-name {
-        font-size: 1.8rem;
-        font-weight: 600;
-        margin-bottom: 10px;
-        color: white;
-        text-shadow: 0 0 10px rgba(0,0,0,0.7);
-    }
-
-    .destination-description {
-        font-size: 1.1rem;
-        opacity: 0.9;
-        color: #e2e8f0;
-        text-shadow: 0 0 5px rgba(0,0,0,0.7);
-        max-width: 80%;
-        margin: 0 auto;
-    }
-
-    .floating-elements {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        z-index: 1;
-    }
-
-    .floating-element {
-        position: absolute;
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-        animation: floatAnimation 15s infinite linear;
-    }
-
-    @keyframes floatAnimation {
-        0% {
-            transform: translateY(100vh) rotate(0deg);
-            opacity: 0;
-        }
-        10% {
-            opacity: 1;
-        }
-        90% {
-            opacity: 1;
-        }
-        100% {
-            transform: translateY(-100px) rotate(360deg);
-            opacity: 0;
-        }
-    }
-
-    .floating-element:nth-child(1) {
-        left: 10%;
-        animation-delay: 0s;
-        animation-duration: 12s;
-    }
-
-    .floating-element:nth-child(2) {
-        left: 20%;
-        animation-delay: 2s;
-        animation-duration: 15s;
-    }
-
-    .floating-element:nth-child(3) {
-        left: 70%;
-        animation-delay: 4s;
-        animation-duration: 18s;
-    }
-
-    .floating-element:nth-child(4) {
-        left: 80%;
-        animation-delay: 6s;
-        animation-duration: 14s;
-    }
-
-    @media (max-width: 768px) {
-        .hero-title {
-            font-size: 2.5rem;
-        }
-        
-        .hero-subtitle {
-            font-size: 1.3rem;
-        }
-        
-        .hero-description {
-            font-size: 1.1rem;
-        }
-        
-        .btn-container {
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .btn {
-            width: 100%;
-            max-width: 300px;
-            margin: 10px 0;
-        }
-        
-        .features-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .destinations-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .features-title,
-        .destinations-title {
-            font-size: 2rem;
-        }
-        
-        .destination-card {
-            height: 250px;
-        }
-    }
-</style>
 
 <div class="floating-elements">
     <div class="floating-element"></div>
@@ -459,24 +11,33 @@
 
 <!-- UPDATED HERO WITH WILDLIFE BACKGROUND -->
 <div class="hero-section">
-    <div class="hero-background"></div>
+    <div class="hero-slider">
+        <div class="hero-slide active" style="background-image: url('{{ url_for('static', filename='images/welcome/view.jpeg') }}');"></div>
+        <div class="hero-slide" style="background-image: url('{{ url_for('static', filename='images/welcome/people.jpeg') }}');"></div>
+        <div class="hero-slide" style="background-image: url('{{ url_for('static', filename='images/welcome/gamepark.jpeg') }}');"></div>
+        <div class="hero-slide" style="background-image: url('{{ url_for('static', filename='images/welcome/ballon.jpeg') }}');"></div>
+        <div class="hero-overlay"></div>
+    </div>
     <div class="hero-content">
-        <h1 class="hero-title">Journey Beyond Boundaries</h1>
-        <h2 class="hero-subtitle">Adventure Awaits</h2>
+        <h3 class="welcome-heading">Welcome to Tourizo</h3>
+        <h1 class="hero-title">Discover the Magic of <span class="highlight">African Adventures</span></h1>
+        <h2 class="hero-subtitle">Embark on unforgettable journeys across Africa's most breathtaking destinations.</h2>
         <p class="hero-description">
-            Discover extraordinary destinations, create unforgettable memories, and explore the world's most breathtaking locations with our expertly curated tours and travel experiences.
+            From wildlife safaris to cultural experiences, create memories that last a lifetime.
         </p>
         <div class="btn-container">
-            <a href="{{ url_for('auth.register') }}" class="btn btn-primary">
-                <i class="fas fa-user-plus"></i> Start Your Journey
+            <a href="{{ url_for('auth.register') }}" class="btn btn-primary hero-signup-btn">
+                <i class="fas fa-user-plus"></i> Sign Up for <br>a free Account 
             </a>
-            <a href="{{ url_for('auth.login') }}" class="btn btn-secondary">
-                <i class="fas fa-sign-in-alt"></i> Welcome Back
-            </a>
-            <a href="{{ url_for('tours.list_tours') }}" class="btn btn-accent">
-                <i class="fas fa-map-marked-alt"></i> Explore Tours
+            <a href="{{ url_for('auth.login') }}" class="btn btn-secondary hero-login-btn">
+                <i class="fas fa-sign-in-alt"></i> Already have an Account <br> Login 
             </a>
         </div>
+        <div class="slider-dots"></div>
+    </div>
+    <div class="scroll-indicator" id="scroll-indicator">
+        <span class="scroll-arrow"></span>
+        <span class="scroll-text">Scroll Down</span>
     </div>
 </div>
 
@@ -527,7 +88,7 @@
             <div class="destination-card" style="background-image: url('https://images.unsplash.com/photo-1504173010664-32509aeebb62?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
                 <div class="destination-overlay">
                     <div class="destination-icon">
-                        <i class="fas fa-paw"></i>
+                        
                     </div>
                     <h3 class="destination-name">Safari Expeditions</h3>
                     <p class="destination-description">Lions, elephants, and the African savanna</p>
@@ -537,17 +98,17 @@
             <div class="destination-card" style="background-image: url('https://images.unsplash.com/photo-1550853024-fae8cd4be47f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
                 <div class="destination-overlay">
                     <div class="destination-icon">
-                        <i class="fas fa-frog"></i>
+                        
                     </div>
                     <h3 class="destination-name">Rainforest Wonders</h3>
                     <p class="destination-description">Exotic birds, monkeys, and lush jungles</p>
                 </div>
             </div>
             
-            <div class="destination-card" style="background-image: url('https://images.unsplash.com/photo-1589656966895-2f33e7653819?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
+            <div class="destination-card" style="background-image: url('{{ url_for('static', filename='images/welcome/sunset.jpeg') }}');">
                 <div class="destination-overlay">
                     <div class="destination-icon">
-                        <i class="fas fa-snowflake"></i>
+                        
                     </div>
                     <h3 class="destination-name">Arctic Wildlife</h3>
                     <p class="destination-description">Polar bears, penguins, and icy landscapes</p>
@@ -556,7 +117,7 @@
         </div>
         
         <div class="btn-container">
-            <a href="{{ url_for('tours.list_tours') }}" class="btn btn-primary">
+            <a href="{{ url_for('auth.login') }}" class="btn btn-primary">
                 <i class="fas fa-compass"></i> Explore Wildlife Tours
             </a>
         </div>
@@ -602,4 +163,12 @@
     });
 </script>
 
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/welcome.css') }}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/welcome.js') }}"></script>
 {% endblock %}

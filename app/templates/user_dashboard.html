@@ -5,128 +5,166 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>User Dashboard</title>
-
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-    <style>
-        body {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: row;
-        }
-
-        .sidebar {
-            min-width: 250px;
-            background-color: #343a40;
-            color: white;
-            min-height: 100vh;
-            padding-top: 1rem;
-            position: fixed;
-            left: 0;
-            top: 0;
-            bottom: 0;
-        }
-
-        .sidebar a {
-            color: white;
-            text-decoration: none;
-            padding: 12px 20px;
-            display: block;
-        }
-
-        .sidebar a:hover,
-        .sidebar a.active {
-            background-color: #495057;
-            color: #f8f9fa;
-        }
-
-        main {
-            margin-left: 250px;
-            padding: 2rem;
-            width: 100%;
-            background-color: #f8f9fa;
-            min-height: 100vh;
-        }
-
-        .navbar-custom {
-            background-color: #212529;
-            color: white;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: fixed;
-            left: 250px;
-            right: 0;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .content-wrapper {
-            margin-top: 80px;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user_dashboard_navbar.css') }}" />
 </head>
 
 <body>
-    <nav class="sidebar">
-        <div class="text-center mb-4 fs-4 fw-bold">Tour Manager</div>
-        <a href="{{ url_for('auth.user_dashboard') }}" class="active">
-            <i class="fas fa-home me-2"></i> Dashboard
-        </a>
-        <a href="{{ url_for('tours.list_tours') }}">
-            <i class="fas fa-eye me-2"></i> View Tours
-        </a>
-        <a href="{{ url_for('bookings.my_bookings') }}">
-            <i class="fas fa-ticket-alt me-2"></i> My Bookings
-        </a>
-        <a href="{{ url_for('auth.logout') }}">
-            <i class="fas fa-sign-out-alt me-2"></i> Logout
-        </a>
-    </nav>
-
-    <div class="navbar-custom">
-        <div>Welcome, <strong>{{ username }}</strong></div>
-        <a href="{{ url_for('auth.logout') }}" class="btn btn-danger btn-sm">
-            <i class="fas fa-sign-out-alt"></i> Logout
-        </a>
-    </div>
-
-    <main>
-        <div class="content-wrapper">
-
-            <p>You are logged in ✅</p>
-
-            <h3>Your Recent Bookings</h3>
-
-            {% if bookings %}
-            <ul class="list-group">
-                {% for booking in bookings %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <div>
-                        <strong>{{ booking.tour.title }}</strong><br />
-                        Date: {{ booking.booking_date.strftime('%Y-%m-%d') }}<br />
-                        Status: <span class="badge bg-primary">{{ booking.payment_status|capitalize }}</span>
-                    </div>
-                </li>
-                {% endfor %}
-            </ul>
-            {% else %}
-            <div class="alert alert-warning mt-3">
-                <strong>No bookings yet.</strong> Browse our <a href="{{ url_for('tours.list_tours') }}">tours</a> to get started!
+    <nav class="navbar-welcome">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <span class="logo-icon"><i class="fas fa-leaf"></i></span>
+                <span class="logo-text">Tourizo</span>
             </div>
-            {% endif %}
-
-            <div class="alert alert-info mt-4">
-                <h5>Hello, {{ username }}!</h5>
-                <p>Use the sidebar to view available tours or check your bookings.</p>
+            <ul class="navbar-links">
+                <li><a href="{{ url_for('auth.user_dashboard') }}" class="{% if request.endpoint == 'auth.user_dashboard' %}active{% endif %}">Home</a></li>
+                <li><a href="{{ url_for('tours.list_tours') }}" class="{% if request.endpoint == 'tours.list_tours' %}active{% endif %}">Tours</a></li>
+                <li><a href="#">Destinations</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="{{ url_for('auth.logout') }}" class="navbar-login">Logout</a>
+            </div>
+        </div>
+    </nav>
+    <main class="welcome-message-container">
+        <div class="container welcome-card d-flex flex-row align-items-start justify-content-between">
+            <div class="welcome-content flex-grow-1">
+                <div class="welcome-title">
+                    {% if is_new_user %}
+                        Welcome, <span class="welcome-highlight">{{ username }}!</span>
+                    {% else %}
+                        Welcome back, <span class="welcome-highlight">{{ username }}!</span>
+                    {% endif %}
+                </div>
+                <div class="welcome-subtitle">
+                    Embark on unforgettable journeys with Tourizo. Discover breathtaking destinations, unique experiences, and create memories that last a lifetime.
+                </div>
+                <div class="btn-group">
+                    <a href="{{ url_for('tours.list_tours') }}" class="btn btn-explore">
+                        Explore Tours <span class="ms-2">&rarr;</span>
+                    </a>
+                    <a href="#" class="btn btn-watch">
+                        Watch Video <i class="fas fa-rocket ms-2"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon feature-orange"><i class="fas fa-camera"></i></div>
+                    <div class="feature-title">Expert Guides</div>
+                    <div class="feature-desc">Local experts who know every hidden gem</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon feature-green"><i class="fas fa-mountain"></i></div>
+                    <div class="feature-title">Unique Experiences</div>
+                    <div class="feature-desc">Authentic adventures off the beaten path</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon feature-blue"><i class="fas fa-users"></i></div>
+                    <div class="feature-title">Small Groups</div>
+                    <div class="feature-desc">Intimate groups for personalized experiences</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon feature-purple"><i class="fas fa-calendar-alt"></i></div>
+                    <div class="feature-title">Flexible Booking</div>
+                    <div class="feature-desc">Easy booking with flexible cancellation</div>
+                </div>
             </div>
         </div>
     </main>
-
+    <section class="featured-tours-section"> <br>
+        <h2 class="featured-tours-title">Featured Tours</h2>
+        <p class="featured-tours-subtitle">Handpicked adventures for the ultimate African experience</p>
+        <div class="tour-cards-container">
+            <div class="tour-card">
+                <div class="tour-image">
+                    <div class="tour-category">Wildlife</div>
+                    <img src="{{ url_for('static', filename='images/tours/segerenti.jpeg') }}" alt="Serengeti Safari Adventure" class="tour-img">
+                </div>
+                <div class="tour-details">
+                    <div class="tour-location">
+                        <i class="fas fa-map-marker-alt"></i> Tanzania
+                    </div>
+                    <h3 class="tour-title">Serengeti Safari Adventure</h3>
+                    <div class="tour-rating">
+                        <i class="fas fa-star"></i> 4.9 (127 reviews)
+                    </div>
+                    <div class="tour-price">$1299 / 7 days</div>
+                    <button class="tour-btn" onclick="window.location.href='{{ url_for('tours.tour_detail', tour_id=7) }}'">View Details</button>
+                </div>
+            </div>
+            <div class="tour-card">
+                <div class="tour-image">
+                    <div class="tour-category">Adventure</div>
+                    <img src="{{ url_for('static', filename='images/tours/victoriafalls.jpeg') }}" alt="Victoria Falls Experience" class="tour-img">
+                </div>
+                <div class="tour-details">
+                    <div class="tour-location">
+                        <i class="fas fa-map-marker-alt"></i> Zambia/Zimbabwe
+                    </div>
+                    <h3 class="tour-title">Victoria Falls Experience</h3>
+                    <div class="tour-rating">
+                        <i class="fas fa-star"></i> 4.8 (89 reviews)
+                    </div>
+                    <div class="tour-price">$899 / 4 days</div>
+                    <button class="tour-btn" onclick="window.location.href='{{ url_for('tours.tour_detail', tour_id=3) }}'">View Details</button>
+                </div>
+            </div>
+            <div class="tour-card">
+                <div class="tour-image">
+                    <div class="tour-category">Trekking</div>
+                    <img src="{{ url_for('static', filename='images/tours/kilimanjaro.jpeg') }}" alt="Kilimanjaro Trek" class="tour-img">
+                </div>
+                <div class="tour-details">
+                    <div class="tour-location">
+                        <i class="fas fa-map-marker-alt"></i> Tanzania
+                    </div>
+                    <h3 class="tour-title">Kilimanjaro Trek</h3>
+                    <div class="tour-rating">
+                        <i class="fas fa-star"></i> 4.7 (156 reviews)
+                    </div>
+                    <div class="tour-price">$2199 / 8 days</div>
+                    <button class="tour-btn" onclick="window.location.href='{{ url_for('tours.tour_detail', tour_id=5) }}'">View Details</button>
+                </div>
+            </div>
+        </div>
+        <div class="view-all-tours-container">
+            <a href="{{ url_for('tours.list_tours') }}" class="view-all-tours-btn">
+                View All Tours <span class="arrow">→</span>
+            </a>
+        </div> <br>
+        <h2 class="featured-tours-title">Popular Destinations</h2> <br>
+        <p class="featured-tours-subtitle" >Explore Africa's most captivating locations</p> <br><br>
+        <div class="d-flex justify-content-center gap-4 flex-wrap" style="margin-bottom: 0;">
+            <div class="destination-card position-relative" style="background: url('{{ url_for('static', filename='images/destination/kenya.jpg') }}') center/cover no-repeat; border-radius:16px; width:240px; height:130px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center; padding:2rem; overflow:hidden;">
+                <div style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(30,40,40,0.45); z-index:1;"></div>
+                <span style="font-size:1.3rem; font-weight:700; color:#fff; position:relative; z-index:2;">Kenya</span>
+                <span style="color:#fff; font-size:1rem; position:relative; z-index:2;">45 tours available</span>
+            </div>
+            <div class="destination-card position-relative" style="background: url('{{ url_for('static', filename='images/destination/tanzania.jpg') }}') center/cover no-repeat; border-radius:16px; width:240px; height:130px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center; padding:2rem; overflow:hidden;">
+                <div style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(30,40,40,0.45); z-index:1;"></div>
+                <span style="font-size:1.3rem; font-weight:700; color:#fff; position:relative; z-index:2;">Tanzania</span>
+                <span style="color:#fff; font-size:1rem; position:relative; z-index:2;">38 tours available</span>
+            </div>
+            <div class="destination-card position-relative" style="background: url('{{ url_for('static', filename='images/destination/southafrica.jpg') }}') center/cover no-repeat; border-radius:16px; width:240px; height:130px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center; padding:2rem; overflow:hidden;">
+                <div style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(30,40,40,0.45); z-index:1;"></div>
+                <span style="font-size:1.3rem; font-weight:700; color:#fff; position:relative; z-index:2;">South Africa</span>
+                <span style="color:#fff; font-size:1rem; position:relative; z-index:2;">52 tours available</span>
+            </div>
+            <div class="destination-card position-relative" style="background: url('{{ url_for('static', filename='images/destination/morocco.jpg') }}') center/cover no-repeat; border-radius:16px; width:240px; height:130px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center; padding:2rem; overflow:hidden;">
+                <div style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(30,40,40,0.45); z-index:1;"></div>
+                <span style="font-size:1.3rem; font-weight:700; color:#fff; position:relative; z-index:2;">Morocco</span>
+                <span style="color:#fff; font-size:1rem; position:relative; z-index:2;">29 tours available</span>
+            </div>
+        </div>
+    </section>
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/user_dashboard_navbar.js') }}"></script>
 </body>
 
 </html>
