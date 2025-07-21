@@ -1,6 +1,14 @@
 from datetime import datetime
 from app.extensions import db
 
+class TourItineraryDay(db.Model):
+    __tablename__ = 'tour_itinerary_day'
+    id = db.Column(db.Integer, primary_key=True)
+    tour_id = db.Column(db.Integer, db.ForeignKey('tour.id'), nullable=False)
+    day = db.Column(db.Integer, nullable=False)
+    title = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+
 class Tour(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
@@ -40,6 +48,7 @@ class Tour(db.Model):
     bookings = db.relationship('Booking', backref='tour', lazy=True)
     reviews = db.relationship('Review', backref='tour', lazy=True)
     available_dates = db.relationship('TourDate', backref='tour', lazy=True)
+    itinerary_days = db.relationship('TourItineraryDay', backref='tour', order_by='TourItineraryDay.day', cascade='all, delete-orphan')
 
     def __repr__(self):
         return f'<Tour {self.title}>'
