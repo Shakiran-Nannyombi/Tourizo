@@ -66,4 +66,11 @@ def create_app():
     def load_user(user_id):
         return User.query.get(int(user_id))
 
+    from app.extensions import mail
+    mail.init_app(app)
+
+    # Register custom Jinja2 filters
+    from app.utils import from_json
+    app.jinja_env.filters['from_json'] = from_json
+
     return app

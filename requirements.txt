@@ -44,3 +44,9 @@ gunicorn==21.2.0
 
 # Cloud deployment (optional)
 boto3==1.29.7  # For AWS S3 file uploads
+
+# login and OAuth
+Flask-Dance==7.1.0 
+oauthlib==3.3.1 
+requests-oauthlib==2.0.0 
+urlobject==3.0.0
