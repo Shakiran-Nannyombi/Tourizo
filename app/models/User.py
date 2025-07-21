@@ -4,6 +4,11 @@ from flask_login import UserMixin
 from app.extensions import db
 from app.extensions import login_manager
 
+wishlist_table = db.Table('wishlist',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('tour_id', db.Integer, db.ForeignKey('tour.id'), primary_key=True)
+)
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -11,9 +16,12 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(120), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    otp_code = db.Column(db.String(8))
+    otp_expiry = db.Column(db.DateTime)
 
     bookings = db.relationship('Booking', backref='user', lazy=True)
     reviews = db.relationship('Review', backref='user', lazy=True)
+    wishlist = db.relationship('Tour', secondary=wishlist_table, backref='wishlisted_by')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
