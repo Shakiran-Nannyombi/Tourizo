@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}My Wishlist{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/user_dashboard_navbar.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tours.css') }}">
+<style>
+.nav-link.active {
+    text-decoration: underline;
+}
+</style>
+{% endblock %}
+{% block content %}
+<!-- Main Site Navbar -->
+<nav class="main-navbar">
+    <div class="container">
+        <a class="navbar-logo" href="{{ url_for('welcome') }}">
+            <i class="fas fa-leaf"></i> Tourizo
+        </a>
+        <div class="nav">
+            <a class="nav-link" href="{{ url_for('auth.user_dashboard') }}">Home</a>
+            <a class="nav-link" href="{{ url_for('tours.list_tours') }}">Tours</a>
+            <a class="nav-link" href="#">Destinations</a>
+            <a class="nav-link" href="#">About</a>
+            <a class="nav-link" href="#">Contact</a>
+        </div>
+        <div class="navbar-actions">
+            <button class="wishlist-btn" id="navbar-wishlist-btn" title="Wishlist" onclick="window.location.href='/tours/wishlist'">
+                <i class="far fa-heart"></i>
+                <span class="wishlist-badge" id="wishlist-badge">0</span>
+            </button>
+        </div>
+    </div>
+</nav>
+<div class="wishlist-container">
+    <h1 class="wishlist-title">My Wishlist</h1>
+    <p class="wishlist-subtitle">{{ tours|length }} tour{{ 's' if tours|length != 1 else '' }} saved for later</p>
+    {% if tours|length == 0 %}
+        <div class="wishlist-empty">
+            <div class="wishlist-empty-icon"><i class="fas fa-heart"></i></div>
+            <h2>Your wishlist is empty</h2>
+            <p>Start exploring our amazing tours and save your favorites for later!</p>
+            <a href="{{ url_for('tours.list_tours') }}" class="btn btn-book-now"><i class="fas fa-search"></i> Browse Tours</a>
+        </div>
+    {% else %}
+        <div class="wishlist-tours-list">
+            {% for tour in tours %}
+            <div class="wishlist-tour-card">
+                <div class="wishlist-tour-img">
+                    {% if tour.featured_image %}
+                        <img src="{{ url_for('static', filename=tour.featured_image) }}" alt="{{ tour.title }}">
+                    {% else %}
+                        <div class="image-placeholder"><i class="fas fa-image"></i></div>
+                    {% endif %}
+                </div>
+                <div class="wishlist-tour-info">
+                    <div class="wishlist-tour-title">{{ tour.title }}</div>
+                    <div class="wishlist-tour-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> {{ tour.destination }}</span>
+                        <span><i class="fas fa-calendar"></i> {{ tour.duration }} days</span>
+                    </div>
+                    <div class="wishlist-tour-price">${{ '%.0f'|format(tour.price) }}</div>
+                    <div class="wishlist-tour-actions">
+                        <a href="{{ url_for('tours.tour_detail', tour_id=tour.id) }}" class="btn btn-book-now">View Details</a>
+                        <button type="button" class="btn btn-wishlist btn-wishlist-remove wishlist-remove-btn{% if tour.id in wishlist_ids %} active{% endif %}" data-tour-id="{{ tour.id }}">
+                            <i class="{% if tour.id in wishlist_ids %}fas{% else %}far{% endif %} fa-heart"></i> Remove
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+<script src="{{ url_for('static', filename='js/user_dashboard_navbar.js') }}"></script>
+<script src="{{ url_for('static', filename='js/tours.js') }}"></script>
+{% endblock %} 
