@@ -1,0 +1,431 @@
+{% extends "base.html" %}
+{% block title %}Manage Reviews{% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --primary-color: #2c5530;
+        --secondary-color: #4a7c59;
+        --accent-color: #ff6b35;
+        --text-dark: #2d3436;
+        --text-light: #636e72;
+    }
+
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    /* Animated background particles */
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image:
+            radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+        animation: float 20s ease-in-out infinite;
+        z-index: -1;
+    }
+
+    @keyframes float {
+
+        0%,
+        100% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-20px);
+        }
+    }
+
+    /* Hero Carousel */
+    .carousel {
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        position: relative;
+    }
+
+    .carousel-item {
+        height: 500px;
+        position: relative;
+    }
+
+    .carousel-item img {
+        height: 500px;
+        object-fit: cover;
+        border-radius: 20px;
+        filter: brightness(0.8);
+        transition: all 0.5s ease;
+    }
+
+    .carousel-item:hover img {
+        filter: brightness(1);
+        transform: scale(1.02);
+    }
+
+    .carousel-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, rgba(44, 85, 48, 0.7), rgba(255, 107, 53, 0.5));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        color: white;
+        text-align: center;
+        border-radius: 20px;
+    }
+
+    .carousel-overlay h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        animation: slideInUp 1s ease-out;
+    }
+
+    .carousel-overlay p {
+        font-size: 1.3rem;
+        margin-bottom: 2rem;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        animation: slideInUp 1s ease-out 0.2s both;
+    }
+
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Main Container */
+    .container {
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Section Title */
+    .section-title {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 2rem;
+        margin: 2rem 0;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        position: relative;
+    }
+
+    .section-title h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(to right, var(--accent-color), var(--secondary-color));
+        border-radius: 2px;
+    }
+
+    /* Table Container */
+    .table-responsive {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        margin: 2rem 0;
+    }
+
+    /* Table Styling */
+    .table {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-bottom: 0;
+    }
+
+    .table-success th {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+        color: white !important;
+        font-weight: 600;
+        border: none;
+        padding: 1.2rem 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-size: 0.9rem;
+    }
+
+    .table tbody tr {
+        transition: all 0.3s ease;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        background: white;
+    }
+
+    .table tbody tr:hover {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05)) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .table td {
+        padding: 1.2rem 1rem;
+        vertical-align: middle;
+        border: none;
+    }
+
+    /* Rating Stars */
+    .text-warning {
+        color: #ffc107 !important;
+        font-size: 1.2rem;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Badges */
+    .badge {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+        border-radius: 50px;
+        font-weight: 500;
+    }
+
+    .bg-success {
+        background: linear-gradient(135deg, #28a745, #20c997) !important;
+        color: white;
+    }
+
+    .bg-secondary {
+        background: linear-gradient(135deg, #6c757d, #adb5bd) !important;
+        color: white;
+    }
+
+    .bg-danger {
+        background: linear-gradient(135deg, #dc3545, #e74c3c) !important;
+        color: white;
+    }
+
+    /* Empty State Alert */
+    .alert-info {
+        background: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 3rem 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        border: none;
+        text-align: center;
+        color: var(--text-light);
+        font-size: 1.2rem;
+        margin: 2rem 0;
+    }
+
+    .alert-info::before {
+        content: '✈️';
+        display: block;
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .carousel-overlay h1 {
+            font-size: 2.5rem;
+        }
+
+        .carousel-overlay p {
+            font-size: 1.1rem;
+        }
+
+        .carousel-item,
+        .carousel-item img {
+            height: 350px;
+        }
+
+        .table-responsive {
+            padding: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .section-title {
+            padding: 1.5rem;
+        }
+
+        .section-title h2 {
+            font-size: 2rem;
+        }
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+    }
+
+    /* Additional Travel Theme Icons */
+    .fa-plane::before {
+        content: "✈️";
+    }
+
+    .fa-mountain::before {
+        content: "🏔️";
+    }
+
+    .fa-star::before {
+        content: "⭐";
+    }
+</style>
+
+<div class="container my-5">
+    <!-- 📸 Carousel with Travel Images -->
+    <div id="reviewCarousel" class="carousel slide mb-5 shadow-sm" data-bs-ride="carousel" data-bs-interval="4000">
+        <div class="carousel-inner rounded">
+            <div class="carousel-item active">
+                <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80"
+                    class="d-block w-100" alt="Mountain Adventure">
+                <div class="carousel-overlay">
+                    <h1>🌟 Customer Reviews</h1>
+                    <p>Discover authentic experiences from our adventurous travelers</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://images.unsplash.com/photo-1571401835393-8c5f35328320?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80"
+                    class="d-block w-100" alt="Safari Tour">
+                <div class="carousel-overlay">
+                    <h1>🦁 Safari Adventures</h1>
+                    <p>Read real stories from our African safari expeditions</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80"
+                    class="d-block w-100" alt="Ocean Vacation">
+                <div class="carousel-overlay">
+                    <h1>🌊 Ocean Escapes</h1>
+                    <p>Testimonials from unforgettable coastal adventures</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://images.unsplash.com/photo-1464822759844-d150baec93d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80"
+                    class="d-block w-100" alt="Mountain Landscape">
+                <div class="carousel-overlay">
+                    <h1>⛰️ Mountain Treks</h1>
+                    <p>Stories from challenging and rewarding expeditions</p>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#reviewCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#reviewCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+
+    <!-- 🌟 Page Title -->
+    <div class="section-title">
+        <h2 class="fw-bold text-success">🎯 Tour Reviews & Ratings</h2>
+        <p class="lead text-muted mb-0">Real feedback from real travelers who chose our adventures</p>
+    </div>
+
+    {% if reviews %}
+    <!-- 📋 Reviews Table -->
+    <div class="table-responsive shadow-sm rounded">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-success">
+                <tr class="text-center">
+                    <th>👤 Reviewer</th>
+                    <th>📧 Email</th>
+                    <th>🗺️ Tour</th>
+                    <th>⭐ Rating</th>
+                    <th>💬 Comment</th>
+                    <th>📅 Date</th>
+                    <th>✅ Verified</th>
+                    <th>👍 Approved</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for review in reviews %}
+                <tr>
+                    <td><strong>{{ review.reviewer_name }}</strong></td>
+                    <td>{{ review.reviewer_email }}</td>
+                    <td><span class="text-primary fw-bold">{{ review.tour.title if review.tour else 'N/A' }}</span></td>
+                    <td class="text-center text-warning fw-bold">{{ review.rating }} ⭐</td>
+                    <td>{{ review.comment }}</td>
+                    <td>{{ review.created_at.strftime('%Y-%m-%d') if review.created_at else 'N/A' }}</td>
+                    <td class="text-center">
+                        {% if review.is_verified %}
+                        <span class="badge bg-success">✅ Yes</span>
+                        {% else %}
+                        <span class="badge bg-secondary">❌ No</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {% if review.is_approved %}
+                        <span class="badge bg-success">👍 Yes</span>
+                        {% else %}
+                        <span class="badge bg-danger">👎 No</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info mt-3">
+        <h4>No Reviews Yet! 🚀</h4>
+        <p class="mb-0">Be the first to share your amazing travel experience with us!</p>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    // Add smooth hover effects to table rows
+    document.addEventListener('DOMContentLoaded', function () {
+        const tableRows = document.querySelectorAll('tbody tr');
+        tableRows.forEach(row => {
+            row.addEventListener('mouseenter', function () {
+                this.style.transform = 'translateX(5px)';
+            });
+            row.addEventListener('mouseleave', function () {
+                this.style.transform = 'translateX(0)';
+            });
+        });
+    });
+</script>
+{% endblock %}

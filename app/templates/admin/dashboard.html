@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .logo i {
+            margin-right: 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            padding: 0.5rem 1rem 0.5rem 2.5rem;
+            border: none;
+            border-radius: 25px;
+            background: #f8f9fa;
+            width: 300px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f8f9fa;
+            border-radius: 25px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Enhanced Sidebar */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+            backdrop-filter: blur(10px);
+            padding-top: 90px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+        }
+
+        .nav-menu {
+            padding: 3rem;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Enhanced Navigation Links */
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1.2rem;
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.85);
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+            border: 2px solid transparent;
+            background: transparent;
+        }
+
+        .nav-link:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateX(8px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-link i {
+            margin-right: 1rem;
+            width: 20px;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link:hover i {
+            transform: scale(1.1);
+        }
+
+        /* Reports Section Styling */
+        .nav-section {
+            margin-top: 2rem;
+        }
+
+        .nav-section-title {
+            padding: 0.8rem 1.2rem 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 1.2px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Reports parent link styling */
+        .reports-parent {
+            background: rgba(96, 4, 94, 0.05);
+            border-left: 3px solid #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .reports-parent:hover {
+            background: rgba(234, 102, 221, 0.15);
+            border-left-color: #764ba2;
+        }
+
+        /* Sub-navigation styling */
+        .sub-nav {
+            margin-left: 0;
+            padding-left: 1rem;
+            border-left: 2px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1rem;
+        }
+
+        .sub-nav .nav-link {
+            padding: 0.8rem 1rem 0.8rem 2rem;
+            color: #ffffffb3;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .sub-nav .nav-link:before {
+            content: '';
+            position: absolute;
+            left: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .sub-nav .nav-link:hover:before {
+            background: white;
+            transform: translateY(-50%) scale(1.5);
+        }
+
+        .sub-nav .nav-link:hover {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.6), rgba(118, 75, 162, 0.6));
+            color: white;
+            transform: translateX(6px);
+            border-left: 3px solid #764ba2;
+        }
+
+        /* Special styling for logout button */
+        .logout-link {
+            margin-top: 2rem;
+            background: rgba(220, 53, 69, 0.1);
+            border-left: 3px solid #dc3545;
+        }
+
+        .logout-link:hover {
+            background: linear-gradient(135deg, #dc3545, #c82333) !important;
+            border-left-color: #bd2130;
+            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding-top: 90px;
+            padding: 90px 2rem 2rem;
+            width: calc(100% - 280px);
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-title {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-change {
+            font-size: 0.8rem;
+            color: #28a745;
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        /* Recent Activities */
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 1rem;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        /* System Status */
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .status-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-online {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-active {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-box input {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-rocket"></i>
+                TOURIZO
+            </div>
+            <div class="header-right">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search...">
+                </div>
+                <div class="user-profile">
+                    <div class="user-avatar">TW</div>
+                    <span>TOURIZO </span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Enhanced Sidebar -->
+        <div class="sidebar">
+            <div class="nav-menu">
+                <div class="nav-item">
+                    <a class="nav-link active" href="{{ url_for('admin.dashboard') }}">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin.manage_tours') }}">
+                        <i class="fas fa-map-marked-alt"></i> Manage Tours
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin.add_tour') }}">
+                        <i class="fas fa-plus"></i> Add New Tour
+                    </a>
+                </div>
+
+                <!-- Manage Inquiries link -->
+                <div class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin.inquiries') }}">
+                        <i class="fas fa-envelope"></i> Manage Inquiries
+                    </a>
+                </div>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin.admin_reviews') }}">
+                        <i class="fas fa-star"></i> Manage Reviews
+                    </a>
+                </li>
+
+
+                <!-- Reports Section -->
+                <div class="nav-item">
+                    <span class="nav-link reports-parent">
+                        <i class="fas fa-chart-bar"></i> Reports
+                    </span>
+                    <div class="sub-nav">
+                        <div class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin.booking_report') }}">
+                                <i class="fas fa-calendar-check"></i> Booking Reports
+                            </a>
+                        </div>
+                        <div class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin.revenue_report') }}">
+                                <i class="fas fa-dollar-sign"></i> Revenue Reports
+                            </a>
+                        </div>
+                        <div class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin.popular_destinations') }}">
+                                <i class="fas fa-fire"></i> Popular Destinations
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin.manage_users') }}">
+                        <i class="fas fa-users"></i> Manage Users
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a class="nav-link logout-link" href="{{ url_for('auth.logout') }}">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-header">
+                <div>
+                    <div class="breadcrumb">
+                        <span>Admin</span>
+                        <i class="fas fa-chevron-right"></i>
+                        <span>Dashboard</span>
+                    </div>
+                    <h1 class="page-title">Dashboard</h1>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Total Tours</div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">24</div>
+                    <div class="stat-change">
+                        <i class="fas fa-arrow-up"></i> 12% from last month
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Active Tours</div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #28a745, #20c997);">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">18</div>
+                    <div class="stat-change">
+                        <i class="fas fa-arrow-up"></i> 8% from last month
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Featured Tours</div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #ffc107, #fd7e14);">
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">6</div>
+                    <div class="stat-change">
+                        <i class="fas fa-arrow-up"></i> 20% from last month
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Draft Tours</div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #17a2b8, #6f42c1);">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">3</div>
+                    <div class="stat-change">
+                        <i class="fas fa-arrow-down"></i> 25% from last month
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Grid -->
+            <div class="content-grid">
+                <!-- Revenue Chart -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Revenue Overview</h3>
+                        <select style="border: none; background: #f8f9fa; padding: 0.5rem; border-radius: 8px;">
+                            <option>Last 8 Months</option>
+                            <option>Last 6 Months</option>
+                            <option>Last Year</option>
+                        </select>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- System Status & Activities -->
+                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <!-- System Status -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">System Status</h3>
+                        </div>
+                        <div class="status-item">
+                            <span>Database</span>
+                            <span class="status-badge status-online">Online</span>
+                        </div>
+                        <div class="status-item">
+                            <span>Tour System</span>
+                            <span class="status-badge status-active">Active</span>
+                        </div>
+                        <div class="status-item">
+                            <span>Last Updated</span>
+                            <span style="color: #666;">Jul 22, 2025</span>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Recent Activity</h3>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">New tour "Bali Adventure" created</div>
+                                <div class="activity-time">2 hours ago</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-edit"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Tour "Kyoto Experience" updated</div>
+                                <div class="activity-time">4 hours ago</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">New user registration</div>
+                                <div class="activity-time">6 hours ago</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Booking Overview Chart -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Booking Overview</h3>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem;">
+                    <div style="display: flex; align-items: center; justify-content: center;">
+                        <div style="position: relative; width: 200px; height: 200px;">
+                            <canvas id="bookingChart"></canvas>
+                            <div
+                                style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                                <div style="font-size: 2rem; font-weight: bold; color: #333;">2,859</div>
+                                <div style="color: #666;">Total Trips</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; justify-content: center; gap: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="color: #666;">Booked</span>
+                            <span style="font-weight: bold;">29.5%</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="color: #666;">Cancelled</span>
+                            <span style="font-weight: bold; color: #dc3545;">8.5%</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="color: #666;">Pending</span>
+                            <span style="font-weight: bold; color: #ffc107;">62%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Revenue Chart
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(revenueCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+                datasets: [{
+                    label: 'Revenue',
+                    data: [45000, 52000, 48000, 61000, 55000, 67000, 59000, 62629],
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0,0,0,0.1)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Booking Chart (Doughnut)
+        const bookingCtx = document.getElementById('bookingChart').getContext('2d');
+        new Chart(bookingCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Booked', 'Cancelled', 'Pending'],
+                datasets: [{
+                    data: [29.5, 8.5, 62],
+                    backgroundColor: ['#667eea', '#dc3545', '#ffc107'],
+                    borderWidth: 0,
+                    cutout: '70%'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+{% block title %}My Wishlist{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/user_dashboard_navbar.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tours.css') }}">
+<style>
+    .nav-link.active {
+        text-decoration: underline;
+    }
+    /* Wishlist specific styles */
+    .wishlist-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+    .wishlist-title {
+        color: #3a5a40;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    .wishlist-subtitle {
+        color: #6c757d;
+        margin-bottom: 2rem;
+    }
+    .wishlist-tours-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
+    }
+    .wishlist-tour-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    .wishlist-tour-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+    .wishlist-tour-img {
+        height: 220px;
+        position: relative;
+        overflow: hidden;
+    }
+    .wishlist-tour-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+    .wishlist-tour-card:hover .wishlist-tour-img img {
+        transform: scale(1.05);
+    }
+    .wishlist-tour-info {
+        padding: 1.5rem;
+    }
+    .wishlist-tour-title {
+        color: #3a5a40;
+        font-weight: 700;
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+    }
+    .wishlist-tour-meta {
+        display: flex;
+        gap: 1rem;
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+    .wishlist-tour-price {
+        color: #3a5a40;
+        font-weight: 700;
+        font-size: 1.2rem;
+        margin-bottom: 1.5rem;
+    }
+    .wishlist-tour-actions {
+        display: flex;
+        gap: 1rem;
+    }
+    .btn-book-now {
+        background-color: #3a5a40;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        flex-grow: 1;
+        text-align: center;
+    }
+    .btn-book-now:hover {
+        background-color: #588157;
+        color: white;
+    }
+    .btn-wishlist-remove {
+        background-color: #f8f9fa;
+        color: #e63946;
+        border: 1px solid #e63946;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .btn-wishlist-remove:hover {
+        background-color: #e63946;
+        color: white;
+    }
+    .wishlist-empty {
+        text-align: center;
+        padding: 4rem 2rem;
+        background-color: #f8f9fa;
+        border-radius: 12px;
+        margin-top: 2rem;
+    }
+    .wishlist-empty-icon {
+        font-size: 3rem;
+        color: #e63946;
+        margin-bottom: 1rem;
+    }
+    .wishlist-empty h2 {
+        color: #3a5a40;
+        margin-bottom: 1rem;
+    }
+    .wishlist-empty p {
+        color: #6c757d;
+        margin-bottom: 2rem;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<!-- Main Site Navbar -->
+<nav class="main-navbar">
+    <div class="container">
+        <a class="navbar-logo" href="{{ url_for('welcome') }}">
+            <i class="fas fa-leaf"></i> Tourizo
+        </a>
+        <div class="nav">
+            <a class="nav-link" href="{{ url_for('auth.user_dashboard') }}">Home</a>
+            <a class="nav-link" href="{{ url_for('tours.list_tours') }}">Tours</a>
+            <a class="nav-link" href="#">Destinations</a>
+            <a class="nav-link" href="#">About</a>
+            <a class="nav-link" href="#">Contact</a>
+        </div>
+        <div class="navbar-actions">
+            <button class="wishlist-btn" id="navbar-wishlist-btn" title="Wishlist" onclick="window.location.href='/tours/wishlist'">
+                <i class="far fa-heart"></i>
+                <span class="wishlist-badge" id="wishlist-badge">{{ wishlist_count }}</span>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<div class="wishlist-container">
+    <h1 class="wishlist-title">My Wishlist</h1>
+    <p class="wishlist-subtitle">{{ tours|length }} tour{{ 's' if tours|length != 1 else '' }} saved for later</p>
+    
+    {% if tours|length == 0 %}
+        <div class="wishlist-empty">
+            <div class="wishlist-empty-icon"><i class="fas fa-heart"></i></div>
+            <h2>Your wishlist is empty</h2>
+            <p>Start exploring our amazing tours and save your favorites for later!</p>
+            <a href="{{ url_for('tours.list_tours') }}" class="btn btn-book-now"><i class="fas fa-search"></i> Browse Tours</a>
+        </div>
+    {% else %}
+        <div class="wishlist-tours-list">
+            {% for tour in tours %}
+            <div class="wishlist-tour-card">
+                <div class="wishlist-tour-img">
+                    {% if tour.featured_image %}
+                        <img src="{{ url_for('static', filename=tour.featured_image) }}" alt="{{ tour.title }}">
+                    {% else %}
+                        <!-- Match the same image logic as tours page -->
+                        {% if "Zanzibar Beach Escape" in tour.title %}
+                        <img src="{{ url_for('static', filename='images/tours/zanzibar.jpeg') }}" alt="Zanzibar beaches">
+                        {% elif "Kalangala" in tour.title and "Brovad" in tour.title %}
+                        <img src="{{ url_for('static', filename='images/tours/kalangala.jpg') }}" alt="Ssese Islands beach">
+                        {% elif "Western Uganda Safari" in tour.title %}
+                        <img src="{{ url_for('static', filename='images/tours/westernUganda.jpg') }}" alt="Western Uganda landscape">
+                        {% elif "5-Day Ugandan Safari" in tour.title %}
+                        <img src="{{ url_for('static', filename='images/tours/victoriafalls.jpeg') }}" alt="Murchison Falls">
+                        {% elif "Queen Elizabeth" in tour.title %}
+                        <img src="{{ url_for('static', filename='images/tours/segerenti.jpeg') }}" alt="Queen Elizabeth National Park">
+                        {% else %}
+                            <!-- Fallback to category-based images -->
+                            {% if tour.category.name == "Adventure Tours" %}
+                            <img src="https://images.unsplash.com/photo-1503917988258-f87a78e3c995?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" 
+                                 alt="Adventure tour">
+                            {% elif tour.category.name == "Wildlife Safari" %}
+                            <img src="https://images.unsplash.com/photo-1523438885200-e635ba2c371e?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" 
+                                 alt="Wildlife safari">
+                            {% elif tour.category.name == "Beach Holidays" %}
+                            <img src="https://images.unsplash.com/photo-1505228395891-9a51e7e86bf6?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" 
+                                 alt="Beach holiday">
+                            {% elif tour.category.name == "Cultural Tours" %}
+                            <img src="https://images.unsplash.com/photo-1527631746610-bca00a040d60?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" 
+                                 alt="Cultural tour">
+                            {% else %}
+                            <img src="https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" 
+                                 alt="Tour image">
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                </div>
+                <div class="wishlist-tour-info">
+                    <div class="wishlist-tour-title">{{ tour.title }}</div>
+                    <div class="wishlist-tour-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> {{ tour.destination }}</span>
+                        <span><i class="fas fa-calendar"></i> {{ tour.duration }} days</span>
+                    </div>
+                    <div class="wishlist-tour-price">${{ '%.0f'|format(tour.price) }}</div>
+                    <div class="wishlist-tour-actions">
+                        <a href="{{ url_for('tours.tour_detail', tour_id=tour.id) }}" class="btn btn-book-now">View Details</a>
+                        <button type="button" class="btn-wishlist-remove wishlist-remove-btn" data-tour-id="{{ tour.id }}">
+                            <i class="fas fa-heart"></i> Remove
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+<script src="{{ url_for('static', filename='js/user_dashboard_navbar.js') }}"></script>
+<script src="{{ url_for('static', filename='js/tours.js') }}"></script>
+<script>
+    // Handle wishlist removal
+    document.querySelectorAll('.wishlist-remove-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const tourId = this.getAttribute('data-tour-id');
+            
+            fetch('/tours/wishlist/remove', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                    // Removed CSRF token - add back if needed with proper setup
+                },
+                body: JSON.stringify({ tour_id: tourId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Remove the tour card from view
+                    this.closest('.wishlist-tour-card').remove();
+                    
+                    // Update the wishlist count
+                    document.getElementById('wishlist-badge').textContent = data.wishlist_count;
+                    
+                    // Update the subtitle
+                    const subtitle = document.querySelector('.wishlist-subtitle');
+                    const newCount = parseInt(data.wishlist_count);
+                    subtitle.textContent = newCount + ' tour' + (newCount !== 1 ? 's' : '') + ' saved for later';
+                    
+                    // If last item removed, show empty state
+                    if (newCount === 0) {
+                        document.querySelector('.wishlist-tours-list').innerHTML = `
+                            <div class="wishlist-empty">
+                                <div class="wishlist-empty-icon"><i class="fas fa-heart"></i></div>
+                                <h2>Your wishlist is empty</h2>
+                                <p>Start exploring our amazing tours and save your favorites for later!</p>
+                                <a href="{{ url_for('tours.list_tours') }}" class="btn btn-book-now"><i class="fas fa-search"></i> Browse Tours</a>
+                            </div>
+                        `;
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error removing from wishlist:', error);
+                alert('Error removing tour from wishlist. Please try again.');
+            });
+        });
+    });
+    
+    // Handle image loading errors
+    document.querySelectorAll('.wishlist-tour-img img').forEach(img => {
+        img.addEventListener('error', function() {
+            this.src = "{{ url_for('static', filename='images/default-tour.jpg') }}";
+        });
+    });
+</script>
+{% endblock %}

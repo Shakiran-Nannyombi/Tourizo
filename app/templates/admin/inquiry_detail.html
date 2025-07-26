@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Inquiry Details{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="card shadow-sm p-4">
+        <h2 class="mb-4 text-primary">Inquiry from {{ inquiry.user.username if inquiry.user else 'Guest' }}</h2>
+
+        <div class="mb-3">
+            <h5 class="text-muted">Subject:</h5>
+            <p class="fs-5">{{ inquiry.subject }}</p>
+        </div>
+
+        <div class="mb-3">
+            <h5 class="text-muted">Message:</h5>
+            <p class="fs-6" style="white-space: pre-wrap;">{{ inquiry.message }}</p>
+        </div>
+
+        <div class="mb-4">
+            <h6 class="text-secondary">Submitted on:</h6>
+            <p>{{ inquiry.timestamp.strftime('%Y-%m-%d %H:%M') }}</p>
+        </div>
+
+        <!-- Hexagonal Button -->
+        <a href="{{ url_for('admin.inquiries') }}" class="btn hex-btn px-5 py-3 fw-bold">
+            ← Back to inquiries
+        </a>
+    </div>
+</div>
+
+<style>
+    /* Container and card styling */
+    .card {
+        border-radius: 1rem;
+        background: #ffffff;
+    }
+
+    /* Hexagonal button styling */
+    .hex-btn {
+        position: relative;
+        display: inline-block;
+        color: #fff;
+        background: linear-gradient(135deg, #0062E6, #33AEFF);
+        font-weight: 700;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        cursor: pointer;
+        user-select: none;
+        text-align: center;
+        border: none;
+        outline: none;
+        padding: 0.75rem 2.5rem;
+        clip-path: polygon(25% 0%, 75% 0%,
+                100% 50%, 75% 100%,
+                25% 100%, 0% 50%);
+        transition: background 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 98, 230, 0.4);
+        text-decoration: none;
+    }
+
+    .hex-btn:hover,
+    .hex-btn:focus {
+        background: linear-gradient(135deg, #0048b0, #1a8cff);
+        box-shadow: 0 8px 20px rgba(0, 72, 176, 0.6);
+        text-decoration: none;
+        color: #ffffff;
+    }
+
+    /* Make sure the hex shape stays on smaller screens */
+    @media (max-width: 576px) {
+        .hex-btn {
+            padding: 0.6rem 1.8rem;
+            font-size: 1rem;
+        }
+    }
+</style>
+{% endblock %}

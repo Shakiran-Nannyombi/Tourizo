@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+
+{% block title %}Popular Destinations{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="bg-primary text-white py-5">
+    <div class="container text-center">
+        <h1 class="display-4 mb-3">🌍 Popular Destinations</h1>
+        <p class="lead">Discover the most booked travel experiences</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    {% if popular_destinations %}
+        
+        <!-- Quick Stats -->
+        <div class="row mb-5">
+            <div class="col-md-4">
+                <div class="card text-center border-0 shadow-sm">
+                    <div class="card-body">
+                        <h3 class="text-primary">{{ popular_destinations|length }}</h3>
+                        <p class="mb-0">Destinations</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center border-0 shadow-sm">
+                    <div class="card-body">
+                        <h3 class="text-success">{{ popular_destinations[0].booking_count if popular_destinations else 0 }}</h3>
+                        <p class="mb-0">Top Bookings</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center border-0 shadow-sm">
+                    <div class="card-body">
+                        <h3 class="text-warning">⭐</h3>
+                        <p class="mb-0">Most Popular</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Destinations Cards -->
+        <div class="row">
+            {% for dest in popular_destinations %}
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-header bg-gradient text-white" style="background: linear-gradient(45deg, #007bff, #6610f2);">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">📍 {{ dest.destination }}</h5>
+                            <span class="badge bg-light text-dark">#{{ loop.index }}</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="card-title">{{ dest.title }}</h6>
+                        
+                        <!-- Progress Bar -->
+                        <div class="mb-3">
+                            <small class="text-muted">Popularity</small>
+                            <div class="progress mt-1" style="height: 10px;">
+                                <div class="progress-bar bg-success" 
+                                     style="width: {{ (dest.booking_count * 100 / popular_destinations[0].booking_count)|round }}%">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Booking Count -->
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-primary me-2">👥 {{ dest.booking_count }} bookings</span>
+                            <small class="text-muted">{{ (dest.booking_count * 100 / popular_destinations[0].booking_count)|round }}% of top destination</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Table View (Alternative) -->
+        <div class="mt-5">
+            <h4 class="mb-4">📊 Detailed Rankings</h4>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Rank</th>
+                            <th>Destination</th>
+                            <th>Tour</th>
+                            <th>Bookings</th>
+                            <th>Popularity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for dest in popular_destinations %}
+                        <tr>
+                            <td><strong>{{ loop.index }}</strong></td>
+                            <td>📍 {{ dest.destination }}</td>
+                            <td>{{ dest.title }}</td>
+                            <td>
+                                <span class="badge bg-primary">{{ dest.booking_count }}</span>
+                            </td>
+                            <td>
+                                <div class="progress" style="width: 100px; height: 20px;">
+                                    <div class="progress-bar" 
+                                         style="width: {{ (dest.booking_count * 100 / popular_destinations[0].booking_count)|round }}%">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    {% else %}
+        <!-- No Data State -->
+        <div class="text-center py-5">
+            <div class="mb-4">
+                <h1 style="font-size: 5rem;">🗺️</h1>
+            </div>
+            <h3 class="text-muted">No Data Available Yet</h3>
+            <p class="text-muted">Popular destinations will appear here once you have bookings.</p>
+            
+            <div class="alert alert-info mt-4">
+                <h6><strong>To see data:</strong></h6>
+                <ul class="list-unstyled">
+                    <li>✅ Add destination info to your tours</li>
+                    <li>✅ Wait for customers to book tours</li>
+                    <li>✅ Data will appear automatically</li>
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+.card {
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.progress {
+    border-radius: 10px;
+}
+
+.progress-bar {
+    border-radius: 10px;
+}
+
+.badge {
+    font-size: 0.9em;
+}
+</style>
+
+{% endblock %}

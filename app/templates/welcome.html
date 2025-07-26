@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - Tour Management</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/welcome.css') }}">
+</head>
+
+<body>
+    <!-- ==============================================
+         HEADER AND UTILITY COMPONENTS
+    ============================================== -->
+    <!-- Place this where your current video-background div is (around line 120) -->
+    <div class="video-background">
+        <video autoplay muted loop playsinline id="bg-video">
+            <!-- Primary Safari Video -->
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-wild-animals-in-a-safari-park-1494-large.mp4"
+                type="video/mp4">
+
+            <!-- Fallback Video Options -->
+            <source
+                src="https://cdn.videvo.net/videvo_files/video/free/2019-08/large_watermarked/190301_11_Durban_4k_013_preview.mp4"
+                type="video/mp4">
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-going-on-a-safari-1580-large.mp4"
+                type="video/mp4">
+
+            <!-- Ultimate Fallback Image -->
+            <img src="https://images.unsplash.com/photo-1503917988258-f87a78e3c995?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+                alt="Safari background">
+        </video>
+        <div class="video-credit">
+            <a href="https://mixkit.co/" target="_blank" rel="noopener">Free stock videos by Mixkit</a>
+        </div>
+    </div>
+
+    <!-- Live Chat -->
+    <div class="live-chat">
+        <button class="chat-toggle" onclick="toggleChat()">
+            <i class="fas fa-comments"></i>
+        </button>
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <i class="fas fa-headset"></i> Live Support
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div style="padding: 10px; background: #f0f0f0; border-radius: 10px; margin-bottom: 10px;">
+                    <strong>Support:</strong> Hi! How can I help you plan your perfect tour today?
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" class="chat-input" placeholder="Type your message..." id="chatInput">
+                <button class="chat-send" onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Dark Mode Toggle -->
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()">
+        <i class="fas fa-moon" id="darkModeIcon"></i>
+    </button>
+
+    <!-- Translate Widget -->
+    <div class="translate-widget" id="google_translate_element"></div>
+
+
+
+    <!-- Instant Search -->
+    <div class="instant-search">
+        <input type="text" class="search-input" placeholder="🔍 Search tours instantly..."
+            oninput="instantSearch(this.value)">
+        <div class="search-results" id="searchResults"></div>
+    </div>
+
+    <!-- Floating Elements -->
+    <div class="floating-elements">
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+    </div>
+
+    <!-- Top Right Auth Buttons -->
+    <div class="top-right-auth-buttons">
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary hero-signup-btn">
+            <i class="fas fa-user-plus"></i> Register
+        </a>
+        <a href="{{ url_for('auth.login') }}" class="btn btn-secondary hero-login-btn">
+            <i class="fas fa-sign-in-alt"></i> Login
+        </a>
+    </div>
+
+    <!-- ==============================================
+         MAIN CONTENT SECTIONS
+    ============================================== -->
+
+    <!-- HERO SECTION -->
+    <div class="hero-section">
+        <div class="hero-slider">
+            <div class="hero-slide active"
+                style="background-image: url('https://images.unsplash.com/photo-1503917988258-f87a78e3c995?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
+            </div>
+            <div class="hero-slide"
+                style="background-image: url('https://images.unsplash.com/photo-1516426122078-c23e76319801?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
+            </div>
+            <div class="hero-slide"
+                style="background-image: url('https://images.unsplash.com/photo-1551632811-561732d1e306?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
+            </div>
+            <div class="hero-slide"
+                style="background-image: url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
+            </div>
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="hero-content">
+            <h3 class="welcome-heading">Welcome to Tourizo</h3>
+            <h1 class="hero-title">Discover the Magic of <span class="highlight">African Adventures</span></h1>
+            <h2 class="hero-subtitle">Embark on unforgettable journeys across Africa's most breathtaking destinations.
+            </h2>
+            <p class="hero-description">
+                From wildlife safaris to cultural experiences, create memories that last a lifetime.
+            </p>
+            <div class="btn-container">
+                <a href="/tours" class="btn btn-primary">
+                    <i class="fas fa-compass"></i> Explore Tours
+                </a>
+            </div>
+            <div class="slider-dots"></div>
+        </div>
+        <div class="scroll-indicator" id="scroll-indicator">
+            <span class="scroll-arrow"></span>
+            <span class="scroll-text">Scroll Down</span>
+        </div>
+    </div>
+
+    <!-- FEATURES SECTION -->
+    <div class="features-section">
+        <div class="features-container">
+            <h2 class="features-title">Why Choose Our Tours?</h2>
+            <p class="features-subtitle">Experience the difference with our world-class travel services</p>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-globe-americas"></i>
+                    </div>
+                    <h3 class="feature-title">Global Destinations</h3>
+                    <p class="feature-description">
+                        Explore over 200 destinations worldwide, from exotic tropical paradises to historic cultural
+                        landmarks, all carefully selected for their unique beauty and experiences.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="feature-title">Expert Guides</h3>
+                    <p class="feature-description">
+                        Our certified local guides provide insider knowledge, ensuring you discover hidden gems and
+                        authentic experiences that typical tourists miss.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Safe & Secure</h3>
+                    <p class="feature-description">
+                        Travel with confidence knowing we prioritize your safety with comprehensive insurance, 24/7
+                        support,
+                        and thoroughly vetted accommodations.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DESTINATIONS PREVIEW -->
+    <div class="destinations-preview">
+        <div class="destinations-container">
+            <h2 class="destinations-title">Wildlife & Nature Adventures</h2>
+
+            <div class="destinations-grid">
+                <div class="destination-card"
+                    style="background-image: url('https://images.unsplash.com/photo-1504173010664-32509aeebb62?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
+                    <div class="destination-overlay">
+                        <div class="destination-icon">🦁</div>
+                        <h3 class="destination-name">Safari Expeditions</h3>
+                        <p class="destination-description">Lions, elephants, and the African savanna</p>
+                    </div>
+                </div>
+
+                <div class="destination-card"
+                    style="background-image: url('https://images.unsplash.com/photo-1550853024-fae8cd4be47f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
+                    <div class="destination-overlay">
+                        <div class="destination-icon">🐒</div>
+                        <h3 class="destination-name">Rainforest Wonders</h3>
+                        <p class="destination-description">Exotic birds, monkeys, and lush jungles</p>
+                    </div>
+                </div>
+
+                <div class="destination-card"
+                    style="background-image: url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
+                    <div class="destination-overlay">
+                        <div class="destination-icon">🐧</div>
+                        <h3 class="destination-name">Arctic Wildlife</h3>
+                        <p class="destination-description">Polar bears, penguins, and icy landscapes</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-container">
+                <a href="/login" class="btn btn-primary">
+                    <i class="fas fa-compass"></i> Explore Wildlife Tours
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- SPECIAL OFFERS SECTION -->
+    <div class="offers-section">
+        <div class="section-container">
+            <h2 class="section-title">Special Offers for Couples</h2>
+            <p class="section-subtitle">Enjoy exclusive discounts and romantic getaway packages designed just for you
+                and
+                your loved one.</p>
+            <div class="offers-grid">
+                <div class="offer-card">
+                    <div class="card-image">
+                        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80"
+                            alt="Romantic Couple" />
+                    </div>
+                    <div class="card-content">
+                        <h4>10% Off Honeymoon Tours</h4>
+                        <p>Celebrate your love with unforgettable honeymoon adventures across breathtaking destinations.
+                        </p>
+                        <div class="card-cta">
+                            <span class="discount-badge">Save 10%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="offer-card">
+                    <div class="card-image">
+                        <img src="https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=600&q=80"
+                            alt="Spa Experience" />
+                    </div>
+                    <div class="card-content">
+                        <h4>Couple's Spa Experience</h4>
+                        <p>Relax together with complimentary spa sessions on select packages for ultimate relaxation.
+                        </p>
+                        <div class="card-cta">
+                            <span class="offer-badge">Free Spa</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="offer-card">
+                    <div class="card-image">
+                        <img src="https://images.unsplash.com/photo-1499346030926-9a72daac6c63?auto=format&fit=crop&w=600&q=80"
+                            alt="Dinner Under Stars" />
+                    </div>
+                    <div class="card-content">
+                        <h4>Private Dinners Under the Stars</h4>
+                        <p>Romantic candlelit dinners in breathtaking safari settings with stunning sunset views.</p>
+                        <div class="card-cta">
+                            <span class="exclusive-badge">Exclusive</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INSURANCE GUIDE SECTION -->
+    <div class="insurance-guide-section">
+        <div class="section-container">
+            <h2 class="section-title">Travel Insurance Guide</h2>
+            <p class="section-subtitle">We care about your safety! Here's how our comprehensive travel insurance works
+                and
+                how you can make the most of it during your journey.</p>
+            <div class="insurance-grid">
+                <div class="insurance-card">
+                    <div class="card-image">
+                        <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=600&q=80"
+                            alt="Medical Help" />
+                    </div>
+                    <div class="card-content">
+                        <h4>Medical Emergencies Coverage</h4>
+                        <p>Stay fully protected against unexpected health issues with comprehensive medical coverage
+                            worldwide.</p>
+                        <ul class="feature-list">
+                            <li>Up to $100,000 coverage</li>
+                            <li>Emergency evacuation</li>
+                            <li>Hospital expenses</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="insurance-card">
+                    <div class="card-image">
+                        <img src="https://images.unsplash.com/photo-1588776814546-2f3b0d1aa26d?auto=format&fit=crop&w=600&q=80"
+                            alt="24/7 Assistance" />
+                    </div>
+                    <div class="card-content">
+                        <h4>24/7 Support Hotline</h4>
+                        <p>Get immediate help anytime you need it, wherever you are in the world with our dedicated
+                            support
+                            team.</p>
+                        <ul class="feature-list">
+                            <li>Multilingual support</li>
+                            <li>Emergency hotline</li>
+                            <li>Local assistance</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="insurance-card">
+                    <div class="card-image">
+                        <img src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=600&q=80"
+                            alt="Claim Process" />
+                    </div>
+                    <div class="card-content">
+                        <h4>Easy Claim Process</h4>
+                        <p>Submit your claims quickly and efficiently with our streamlined process and dedicated support
+                            team.</p>
+                        <ul class="feature-list">
+                            <li>Online claim submission</li>
+                            <li>Fast processing</li>
+                            <li>Dedicated claim agents</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- UPCOMING INTERNATIONAL PACKAGES -->
+    <div class="upcoming-packages-section">
+        <div class="section-container">
+            <h2 class="section-title">Upcoming International Packages</h2>
+            <p class="section-subtitle">Discover our most exciting upcoming tours to international destinations</p>
+            <div class="packages-grid">
+                <div class="package-card">
+                    <div class="card-image">
+                        <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=600&q=80"
+                            alt="Europe Tour" />
+                    </div>
+                    <div class="card-content">
+                        <h4>European Grand Tour</h4>
+                        <p>Explore the cultural capitals of Europe in this comprehensive 14-day journey.</p>
+                        <div class="card-cta">
+                            <span class="price-badge">From $2,999</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chat functionality
+        function toggleChat() {
+            const chatWindow = document.getElementById('chatWindow');
+            chatWindow.style.display = chatWindow.style.display === 'none' ? 'flex' : 'none';
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const messages = document.getElementById('chatMessages');
+
+            if (input.value.trim()) {
+                const messageDiv = document.createElement('div');
+                messageDiv.style.cssText = 'padding: 10px; background: #e3f2fd; border-radius: 10px; margin-bottom: 10px; text-align: right;';
+                messageDiv.innerHTML = `<strong>You:</strong> ${input.value}`;
+                messages.appendChild(messageDiv);
+
+                input.value = '';
+                messages.scrollTop = messages.scrollHeight;
+
+                // Auto response
+                setTimeout(() => {
+                    const responseDiv = document.createElement('div');
+                    responseDiv.style.cssText = 'padding: 10px; background: #f0f0f0; border-radius: 10px; margin-bottom: 10px;';
+                    responseDiv.innerHTML = '<strong>Support:</strong> Thank you for your message! Our team will get back to you shortly.';
+                    messages.appendChild(responseDiv);
+                    messages.scrollTop = messages.scrollHeight;
+                }, 1000);
+            }
+        }
+
+
+
+        // Dark mode toggle
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const icon = document.getElementById('darkModeIcon');
+            icon.className = document.body.classList.contains('dark-mode') ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // Translation functionality (placeholder)
+        function translatePage(language) {
+            console.log('Translating to:', language);
+            // This would typically integrate with a translation service
+        }
+
+        // Search functionality
+        function instantSearch(query) {
+            const results = document.getElementById('searchResults');
+            if (query.length > 2) {
+                results.innerHTML = `
+                    <div style="padding: 10px; background: white; border-radius: 5px; margin-top: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                        <strong>Safari Adventure</strong><br>
+                        <small>3-day wildlife safari in Kenya</small>
+                    </div>
+                    <div style="padding: 10px; background: white; border-radius: 5px; margin-top: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                        <strong>Cultural Tour</strong><br>
+                        <small>5-day cultural experience in Tanzania</small>
+                    </div>
+                `;
+                results.style.display = 'block';
+            } else {
+                results.style.display = 'none';
+            }
+        }
+
+        // Hero slider functionality
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.hero-slide');
+
+        function nextSlide() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+
+        // Auto-advance slides
+        setInterval(nextSlide, 5000);
+
+        // Scroll indicator
+        window.addEventListener('scroll', function () {
+            const scrollIndicator = document.getElementById('scroll-indicator');
+            if (window.scrollY > 100) {
+                scrollIndicator.style.opacity = '0';
+            } else {
+                scrollIndicator.style.opacity = '1';
+            }
+        });
+
+        // Initialize dots for slider
+        function initSliderDots() {
+            const dotsContainer = document.querySelector('.slider-dots');
+            slides.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.className = 'slider-dot';
+                if (index === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => goToSlide(index));
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        function goToSlide(index) {
+            slides[currentSlide].classList.remove('active');
+            document.querySelectorAll('.slider-dot')[currentSlide].classList.remove('active');
+            currentSlide = index;
+            slides[currentSlide].classList.add('active');
+            document.querySelectorAll('.slider-dot')[currentSlide].classList.add('active');
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            initSliderDots();
+        });
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,es,fr,de,it,sw',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+
+    </script>
+    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+
+</html>

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}Booking Report{% endblock %}
+{% block content %}
+<div class="container-fluid travel-report-container" style="background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'); background-size: cover; background-position: center; min-height: 100vh; padding: 30px 0;">
+    <div class="container">
+        <div class="card shadow-lg border-0">
+            <div class="card-header travel-header" style="background: linear-gradient(to right, #1a6fc9, #19b3d3); color: white;">
+                <h2 class="mb-0"><i class="fas fa-calendar-alt mr-2"></i> Monthly Booking Report</h2>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+                        <thead class="travel-thead" style="background-color: #f8f9fa; color: #495057;">
+                            <tr>
+                                <th><i class="fas fa-calendar-year mr-1"></i> Year</th>
+                                <th><i class="fas fa-calendar-week mr-1"></i> Month</th>
+                                <th><i class="fas fa-ticket-alt mr-1"></i> Total Bookings</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in bookings_by_month %}
+                            <tr class="travel-data-row">
+                                <td>{{ row.year }}</td>
+                                <td>{{ row.month }}</td>
+                                <td><span class="badge badge-primary" style="background-color: #19b3d3; font-size: 0.9rem;">{{ row.total_bookings }}</span></td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted py-4">
+                                    <i class="fas fa-exclamation-circle fa-2x mb-3" style="color: #6c757d;"></i>
+                                    <p class="h5">No bookings data available</p>
+                                    <small>Start tracking your travel bookings to see analytics here</small>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                {% if bookings_by_month %}
+                <div class="mt-4 text-center">
+                    <a href="#" class="btn btn-travel" style="background-color: #1a6fc9; color: white;">
+                        <i class="fas fa-download mr-2"></i>Export Report
+                    </a>
+                    <a href="#" class="btn btn-outline-travel ml-2" style="border-color: #19b3d3; color: #19b3d3;">
+                        <i class="fas fa-chart-line mr-2"></i>View Analytics
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            <div class="card-footer text-muted travel-footer" style="background-color: #f8f9fa;">
+                <small>Report generated on {{ now.strftime('%Y-%m-%d') }}</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .travel-report-container {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .travel-header {
+        border-radius: 0 !important;
+    }
+    .travel-thead {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+    }
+    .travel-data-row:hover {
+        background-color: rgba(25, 179, 211, 0.1) !important;
+        transform: translateX(2px);
+        transition: all 0.2s ease;
+    }
+    .btn-travel:hover {
+        background-color: #145da0 !important;
+        transform: translateY(-1px);
+    }
+    .btn-outline-travel:hover {
+        background-color: #19b3d3 !important;
+        color: white !important;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Your Adventure - Safari Tours</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2d5016;
+            --secondary-color: #8bc34a;
+            --accent-color: #ff6b35;
+            --warm-gold: #f4a261;
+            --earth-brown: #8b4513;
+            --sky-blue: #87ceeb;
+            --sunset-orange: #ff8c42;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .hero-section {
+            background: linear-gradient(rgba(45, 80, 22, 0.7), rgba(139, 195, 74, 0.7)), 
+                        url('https://images.unsplash.com/photo-1516426122078-c23e76319801?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            padding: 4rem 0 3rem;
+            text-align: center;
+            margin-bottom: 0;
+            position: relative;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 25px 25px 0 0;
+            margin-top: -50px;
+            position: relative;
+            z-index: 3;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.1);
+            min-height: 100vh;
+            padding: 3rem 0 2rem;
+        }
+
+        .container {
+            max-width: 900px;
+        }
+
+        .booking-section {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            border: none;
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .booking-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15);
+        }
+
+        .booking-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title i {
+            color: var(--accent-color);
+            font-size: 1.3rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid #e3f2fd;
+            border-radius: 12px;
+            padding: 0.8rem 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.25rem rgba(139, 195, 74, 0.15);
+            background: white;
+            transform: translateY(-2px);
+        }
+
+        .form-control:hover, .form-select:hover {
+            border-color: var(--warm-gold);
+        }
+
+        #total-price {
+            font-weight: 700;
+            color: var(--accent-color);
+            font-size: 1.8rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .price-display {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 2px solid var(--warm-gold);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .price-display::before {
+            content: '💰';
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 2rem;
+            opacity: 0.3;
+        }
+
+        .payment-method-card {
+            border: 2px solid #e8f5e8;
+            border-radius: 15px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: linear-gradient(145deg, #ffffff, #f8fffe);
+        }
+
+        .payment-method-card:hover {
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 195, 74, 0.15);
+        }
+
+        .payment-method-card.selected {
+            border-color: var(--primary-color);
+            background: linear-gradient(145deg, #e8f5e8, #f1f8e9);
+            box-shadow: 0 5px 20px rgba(45, 80, 22, 0.2);
+        }
+
+        .form-check-input:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .form-check-label {
+            font-weight: 500;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+        }
+
+        .payment-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            padding: 4px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .payment-details {
+            background: linear-gradient(145deg, #f8fffe, #e8f5e8);
+            border: 2px solid var(--secondary-color);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .payment-details::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--warm-gold));
+        }
+
+        .payment-details h5 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 15px;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--accent-color), var(--warm-gold));
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(45, 80, 22, 0.3);
+        }
+
+        .btn-outline-secondary {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 15px;
+            padding: 0.8rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-secondary:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .alert {
+            border-radius: 12px;
+            border: none;
+            padding: 1rem 1.5rem;
+            font-weight: 500;
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            color: #1565c0;
+            border-left: 4px solid #2196f3;
+        }
+
+        .modal-content {
+            border-radius: 20px;
+            border: none;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 1.5rem 2rem;
+        }
+
+        .modal-title {
+            font-weight: 600;
+        }
+
+        .btn-close {
+            filter: invert(1);
+        }
+
+        .modal-body {
+            padding: 2rem;
+            background: #fafafa;
+        }
+
+        .modal-body h6 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-body h6:first-child {
+            margin-top: 0;
+        }
+
+        .invalid-feedback {
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .spinner-border {
+            width: 1.2rem;
+            height: 1.2rem;
+        }
+
+        .travel-icons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+            opacity: 0.7;
+        }
+
+        .travel-icons i {
+            font-size: 2rem;
+            color: var(--warm-gold);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .travel-icons i:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .travel-icons i:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        .travel-icons i:nth-child(4) {
+            animation-delay: 1.5s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .form-floating {
+            position: relative;
+        }
+
+        .form-floating > .form-control:focus ~ label,
+        .form-floating > .form-control:not(:placeholder-shown) ~ label {
+            opacity: 0.65;
+            transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .booking-section {
+                padding: 1.5rem;
+                margin-left: 1rem;
+                margin-right: 1rem;
+            }
+
+            .main-container {
+                padding: 2rem 0 1rem;
+            }
+
+            .travel-icons {
+                gap: 1rem;
+            }
+
+            .travel-icons i {
+                font-size: 1.5rem;
+            }
+        }
+
+        .destinations-preview {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            padding: 0.5rem 0;
+        }
+
+        .destination-card {
+            min-width: 120px;
+            height: 80px;
+            border-radius: 12px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .destination-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(0, 0, 0, 0.4), transparent);
+        }
+
+        .destination-card span {
+            position: absolute;
+            bottom: 5px;
+            left: 8px;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="hero-content">
+            <div class="container">
+                <h1 class="hero-title">
+                    <i class="fas fa-compass"></i>
+                    Adventure Awaits
+                </h1>
+                <p class="hero-subtitle">
+                    Book your dream safari experience and create memories that will last a lifetime
+                </p>
+                <div class="travel-icons">
+                    <i class="fas fa-mountain"></i>
+                    <i class="fas fa-binoculars"></i>
+                    <i class="fas fa-camera"></i>
+                    <i class="fas fa-tent"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="container">
+            <!-- Destinations Preview -->
+            <div class="destinations-preview">
+                <div class="destination-card" style="background-image: url('https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=400&h=300&fit=crop');">
+                    <span>Serengeti</span>
+                </div>
+                <div class="destination-card" style="background-image: url('https://images.unsplash.com/photo-1549366021-9f761d040ab2?w=400&h=300&fit=crop');">
+                    <span>Murchison</span>
+                </div>
+                <div class="destination-card" style="background-image: url('https://images.unsplash.com/photo-1516905365624-24e3ac0b6629?w=400&h=300&fit=crop');">
+                    <span>Queen Elizabeth</span>
+                </div>
+                <div class="destination-card" style="background-image: url('https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=400&h=300&fit=crop');">
+                    <span>Bwindi Forest</span>
+                </div>
+                <div class="destination-card" style="background-image: url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop');">
+                    <span>Lake Mburo</span>
+                </div>
+            </div>
+
+            <form id="bookingForm" method="POST" action="{{ url_for('bookings.book') }}" class="mb-4">
+                {{ form.hidden_tag() }}
+
+                <div class="booking-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-user-circle"></i>
+                        Personal Information
+                    </h3>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.full_name.label(class="form-label") }}
+                            {{ form.full_name(class="form-control", placeholder="Enter your full name") }}
+                            {% for error in form.full_name.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ form.email.label(class="form-label") }}
+                            {{ form.email(class="form-control", placeholder="your.email@example.com") }}
+                            {% for error in form.email.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.phone.label(class="form-label") }}
+                            {{ form.phone(class="form-control", placeholder="+256 XXX XXX XXX") }}
+                            {% for error in form.phone.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ form.num_people.label(class="form-label") }}
+                            {{ form.num_people(class="form-control", min=1, id="num_people") }}
+                            {% for error in form.num_people.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.tour_id.label(class="form-label") }}
+                            {{ form.tour_id(class="form-select", id="tour_id") }}
+                            {% for error in form.tour_id.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ form.booking_date.label(class="form-label") }}
+                            {{ form.booking_date(class="form-control") }}
+                            {% for error in form.booking_date.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.booking_time.label(class="form-label") }}
+                        {{ form.booking_time(class="form-control") }}
+                        {% for error in form.booking_time.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="price-display">
+                        <p class="mb-0">Total Price: <span id="total-price">0.00</span> UGX</p>
+                        <small class="text-muted">Price includes all taxes and fees</small>
+                    </div>
+                </div>
+
+                <div class="booking-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-credit-card"></i>
+                        Payment Method
+                    </h3>
+                    
+                    <div class="mb-3">
+                        {{ form.payment_method.label(class="form-label") }}
+                        
+                        <div class="payment-method-card" onclick="selectPaymentMethod('momo')">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="payment_method" id="momo" value="momo" checked>
+                                <label class="form-check-label" for="momo">
+                                    <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=32&h=32&fit=crop&crop=center" alt="Mobile Money" class="payment-icon">
+                                    <div>
+                                        <strong>Mobile Money</strong>
+                                        <small class="d-block text-muted">MTN, Airtel, Africell</small>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="payment-method-card" onclick="selectPaymentMethod('card')">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="payment_method" id="card" value="card">
+                                <label class="form-check-label" for="card">
+                                    <img src="https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?w=32&h=32&fit=crop&crop=center" alt="Credit Card" class="payment-icon">
+                                    <div>
+                                        <strong>Credit/Debit Card</strong>
+                                        <small class="d-block text-muted">Visa, Mastercard accepted</small>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="payment-method-card" onclick="selectPaymentMethod('bank')">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="payment_method" id="bank" value="bank">
+                                <label class="form-check-label" for="bank">
+                                    <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=32&h=32&fit=crop&crop=center" alt="Bank Transfer" class="payment-icon">
+                                    <div>
+                                        <strong>Bank Transfer</strong>
+                                        <small class="d-block text-muted">Secure bank to bank</small>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Money Details -->
+                    <div class="payment-details" id="momo-details">
+                        <h5><i class="fas fa-mobile-alt"></i> Mobile Money Details</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="momo_provider" class="form-label">Provider</label>
+                                <select class="form-select" name="momo_provider" id="momo_provider" required>
+                                    <option value="">Select provider</option>
+                                    <option value="MTN">MTN Mobile Money</option>
+                                    <option value="Airtel">Airtel Money</option>
+                                    <option value="Africell">Africell Money</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="momo_number" class="form-label">Mobile Number</label>
+                                <input type="tel" class="form-control" name="momo_number" id="momo_number" placeholder="+2567XXXXXXXX" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="momo_name" class="form-label">Account Holder Name</label>
+                            <input type="text" class="form-control" name="momo_name" id="momo_name" required>
+                        </div>
+                    </div>
+
+                    <!-- Card Details -->
+                    <div class="payment-details d-none" id="card-details">
+                        <h5><i class="fas fa-credit-card"></i> Card Payment Details</h5>
+                        <div class="mb-3">
+                            <label for="card_number" class="form-label">Card Number</label>
+                            <input type="text" class="form-control" name="card_number" id="card_number" placeholder="1234 5678 9012 3456" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="card_expiry" class="form-label">Expiry Date</label>
+                                <input type="text" class="form-control" name="card_expiry" id="card_expiry" placeholder="MM/YY" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="card_cvv" class="form-label">CVV</label>
+                                <input type="text" class="form-control" name="card_cvv" id="card_cvv" placeholder="123" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="card_name" class="form-label">Cardholder Name</label>
+                            <input type="text" class="form-control" name="card_name" id="card_name" required>
+                        </div>
+                    </div>
+
+                    <!-- Bank Details -->
+                    <div class="payment-details d-none" id="bank-details">
+                        <h5><i class="fas fa-university"></i> Bank Transfer Details</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="bank_name" class="form-label">Bank Name</label>
+                                <select class="form-select" name="bank_name" id="bank_name" required>
+                                    <option value="">Select bank</option>
+                                    <option value="Stanbic Bank">Stanbic Bank</option>
+                                    <option value="Centenary Bank">Centenary Bank</option>
+                                    <option value="DFCU Bank">DFCU Bank</option>
+                                    <option value="Standard Chartered">Standard Chartered</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="account_number" class="form-label">Account Number</label>
+                                <input type="text" class="form-control" name="account_number" id="account_number" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="account_name" class="form-label">Account Holder Name</label>
+                            <input type="text" class="form-control" name="account_name" id="account_name" required>
+                        </div>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <small>Please use your booking ID as the reference when making the transfer.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="booking-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-comment-alt"></i>
+                        Additional Information
+                    </h3>
+                    
+                    <div class="mb-3">
+                        {{ form.special_requests.label(class="form-label") }}
+                        {{ form.special_requests(class="form-control", placeholder="Let us know about dietary restrictions, special occasions, accessibility needs, or any other requests...", rows="4") }}
+                    </div>
+
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="checkbox" id="terms" required>
+                        <label class="form-check-label" for="terms">
+                            I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal" class="text-decoration-none">terms and conditions</a> and privacy policy
+                        </label>
+                    </div>
+
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary w-100 py-3" id="submitBtn">
+                            <span id="submitText">
+                                <i class="fas fa-calendar-check me-2"></i>
+                                Book Now & Pay Securely
+                            </span>
+                            <span id="submitSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                        </button>
+                    </div>
+
+                    <div id="formMessages">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                    <div class="alert alert-{{ category }}">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>
+                                        {{ message }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </form>
+
+            <div class="text-center mb-4">
+                <a href="{{ url_for('bookings.my_bookings') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-list me-2"></i>
+                    View My Bookings
+                </a>
+            </div>
+
+            <!-- Trust Badges -->
+            <div class="row text-center mb-4">
+                <div class="col-md-4 mb-3">
+                    <div class="d-flex flex-column align-items-center">
+                        <i class="fas fa-shield-alt text-success mb-2" style="font-size: 2rem;"></i>
+                        <h6 class="text-primary">Secure Payment</h6>
+                        <small class="text-muted">256-bit SSL encryption</small>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="d-flex flex-column align-items-center">
+                        <i class="fas fa-award text-warning mb-2" style="font-size: 2rem;"></i>
+                        <h6 class="text-primary">Certified Guides</h6>
+                        <small class="text-muted">Professional & experienced</small>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="d-flex flex-column align-items-center">
+                        <i class="fas fa-phone-alt text-info mb-2" style="font-size: 2rem;"></i>
+                        <h6 class="text-primary">24/7 Support</h6>
+                        <small class="text-muted">We're always here to help</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terms Modal -->
+    <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="termsModalLabel">
+                        <i class="fas fa-file-contract me-2"></i>
+                        Terms and Conditions
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-4">
+                        <h6><i class="fas fa-calendar-alt me-2"></i>Booking Policy</h6>
+                        <p>All bookings require full payment to confirm your reservation. Prices are subject to change without notice until the booking is confirmed. We recommend booking at least 48 hours in advance to ensure availability.</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h6><i class="fas fa-undo-alt me-2"></i>Cancellation Policy</h6>
+                        <p>Cancellations made more than 14 days prior to the tour date will receive a full refund minus processing fees. Cancellations made 7-14 days prior will receive a 50% refund. No refunds for cancellations within 7 days of the tour.</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h6><i class="fas fa-lock me-2"></i>Payment Security</h6>
+                        <p>All payments are processed through secure, encrypted channels. We do not store your credit card details on our servers. Your personal and financial information is protected with industry-standard security measures.</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6><i class="fas fa-exclamation-triangle me-2"></i>Weather & Safety</h6>
+                        <p>Tours may be cancelled or modified due to weather conditions or safety concerns. In such cases, we will offer alternative dates or full refunds. Please bring appropriate clothing and follow guide instructions at all times.</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6><i class="fas fa-camera me-2"></i>Photography & Privacy</h6>
+                        <p>Photos and videos may be taken during tours for marketing purposes. Please inform us if you prefer not to be photographed. Wildlife photography guidelines will be provided and must be followed.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Initialize tour prices
+        const tourPrices = {{ tour_prices | tojson | safe }};
+        
+        // DOM elements
+        const tourSelect = document.getElementById("tour_id");
+        const numPeopleInput = document.getElementById("num_people");
+        const totalPriceEl = document.getElementById("total-price");
+        const submitBtn = document.getElementById("submitBtn");
+        const submitText = document.getElementById("submitText");
+        const submitSpinner = document.getElementById("submitSpinner");
+        
+        // Update total price calculation
+        function updateTotal() {
+            if (!tourSelect || !numPeopleInput || !totalPriceEl) return;
+            
+            const tourId = parseInt(tourSelect.value);
+            const numPeople = parseInt(numPeopleInput.value) || 1;
+            const price = tourPrices[tourId] || 0;
+            const total = price * numPeople;
+            
+            totalPriceEl.textContent = total.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+            // Add animation effect
+            totalPriceEl.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                totalPriceEl.style.transform = 'scale(1)';
+            }, 200);
+        }
+        
+        // Payment method selection
+        function selectPaymentMethod(method) {
+            // Remove selected class from all cards
+            document.querySelectorAll('.payment-method-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked card
+            event.currentTarget.classList.add('selected');
+            
+            // Check the radio button
+            document.getElementById(method).checked = true;
+            
+            // Toggle payment details
+            togglePaymentDetails();
+        }
+        
+        // Toggle payment details based on selected method
+        function togglePaymentDetails() {
+            const selectedMethod = document.querySelector('input[name="payment_method"]:checked').value;
+            const momoDetails = document.getElementById('momo-details');
+            const cardDetails = document.getElementById('card-details');
+            const bankDetails = document.getElementById('bank-details');
+            
+            // Hide all first with animation
+            [momoDetails, cardDetails, bankDetails].forEach(el => {
+                if (el) {
+                    el.style.opacity = '0';
+                    el.style.transform = 'translateY(-10px)';
+                    setTimeout(() => {
+                        el.classList.add('d-none');
+                    }, 300);
+                }
+            });
+            
+            // Clear required attributes
+            document.querySelectorAll('[id$="-details"] input, [id$="-details"] select').forEach(el => {
+                el.removeAttribute('required');
+            });
+            
+            // Show selected with animation and set required fields
+            setTimeout(() => {
+                let targetElement;
+                switch(selectedMethod) {
+                    case 'momo':
+                        targetElement = momoDetails;
+                        if (momoDetails) {
+                            document.getElementById('momo_provider')?.setAttribute('required', '');
+                            document.getElementById('momo_number')?.setAttribute('required', '');
+                            document.getElementById('momo_name')?.setAttribute('required', '');
+                        }
+                        break;
+                    case 'card':
+                        targetElement = cardDetails;
+                        if (cardDetails) {
+                            document.getElementById('card_number')?.setAttribute('required', '');
+                            document.getElementById('card_expiry')?.setAttribute('required', '');
+                            document.getElementById('card_cvv')?.setAttribute('required', '');
+                            document.getElementById('card_name')?.setAttribute('required', '');
+                        }
+                        break;
+                    case 'bank':
+                        targetElement = bankDetails;
+                        if (bankDetails) {
+                            document.getElementById('bank_name')?.setAttribute('required', '');
+                            document.getElementById('account_number')?.setAttribute('required', '');
+                            document.getElementById('account_name')?.setAttribute('required', '');
+                        }
+                        break;
+                }
+                
+                if (targetElement) {
+                    targetElement.classList.remove('d-none');
+                    setTimeout(() => {
+                        targetElement.style.opacity = '1';
+                        targetElement.style.transform = 'translateY(0)';
+                    }, 50);
+                }
+            }, 300);
+        }
+        
+        // Format card inputs
+        function formatCardNumber(e) {
+            let value = e.target.value.replace(/\s/g, '');
+            let formattedValue = value.replace(/(.{4})/g, '$1 ').trim();
+            e.target.value = formattedValue.substring(0, 19);
+        }
+        
+        function formatExpiryDate(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            e.target.value = value.substring(0, 5);
+        }
+        
+        function restrictToNumbers(e) {
+            e.target.value = e.target.value.replace(/\D/g, '');
+        }
+        
+        // Form submission handler with enhanced UX
+        function handleFormSubmit(e) {
+            // Show loading state with animation
+            submitText.style.opacity = '0';
+            setTimeout(() => {
+                submitText.classList.add('d-none');
+                submitSpinner.classList.remove('d-none');
+                
+                // Add pulsing effect to button
+                submitBtn.style.animation = 'pulse 1.5s infinite';
+            }, 200);
+            
+            submitBtn.disabled = true;
+            
+            // Add a subtle success feedback
+            setTimeout(() => {
+                submitBtn.style.background = 'linear-gradient(135deg, #4CAF50, #81C784)';
+            }, 1000);
+        }
+        
+        // Enhanced form validation
+        function validateForm() {
+            let isValid = true;
+            const requiredFields = document.querySelectorAll('[required]');
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    field.classList.remove('is-invalid');
+                    field.classList.add('is-valid');
+                }
+            });
+            
+            return isValid;
+        }
+        
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up event listeners for price calculation
+            if (tourSelect) {
+                tourSelect.addEventListener('change', updateTotal);
+                // Add visual feedback for tour selection
+                tourSelect.addEventListener('change', function() {
+                    this.style.borderColor = '#4CAF50';
+                    setTimeout(() => {
+                        this.style.borderColor = '';
+                    }, 1000);
+                });
+            }
+            
+            if (numPeopleInput) {
+                numPeopleInput.addEventListener('input', updateTotal);
+                // Add spinner animation for number input
+                numPeopleInput.addEventListener('change', function() {
+                    this.style.transform = 'scale(1.05)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 200);
+                });
+            }
+            
+            // Set up payment method toggling
+            document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
+                radio.addEventListener('change', togglePaymentDetails);
+            });
+            
+            // Set up card input formatting
+            const cardNumberInput = document.getElementById('card_number');
+            const cardExpiryInput = document.getElementById('card_expiry');
+            const cardCvvInput = document.getElementById('card_cvv');
+            
+            if (cardNumberInput) cardNumberInput.addEventListener('input', formatCardNumber);
+            if (cardExpiryInput) cardExpiryInput.addEventListener('input', formatExpiryDate);
+            if (cardCvvInput) cardCvvInput.addEventListener('input', restrictToNumbers);
+            
+            // Set up form submission
+            const form = document.getElementById('bookingForm');
+            if (form) {
+                form.addEventListener('submit', handleFormSubmit);
+                
+                // Add real-time validation
+                form.addEventListener('input', function(e) {
+                    if (e.target.hasAttribute('required')) {
+                        if (e.target.value.trim()) {
+                            e.target.classList.remove('is-invalid');
+                            e.target.classList.add('is-valid');
+                        } else {
+                            e.target.classList.remove('is-valid');
+                            e.target.classList.add('is-invalid');
+                        }
+                    }
+                });
+            }
+            
+            // Initialize payment method cards
+            document.querySelector('.payment-method-card').classList.add('selected');
+            
+            // Initial calculations and setup
+            updateTotal();
+            togglePaymentDetails();
+            
+            // Add smooth scrolling for form sections
+            document.querySelectorAll('.booking-section').forEach((section, index) => {
+                section.style.animationDelay = `${index * 0.1}s`;
+                section.style.animation = 'fadeInUp 0.6s ease-out both';
+            });
+            
+            // Set minimum date to today
+            const dateInput = document.querySelector('input[type="date"]');
+            if (dateInput) {
+                const today = new Date().toISOString().split('T')[0];
+                dateInput.setAttribute('min', today);
+            }
+        });
+        
+        // Add CSS animations dynamically
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = `
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.02); }
+                100% { transform: scale(1); }
+            }
+            
+            .form-control.is-valid, .form-select.is-valid {
+                border-color: #4CAF50;
+                background-image: none;
+            }
+            
+            .form-control.is-invalid, .form-select.is-invalid {
+                border-color: #dc3545;
+                background-image: none;
+            }
+            
+            .payment-details {
+                transition: all 0.3s ease;
+            }
+        `;
+        document.head.appendChild(styleSheet);
+    </script>
+</body>
+</html>

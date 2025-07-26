@@ -1,0 +1,16 @@
+<!-- Toggle Button -->
+<button id="darkToggle" style="position: fixed; bottom: 20px; right: 20px; z-index: 999;" class="btn btn-dark">🌓 Dark Mode</button>
+
+<script>
+  const toggle = document.getElementById('darkToggle');
+  toggle.onclick = () => {
+    document.body.classList.toggle('dark-mode');
+  };
+</script>
+
+<style>
+  .dark-mode {
+    background-color: #121212 !important;
+    color: #f1f1f1 !important;
+  }
+</style>

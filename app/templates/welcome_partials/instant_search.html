@@ -1,0 +1,34 @@
+<div class="form-group mt-4">
+  <input type="text" id="searchInput" class="form-control" placeholder="🔍 Search Tours...">
+</div>
+<ul id="searchResults" class="list-group mt-2"></ul>
+
+<script>
+  const tours = [
+    "Murchison Falls Tour",
+    "Lake Mburo Safari",
+    "Jinja Adventure",
+    "Queen Elizabeth Park",
+    "Zanzibar Vacation",
+    "Mabira Forest",
+    "Fort Portal Hills",
+    "Lake Bunyonyi Camp"
+  ];
+
+  const input = document.getElementById('searchInput');
+  const results = document.getElementById('searchResults');
+
+  input.addEventListener('input', () => {
+    const value = input.value.toLowerCase();
+    results.innerHTML = '';
+    if (value.length > 0) {
+      const filtered = tours.filter(t => t.toLowerCase().includes(value));
+      filtered.forEach(tour => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item';
+        li.innerText = tour;
+        results.appendChild(li);
+      });
+    }
+  });
+</script>

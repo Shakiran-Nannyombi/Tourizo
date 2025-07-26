@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block title %}Revenue Report{% endblock %}
+
+{% block content %}
+<style>
+    .report-container {
+        background: linear-gradient(
+            rgba(255, 255, 255, 0.9), 
+            rgba(255, 255, 255, 0.9)
+        ),
+        url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80');
+        background-size: cover;
+        background-position: center;
+        min-height: 100vh;
+        padding: 50px 15px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    h2 {
+        color: #008080; /* teal-ish */
+        font-weight: 700;
+        margin-bottom: 30px;
+        text-shadow: 1px 1px 2px rgba(0, 128, 128, 0.2);
+    }
+    table {
+        background-color: rgb(11, 191, 92);
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 128, 128, 0.15);
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+    }
+    thead tr {
+        background: linear-gradient(90deg, #87ceeb, #20b2aa); /* skyblue to lightseagreen */
+        color: #1087a8;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+    thead th {
+        padding: 12px 15px;
+        font-weight: 600;
+        text-shadow: 0 1px 1px rgba(0,0,0,0.15);
+        border: none;
+    }
+    tbody tr:hover {
+        background-color: #24bfd4; /* soft cyan */
+        transition: background-color 0.3s ease;
+    }
+    tbody td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #40bfe2;
+        color: #333;
+    }
+    .footer-note {
+        margin-top: 40px;
+        font-size: 0.9rem;
+        color: #555;
+        text-align: center;
+        font-style: italic;
+    }
+</style>
+
+<div class="report-container">
+    <div class="container">
+        <h2 class="text-center"><i class="fas fa-dollar-sign me-2"></i>Monthly Revenue Report</h2>
+        <div class="table-responsive shadow-sm rounded">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Year</th>
+                        <th>Month</th>
+                        <th>Total Revenue (USD)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in revenue_by_month %}
+                    <tr>
+                        <td>{{ row.year }}</td>
+                        <td>{{ row.month }}</td>
+                        <td>${{ "%.2f"|format(row.total_revenue or 0) }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center">No revenue data available.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer-note">
+            Report generated on {{ now.strftime('%B %d, %Y') }} — Powered by your Travel App
+        </div>
+    </div>
+</div>
+{% endblock %}

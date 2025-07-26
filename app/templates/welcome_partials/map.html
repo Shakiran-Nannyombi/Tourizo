@@ -1,0 +1,18 @@
+<h3 class="mt-5 mb-3">📍 Explore Our Destinations</h3>
+<div id="map" style="height: 400px; width: 100%;"></div>
+
+<!-- Leaflet Map -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+  var map = L.map('map').setView([0.3476, 32.5825], 7);  // Kampala center
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  // Example tour markers (add real data later)
+  L.marker([0.44, 33.2]).addTo(map).bindPopup("Jinja Adventure Tour");
+  L.marker([0.15, 30.0]).addTo(map).bindPopup("Queen Elizabeth Safari");
+</script>

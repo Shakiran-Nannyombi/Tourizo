@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Tourizo{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
+    <!-- Moment.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .sidebar {
+            height: 100vh;
+            background-color: #343a40;
+            padding-top: 1rem;
+        }
+
+        .sidebar h5 {
+            color: white;
+        }
+
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .sidebar .nav-link.active,
+        .sidebar .nav-link:hover {
+            color: #fff;
+            background-color: #495057;
+        }
+
+        .alert-info {
+            background-color: #e9f7fd;
+            color: #0c5460;
+        }
+
+        .card-title {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    {% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div class="text-center mb-4">
+                    <h5>Admin Panel</h5>
+                </div>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('admin.dashboard') if current_user.is_authenticated and current_user.is_admin else url_for('auth.user_dashboard') }}">
+                            <i class="fas fa-home me-2"></i> Home
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin.manage_tours') }}">
+                            <i class="fas fa-map-marked-alt me-2"></i> Manage Tours
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin.add_tour') }}">
+                            <i class="fas fa-plus me-2"></i> Add New Tour
+                        </a>
+                    </li>
+                    <li class="nav-item mt-3">
+                        <a class="nav-link" href="{{ url_for('tours.list_tours') }}">
+                            <i class="fas fa-eye me-2"></i> View Public Site
+                        </a>
+                    </li>
+                    {% if current_user.is_authenticated and current_user.is_admin %}
+                    <li class="nav-item mt-3">
+                        <a class="nav-link" href="{{ url_for('admin.dashboard') }}">
+                            <i class="fas fa-user-shield me-2"></i> Admin Dashboard
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                <div class="d-flex justify-content-between flex-wrap align-items-center pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Welcome to Admin Panel</h1>
+                    <div class="btn-toolbar">
+                        <div class="btn-group me-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-user"></i> Admin
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Welcome Message -->
+                <div class="alert alert-info">
+                    <h4 class="alert-heading">Welcome to Tour Management System!</h4>
+                    <p>This is your administrative panel where you can manage all tour packages. Use the sidebar to
+                        navigate between different sections.</p>
+                    <hr>
+                    <p class="mb-0">Get started by adding a new tour or managing existing ones.</p>
+                </div>
+
+                {% block dashboard_content %}
+                <!-- Placeholder for page-specific content -->
+                {% endblock %}
+            </main>
+        </div>
+    </div>
+    {% endblock %}
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Manage Inquiries{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1950&q=80") no-repeat center center fixed;
+        background-size: cover;
+    }
+
+    .inquiries-section {
+        background-color: rgba(255, 255, 255, 0.95);
+        /* Light semi-opaque background */
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+    }
+
+    h2 {
+        font-weight: bold;
+        color: #1b5e20;
+    }
+
+    .table thead th {
+        background-color: #388e3c;
+        color: white;
+    }
+
+    .btn-info {
+        background-color: #0288d1;
+        border-color: #0288d1;
+    }
+
+    .btn-danger {
+        background-color: #d32f2f;
+        border-color: #d32f2f;
+    }
+
+    .btn i {
+        margin-right: 4px;
+    }
+</style>
+
+<div class="container my-5">
+    <div class="inquiries-section">
+        <h2 class="mb-4">User Inquiries</h2>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Message</th>
+                        <th>Submitted</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for inquiry in inquiries %}
+                    <tr>
+                        <td>{{ inquiry.name }}</td>
+                        <td>{{ inquiry.email }}</td>
+                        <td class="text-truncate" style="max-width: 300px;">{{ inquiry.message }}</td>
+                        <td>{{ inquiry.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td class="text-center" style="min-width: 140px;">
+                            <a href="{{ url_for('admin.inquiry_detail', inquiry_id=inquiry.id) }}"
+                                class="btn btn-sm btn-info me-2" title="View Inquiry">
+                                <i class="bi bi-eye"></i> View
+                            </a>
+                            <a href="{{ url_for('admin.inquiry_delete', inquiry_id=inquiry.id) }}"
+                                class="btn btn-sm btn-danger"
+                                onclick="return confirm('Are you sure you want to delete this inquiry?');"
+                                title="Delete Inquiry">
+                                <i class="bi bi-trash"></i> Delete
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center py-4 text-muted">No inquiries found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

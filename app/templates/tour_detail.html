@@ -1,0 +1,329 @@
+{% extends "base.html" %}
+{% block title %}{{ tour.title }} - Tour Details{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tours.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css">
+
+<style>
+    /* Style for the login-to-book link as a button */
+    .btn-login-to-book {
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+        padding: 10px 0;
+        font-weight: 600;
+        color: #fff;
+        background-color: #0d6efd;
+        /* Bootstrap primary blue */
+        border-radius: 0.375rem;
+        text-decoration: none;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .btn-login-to-book:hover,
+    .btn-login-to-book:focus {
+        background-color: #0b5ed7;
+        /* darker blue on hover */
+        box-shadow: 0 0 10px rgba(13, 110, 253, 0.5);
+        text-decoration: none;
+        color: #fff;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Main Site Navbar -->
+<nav class="main-navbar">
+    <div class="container">
+        <a class="navbar-logo" href="{{ url_for('welcome') }}">
+            <i class="fas fa-leaf"></i> Tourizo
+        </a>
+        <div class="nav">
+            <a class="nav-link" href="{{ url_for('auth.user_dashboard') }}">Home</a>
+            <a class="nav-link active" href="{{ url_for('tours.list_tours') }}">Tours</a>
+            <a class="nav-link" href="#">Destinations</a>
+            <a class="nav-link" href="#">About</a>
+            <a class="nav-link" href="#">Contact</a>
+        </div>
+        <div class="navbar-actions">
+            <button class="wishlist-btn" id="navbar-wishlist-btn" title="Wishlist"
+                onclick="window.location.href='/tours/wishlist'">
+                <i class="far fa-heart"></i>
+                <span class="wishlist-badge" id="wishlist-badge">0</span>
+            </button>
+            <form method="POST" action="{{ url_for('auth.logout') }}" style="display:inline;">
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="tour-detail-container">
+    <div class="container">
+        <!-- Breadcrumb Navigation -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-nav">
+                <li class="breadcrumb-item"><a href="{{ url_for('auth.user_dashboard') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('tours.list_tours') }}">Tours</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ tour.title }}</li>
+            </ol>
+        </nav>
+
+        <div class="row">
+            <!-- Main Content Section -->
+            <div class="col-lg-8">
+                <!-- Overview -->
+                <div class="tour-overview-section">
+                    <h1 class="tour-title-main">{{ tour.title }}</h1>
+                    <div class="tour-meta">
+                        <div class="tour-location"><i class="fas fa-map-marker-alt"></i> {{ tour.destination }}</div>
+                        <div class="tour-rating">
+                            <i class="fas fa-star"></i>
+                            {% if tour.average_rating %}
+                            {{ "%.1f"|format(tour.average_rating) }} ({{ tour.reviews|length }} reviews)
+                            {% else %}
+                            Not yet rated
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="tour-badges">
+                        <span class="tour-badge"><i class="fas fa-calendar"></i> {{ tour.duration }} days</span>
+                        <span class="tour-badge"><i class="fas fa-users"></i> {{ tour.min_participants }}-{{
+                            tour.max_participants }} people</span>
+                        <span class="tour-badge"><i class="fas fa-shield-alt"></i> Fully Insured</span>
+                    </div>
+                    <p class="tour-description">{{ tour.description }}</p>
+                </div>
+
+                <!-- Main Image -->
+                <div class="main-image-container">
+                    {% if tour.featured_image %}
+                    <img src="{{ url_for('static', filename=tour.featured_image) }}" alt="{{ tour.title }}"
+                        class="main-image" id="main-tour-image">
+                    {% else %}
+                    <img src="{{ url_for('static', filename='images/tours/zanzibar.jpeg') }}" alt="Zanzibar tour image"
+                        class="main-image" id="main-tour-image">
+                    {% endif %}
+                </div>
+
+                <!-- Dynamic Gallery -->
+                <div class="tour-gallery-section">
+                    {% if tour.image_gallery %}
+                    {% set gallery_images = tour.image_gallery|from_json %}
+                    {% if gallery_images|length > 0 %}
+                    <div class="image-gallery-grid">
+                        {% for img in gallery_images %}
+                        <div class="gallery-item">
+                            <a href="{{ url_for('static', filename='images/tours/' + img) }}"
+                                data-lightbox="tour-gallery" data-title="{{ tour.title }} - Image {{ loop.index }}">
+                                <img src="{{ url_for('static', filename='images/tours/' + img) }}"
+                                    alt="{{ tour.title }} - Image {{ loop.index }}" class="gallery-image">
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="no-gallery-images">
+                        <i class="fas fa-images"></i>
+                        <p>No additional images available for this tour.</p>
+                    </div>
+                    {% endif %}
+                    {% else %}
+                    <div class="no-gallery-images">
+                        <i class="fas fa-images"></i>
+                        <p>No additional images available for this tour.</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Tags -->
+                <div class="tour-tags">
+                    {% if tour.category %}
+                    <span class="tour-tag primary">{{ tour.category.name }}</span>
+                    {% endif %}
+                    {% if tour.difficulty_level %}
+                    <span class="tour-tag secondary">{{ tour.difficulty_level }}</span>
+                    {% endif %}
+                </div>
+
+                <!-- Highlights -->
+                <div class="tour-highlights-section">
+                    <h3 class="section-title">Tour Highlights</h3>
+                    <ul class="highlights-list">
+                        {% if tour.highlights %}
+                        {% for highlight in tour.highlights.split(';') %}
+                        <li><i class="fas fa-check"></i> {{ highlight }}</li>
+                        {% endfor %}
+                        {% else %}
+                        <li><i class="fas fa-check"></i> Professional guide</li>
+                        <li><i class="fas fa-check"></i> Comfortable transportation</li>
+                        <li><i class="fas fa-check"></i> Memorable experiences</li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <!-- Itinerary -->
+                <div class="tour-itinerary-section">
+                    <h3 class="section-title">Detailed Itinerary</h3>
+                    {% if itinerary_days %}
+                    <ul class="itinerary-list">
+                        {% for day in itinerary_days %}
+                        <li class="itinerary-day">
+                            <span class="itinerary-day-circle">Day {{ day.day }}</span>
+                            <div class="itinerary-day-content">
+                                <span class="itinerary-day-title">{{ day.title }}</span>
+                                <span class="itinerary-day-desc">{{ day.description }}</span>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <div class="no-itinerary">
+                        <p>Detailed itinerary coming soon.</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Inclusions -->
+                <div class="tour-inclusions-section">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="inclusion-card">
+                                <h5 class="inclusion-title">What's Included</h5>
+                                <ul class="inclusion-list">
+                                    {% if tour.inclusions %}
+                                    {% for inclusion in tour.inclusions.split(';') %}
+                                    <li><i class="fas fa-check-circle included"></i> {{ inclusion }}</li>
+                                    {% endfor %}
+                                    {% else %}
+                                    <li><i class="fas fa-check-circle included"></i> Airport transfers</li>
+                                    <li><i class="fas fa-check-circle included"></i> All accommodation</li>
+                                    <li><i class="fas fa-check-circle included"></i> Professional guide</li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="inclusion-card">
+                                <h5 class="inclusion-title">Not Included</h5>
+                                <ul class="inclusion-list">
+                                    {% if tour.exclusions %}
+                                    {% for exclusion in tour.exclusions.split(';') %}
+                                    <li><i class="far fa-square not-included"></i> {{ exclusion }}</li>
+                                    {% endfor %}
+                                    {% else %}
+                                    <li><i class="far fa-square not-included"></i> International flights</li>
+                                    <li><i class="far fa-square not-included"></i> Travel insurance</li>
+                                    <li><i class="far fa-square not-included"></i> Personal expenses</li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <div class="tour-sidebar">
+                    <div class="tour-price">${{ "%.0f"|format(tour.price) }}</div>
+                    <div class="price-subtitle">per person</div>
+
+                    <div class="tour-info-item"><span class="info-label">Duration</span><span class="info-value">{{
+                            tour.duration }} days</span></div>
+                    <div class="tour-info-item"><span class="info-label">Group Size</span><span class="info-value">{{
+                            tour.min_participants }}-{{ tour.max_participants }} people</span></div>
+                    <div class="tour-info-item"><span class="info-label">Difficulty</span><span class="info-value">{{
+                            tour.difficulty_level if tour.difficulty_level else 'Moderate' }}</span></div>
+
+                    <!-- Book Now with login check -->
+                    {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('bookings.book', tour_id=tour.id) }}" class="btn btn-book-now">Book Now</a>
+                    {% else %}
+                    <a href="{{ url_for('auth.login', next=url_for('bookings.book', tour_id=tour.id)) }}"
+                        class="btn btn-info btn-login-to-book">
+                        Please log in to book
+                    </a>
+                    <button class="btn btn-book-now" disabled>Book Now</button>
+                    {% endif %}
+
+                    <div class="wishlist-btn-row mt-3">
+                        {% if current_user.is_authenticated %}
+                        <button
+                            class="btn btn-wishlist tour-wishlist{% if tour.id in wishlist_ids %} btn-wishlist-remove active{% else %} btn-wishlist-add{% endif %}"
+                            data-tour-id="{{ tour.id }}" id="wishlist-toggle-btn">
+                            <i class="{% if tour.id in wishlist_ids %}fas{% else %}far{% endif %} fa-heart"></i>
+                            {% if tour.id in wishlist_ids %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}
+                        </button>
+                        {% else %}
+                        <button class="btn btn-wishlist" id="wishlist-login-required">
+                            <i class="far fa-heart"></i>
+                            Add to Wishlist
+                        </button>
+                        {% endif %}
+                    </div>
+
+                    <h3 class="mt-5">Reviews</h3>
+
+                    {% if tour.reviews %}
+                    {% for review in tour.reviews if review.is_approved %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5>{{ review.reviewer_name }}
+                                <small class="text-muted">{{ review.created_at.strftime('%d %b %Y') }}</small>
+                            </h5>
+                            <p>
+                                {% for i in range(review.rating) %}
+                                <i class="fas fa-star text-warning"></i>
+                                {% endfor %}
+                            </p>
+                            <p>{{ review.comment }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <p class="text-muted">No reviews yet for this tour.</p>
+
+                    <div class="text-center mt-3">
+                        <small class="text-muted">Questions about this tour?</small><br>
+                        <a href="{{ url_for('admin.contact') }}" class="contact-link">Contact our travel experts</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        lightbox.option({
+            'resizeDuration': 200,
+            'wrapAround': true,
+            'albumLabel': 'Image %1 of %2'
+        });
+
+        // Wishlist button click redirect for non-authenticated users
+        const wishlistLoginBtn = document.getElementById('wishlist-login-required');
+        if (wishlistLoginBtn) {
+            wishlistLoginBtn.addEventListener('click', function () {
+                window.location.href = "{{ url_for('auth.login', next=request.path) }}";
+            });
+        }
+    });
+</script>
+{% if current_user.is_authenticated %}
+<script>window.isLoggedIn = true;</script>
+{% else %}
+<script>window.isLoggedIn = false;</script>
+{% endif %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='js/user_dashboard_navbar.js') }}"></script>
+<script src="{{ url_for('static', filename='js/tours.js') }}"></script>
+{% endblock %}

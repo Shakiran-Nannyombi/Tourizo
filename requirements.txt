@@ -1,0 +1,52 @@
+# Flask and Extensions
+Flask==2.3.3
+Flask-SQLAlchemy==3.0.5
+Flask-WTF==1.1.1
+WTForms==3.0.1
+Flask-Login==0.6.3
+Flask-Mail==0.9.1
+Flask-Migrate==4.0.5
+Flask-Moment==1.0.5
+PyMySQL==1.1.0
+
+# Database
+SQLAlchemy==2.0.21
+psycopg2-binary==2.9.7  # For PostgreSQL support
+
+# Form Validation
+email-validator==2.0.0
+
+# Date/Time handling
+python-dateutil==2.8.2
+
+# Environment variables
+python-dotenv==1.0.0
+
+# Security
+Werkzeug==2.3.7
+cryptography==41.0.7
+
+# HTTP requests (for external APIs)
+requests==2.31.0
+
+# Image processing (optional)
+Pillow==10.0.1
+
+# Development tools
+python-decouple==3.8  # For configuration management
+
+# Testing (optional)
+pytest==7.4.2
+pytest-flask==1.2.0
+
+# Production server
+gunicorn==21.2.0
+
+# Cloud deployment (optional)
+boto3==1.29.7  # For AWS S3 file uploads
+
+# login and OAuth
+Flask-Dance==7.1.0 
+oauthlib==3.3.1 
+requests-oauthlib==2.0.0 
+urlobject==3.0.0
