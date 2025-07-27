@@ -1,0 +1,499 @@
+/* Settings Page Styles */
+:root {
+    --primary-green: #43a047;
+    --secondary-green: #388e3c;
+    --accent-green: #a5d6a7;
+    --light-green: #c8e6c9;
+    --dark-green: #1b5e20;
+    --yellow: #ffd700;
+    --white: #fff;
+    --gray: #e2e8f0;
+    --light-gray: #f8f9fa;
+    --border-color: #e9ecef;
+    --text-dark: #333;
+    --text-muted: #6c757d;
+    --danger: #dc3545;
+    --warning: #ffc107;
+    --info: #17a2b8;
+}
+
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+/* Override main-content for settings page to fill viewport */
+.main-content {
+    max-width: 1200px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: 100% !important;
+    padding: 40px 20px !important;
+}
+
+/* Settings Header */
+.settings-header {
+    background: transparent;
+    border-radius: 0;
+    padding: 40px;
+    margin-bottom: 30px;
+    box-shadow: none;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.settings-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-green), var(--secondary-green));
+}
+
+.settings-icon {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 25px rgba(67, 160, 71, 0.3);
+}
+
+.settings-icon i {
+    font-size: 2.5rem;
+    color: var(--white);
+}
+
+.settings-info {
+    flex-grow: 1;
+}
+
+.settings-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    line-height: 1.2;
+}
+
+.settings-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+/* Settings Container */
+.settings-container {
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+/* Settings Cards */
+.settings-card {
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: hidden;
+    margin-bottom: 30px;
+    border: none;
+}
+
+.settings-card .card-header {
+    background: transparent;
+    border-bottom: 2px solid var(--border-color);
+    padding: 25px 30px;
+}
+
+.settings-card .card-header h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+
+.settings-card .card-header h3 i {
+    color: var(--primary-green);
+    margin-right: 10px;
+}
+
+.settings-card .card-header p {
+    color: var(--text-muted);
+    margin: 0;
+    font-size: 1rem;
+}
+
+.settings-card .card-body {
+    padding: 30px;
+}
+
+/* Settings Form */
+.settings-form {
+    max-width: 100%;
+}
+
+.settings-section {
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 2px solid var(--light-gray);
+}
+
+.settings-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.settings-section h4 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.settings-section h4 i {
+    color: var(--primary-green);
+    font-size: 1.2rem;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    font-size: 1rem;
+    display: block;
+}
+
+.form-control {
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+.form-control:focus {
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 3px rgba(67, 160, 71, 0.1);
+    outline: none;
+}
+
+/* Checkbox Styling */
+.form-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 15px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.form-check:hover {
+    background: var(--light-gray);
+    border-color: var(--border-color);
+}
+
+.form-check-input {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.form-check-input:checked {
+    background-color: var(--primary-green);
+    border-color: var(--primary-green);
+}
+
+.form-check-label {
+    flex-grow: 1;
+    cursor: pointer;
+}
+
+.form-check-label strong {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 5px;
+}
+
+.form-check-label .form-text {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 20px;
+    border-top: 2px solid var(--light-gray);
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 12px 30px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+    color: var(--white);
+    box-shadow: 0 4px 15px rgba(67, 160, 71, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(67, 160, 71, 0.4);
+    color: var(--white);
+}
+
+/* Quick Actions */
+.quick-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--text-dark);
+    transition: all 0.3s ease;
+    border: 2px solid var(--border-color);
+    background: var(--white);
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary-green);
+    color: var(--text-dark);
+    text-decoration: none;
+}
+
+.action-btn.danger:hover {
+    border-color: var(--danger);
+    background: rgba(220, 53, 69, 0.05);
+}
+
+.action-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--light-gray);
+    flex-shrink: 0;
+}
+
+.action-btn:hover .action-icon {
+    background: var(--primary-green);
+    color: var(--white);
+}
+
+.action-btn.danger:hover .action-icon {
+    background: var(--danger);
+    color: var(--white);
+}
+
+.action-icon i {
+    font-size: 1.3rem;
+    color: var(--primary-green);
+}
+
+.action-btn:hover .action-icon i {
+    color: var(--white);
+}
+
+.action-content h5 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--text-dark);
+}
+
+.action-content p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+/* Account Stats */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 20px 15px;
+    border-radius: 12px;
+    background: var(--light-gray);
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    background: var(--primary-green);
+    color: var(--white);
+    transform: translateY(-2px);
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-green);
+    margin-bottom: 5px;
+}
+
+.stat-item:hover .stat-number {
+    color: var(--white);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.stat-item:hover .stat-label {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-content {
+        padding: 20px 10px !important;
+    }
+    
+    .settings-header {
+        flex-direction: column;
+        text-align: center;
+        padding: 30px 20px;
+    }
+    
+    .settings-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .settings-icon i {
+        font-size: 2rem;
+    }
+    
+    .settings-title {
+        font-size: 2rem;
+    }
+    
+    .settings-card .card-body {
+        padding: 20px;
+    }
+    
+    .settings-card .card-header {
+        padding: 20px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .main-content {
+        padding: 15px 5px !important;
+    }
+    
+    .settings-header {
+        padding: 20px 15px;
+    }
+    
+    .settings-card .card-body {
+        padding: 15px;
+    }
+    
+    .settings-card .card-header {
+        padding: 15px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-btn {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+/* Animation for settings elements */
+.settings-card, .action-btn, .stat-item {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Custom select styling */
+select.form-control {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    padding-right: 40px;
+    appearance: none;
+} 

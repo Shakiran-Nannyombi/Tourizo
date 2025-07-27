@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy Policy - Tourizo</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user_page.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/policy.css') }}" />
+</head>
+
+<body>
+    <div class="user-dashboard-wrapper">
+        <div class="user-dashboard-main">
+           <!-- Navbar -->
+           <nav class="navbar-welcome">
+            <div class="navbar-container">
+                <div class="navbar-logo">
+                    <i class="fas fa-leaf logo-icon"></i>
+                    <span class="logo-text">Tourizo</span>
+                </div>
+
+                <ul class="navbar-links">
+                    <li><a href="{{ url_for('auth.user_dashboard') }}" class="{% if request.endpoint == 'auth.user_dashboard' %}active{% endif %}">Home</a></li>
+                    <li><a href="{{ url_for('tours.list_tours') }}" class="{% if request.endpoint == 'tours.list_tours' %}active{% endif %}">Tours</a></li>
+                    <li><a href="{{ url_for('bookings.book') }}" class="{% if request.endpoint == 'bookings.my_bookings' %}active{% endif %}">Bookings</a></li>
+                    <li><a href="{{ url_for('reviews.my_reviews') }}" class="{% if request.endpoint == 'reviews.my_reviews' %}active{% endif %}">Reviews</a></li>
+                    <li><a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %}">About</a></li>
+                    <li><a href="{{ url_for('contact.contact_form') }}" class="{% if request.endpoint == 'contact.contact_form' %}active{% endif %}">Contact</a></li>
+                </ul>
+
+                <div class="navbar-actions">
+                    <button class="wishlist-btn" id="navbar-wishlist-btn" title="Wishlist" onclick="window.location.href='/tours/wishlist'">
+                        <i class="far fa-heart"></i>
+                        <span class="wishlist-badge" id="wishlist-badge">0</span>
+                    </button>
+                    <div class="user-profile-dropdown">
+                        <div class="user-profile" onclick="toggleProfileDropdown()">
+                            <div class="user-avatar">{{ current_user.username[0]|upper }}</div>
+                            <div class="user-name">{{ current_user.username }}</div>
+                            <i class="fas fa-chevron-down dropdown-arrow"></i>
+                        </div>
+                        <div class="profile-dropdown-menu" id="profileDropdown">
+                            <a href="{{ url_for('auth.profile') }}" class="dropdown-item">
+                                <i class="fas fa-user"></i> Profile
+                            </a>
+                            <a href="{{ url_for('auth.settings') }}" class="dropdown-item">
+                                <i class="fas fa-cog"></i> Settings
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="{{ url_for('auth.logout') }}" class="dropdown-item">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <h1 class="policy-title" style="color: black;">Privacy Policy</h1>
+            <p class="policy-subtitle">Understanding how we collect, use, and protect your personal information</p>
+            
+            <div class="last-updated-section">
+                <i class="fas fa-clock"></i>
+                <span>Last Updated: July 27, 2025</span>
+            </div>
+
+            <div class="policy-content">
+                <div class="policy-section">
+                    <h2 style="color: black; font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; border-left: 4px solid var(--primary-green); padding-left: 1rem;">1. Introduction</h2>
+                    <p style="color: black; line-height: 1.6; margin-bottom: 1rem;">At Tourizo, we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our services.</p>
+                </div>
+
+                <div class="policy-section">
+                    <h2 style="color: black; font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; border-left: 4px solid var(--primary-green); padding-left: 1rem;">2. Information We Collect</h2>
+                    <p style="color: black; line-height: 1.6; margin-bottom: 1rem;">We collect the following types of information:</p>
+                    
+                    <h3 style="color: black; font-size: 1.2rem; font-weight: 600; margin: 1.5rem 0 0.5rem 0;">Personal Information</h3>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            Name, email address, and phone number
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            Date of birth and gender
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            Passport and visa information
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            Emergency contact details
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            Payment and billing information
+                        </li>
+                    </ul>
+
+                    <h3 style="color: black; font-size: 1.2rem; font-weight: 600; margin: 1.5rem 0 0.5rem 0;">Travel Information</h3>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            Travel preferences and requirements
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            Dietary restrictions and health information
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            Tour bookings and itineraries
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            Travel insurance details
+                        </li>
+                    </ul>
+
+                    <h3 style="color: black; font-size: 1.2rem; font-weight: 600; margin: 1.5rem 0 0.5rem 0;">Technical Information</h3>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            IP address and device information
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            Browser type and version
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            Website usage data and cookies
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            Location data (with consent)
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="policy-section">
+                    <h2 style="color: black; font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; border-left: 4px solid var(--primary-green); padding-left: 1rem;">3. How We Use Your Information</h2>
+                    <p style="color: black; line-height: 1.6; margin-bottom: 1rem;">We use your information for the following purposes:</p>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            <strong>Service Provision:</strong> To process bookings and provide tour services
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            <strong>Communication:</strong> To send booking confirmations and updates
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            <strong>Customer Support:</strong> To respond to inquiries and provide assistance
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            <strong>Safety:</strong> To ensure your safety during tours
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            <strong>Legal Compliance:</strong> To comply with legal and regulatory requirements
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            <strong>Improvement:</strong> To improve our services and user experience
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            <strong>Marketing:</strong> To send promotional offers (with consent)
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="policy-section">
+                    <h2 style="color: black; font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; border-left: 4px solid var(--primary-green); padding-left: 1rem;">4. Information Sharing</h2>
+                    <p style="color: black; line-height: 1.6; margin-bottom: 1rem;">We may share your information with:</p>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            <strong>Service Providers:</strong> Hotels, transportation companies, and tour guides
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            <strong>Payment Processors:</strong> To process payments securely
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            <strong>Legal Authorities:</strong> When required by law or for safety
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            <strong>Business Partners:</strong> With your explicit consent
+                        </li>
+                    </ul>
+                    <p style="color: black; line-height: 1.6; margin-bottom: 1rem;">We do not sell, rent, or trade your personal information to third parties for marketing purposes.</p>
+                </div>
+
+                <div class="policy-section">
+                    <h2 style="color: black; font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; border-left: 4px solid var(--primary-green); padding-left: 1rem;">5. Data Security</h2>
+                    <p style="color: black; line-height: 1.6; margin-bottom: 1rem;">We implement appropriate security measures to protect your information:</p>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            Encryption of sensitive data in transit and at rest
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            Secure servers and data centers
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            Regular security audits and updates
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            Access controls and authentication
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            Employee training on data protection
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="policy-section">
+                    <h2 style="color: black; font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; border-left: 4px solid var(--primary-green); padding-left: 1rem;">6. Your Rights</h2>
+                    <p style="color: black; line-height: 1.6; margin-bottom: 1rem;">You have the following rights regarding your personal information:</p>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            <strong>Access:</strong> Request a copy of your personal data
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            <strong>Correction:</strong> Update or correct inaccurate information
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            <strong>Deletion:</strong> Request deletion of your personal data
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            <strong>Portability:</strong> Receive your data in a portable format
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            <strong>Objection:</strong> Object to certain processing activities
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            <strong>Withdrawal:</strong> Withdraw consent for marketing communications
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="policy-section">
+                    <h2 style="color: black; font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; border-left: 4px solid var(--primary-green); padding-left: 1rem;">7. Contact Information</h2>
+                    <p style="color: black; line-height: 1.6; margin-bottom: 1rem;">If you have questions about this Privacy Policy or our data practices:</p>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            <strong>Email:</strong> privacy@tourizo.com
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            <strong>Phone:</strong> +1 (555) 123-4567
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            <strong>Address:</strong> 123 Safari Street, Adventure City
+                        </li>
+                        <li style="color: black; line-height: 1.6; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">
+                            <span style="color: var(--primary-green); font-weight: bold; position: absolute; left: 0;">•</span>
+                            <strong>Data Protection Officer:</strong> dpo@tourizo.com
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <!-- Related Policies Section -->
+        <div style="background: var(--gray); padding: 3rem 2rem; text-align: center; margin-top: 3rem;">
+            <h2 style="color: var(--dark-green); font-size: 2rem; font-weight: 700; margin-bottom: 2rem;">Related Policies</h2>
+            <div style="display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;">
+                <a href="{{ url_for('policies.booking_policy') }}" class="btn" style="background: var(--white); color: var(--dark-green); border: 1px solid var(--gray); padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 8px; font-weight: 500; transition: all 0.3s ease; display: inline-block;">Booking Policy</a>
+                <a href="{{ url_for('policies.cancellation') }}" class="btn" style="background: var(--white); color: var(--dark-green); border: 1px solid var(--gray); padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 8px; font-weight: 500; transition: all 0.3s ease; display: inline-block;">Cancellation Policy</a>
+                <a href="{{ url_for('policies.terms_conditions') }}" class="btn" style="background: var(--white); color: var(--dark-green); border: 1px solid var(--gray); padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 8px; font-weight: 500; transition: all 0.3s ease; display: inline-block;">Terms & Conditions</a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="bottom-sections">
+            <div class="footer-bottom">
+                <div class="footer-container">
+                    <div class="footer-grid">
+                        <!-- Tourizo Column -->
+                        <div>
+                            <h3 class="footer-title">Tourizo</h3>
+                            <p style="color: #ccc; margin-bottom: 1rem;">Your gateway to unforgettable African safari adventures.</p>
+                            <div class="footer-social">
+                                <div class="footer-social-dot"></div>
+                                <div class="footer-social-dot"></div>
+                                <div class="footer-social-dot"></div>
+                            </div>
+                        </div>
+                        <!-- Quick Links Column -->
+                        <div>
+                            <h4 class="footer-link-title">Quick Links</h4>
+                            <ul class="footer-links">
+                                <li><a href="{{ url_for('tours.list_tours') }}">Tours</a></li>
+                                <li><a href="{{ url_for('bookings.book') }}">Bookings</a></li>
+                                <li><a href="{{ url_for('about') }}">About Us</a></li>
+                                <li><a href="{{ url_for('contact.contact_form') }}">Contact</a></li>
+                            </ul>
+                        </div>
+                        <!-- Support Column -->
+                        <div>
+                            <h4 class="footer-link-title">Support</h4>
+                            <ul class="footer-support">
+                                <li><a href="{{ url_for('policies.booking_policy') }}">Booking Policy</a></li>
+                                <li><a href="{{ url_for('policies.cancellation') }}">Cancellation</a></li>
+                                <li><a href="{{ url_for('policies.terms_conditions') }}">Terms & Conditions</a></li>
+                                <li><a href="{{ url_for('policies.privacy_policy') }}">Privacy Policy</a></li>
+                            </ul>
+                        </div>
+                        <!-- Contact Info Column -->
+                        <div>
+                            <h4 class="footer-link-title">Contact Info</h4>
+                            <div class="footer-contact-info">
+                                <p><i class="fas fa-envelope" style="margin-right: 0.5rem;"></i>info@tourizo.com</p>
+                                <p><i class="fas fa-phone" style="margin-right: 0.5rem;"></i>+1 (555) 123-4567</p>
+                                <p><i class="fas fa-map-marker-alt" style="margin-right: 0.5rem;"></i>123 Safari Street, Adventure City</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Copyright -->
+                    <div class="footer-copyright">
+                        © 2024 Tourizo. All rights reserved.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="{{ url_for('static', filename='js/user_dashboard_navbar.js') }}"></script>
+</body>
+
+</html> 

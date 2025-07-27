@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Booking Policy - Tourizo</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user_page.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/policy.css') }}" />
+   
+</head>
+
+<body>
+    <div class="user-dashboard-wrapper">
+        <div class="user-dashboard-main">
+           <!-- Navbar -->
+           <nav class="navbar-welcome">
+            <div class="navbar-container">
+                <div class="navbar-logo">
+                    <i class="fas fa-leaf logo-icon"></i>
+                    <span class="logo-text">Tourizo</span>
+                </div>
+
+                <ul class="navbar-links">
+                    <li><a href="{{ url_for('auth.user_dashboard') }}" class="{% if request.endpoint == 'auth.user_dashboard' %}active{% endif %}">Home</a></li>
+                    <li><a href="{{ url_for('tours.list_tours') }}" class="{% if request.endpoint == 'tours.list_tours' %}active{% endif %}">Tours</a></li>
+                    <li><a href="{{ url_for('bookings.book') }}" class="{% if request.endpoint == 'bookings.my_bookings' %}active{% endif %}">Bookings</a></li>
+                    <li><a href="{{ url_for('reviews.my_reviews') }}" class="{% if request.endpoint == 'reviews.my_reviews' %}active{% endif %}">Reviews</a></li>
+                    <li><a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %}">About</a></li>
+                    <li><a href="{{ url_for('contact.contact_form') }}" class="{% if request.endpoint == 'contact.contact_form' %}active{% endif %}">Contact</a></li>
+                </ul>
+
+                <div class="navbar-actions">
+                    <button class="wishlist-btn" id="navbar-wishlist-btn" title="Wishlist" onclick="window.location.href='/tours/wishlist'">
+                        <i class="far fa-heart"></i>
+                        <span class="wishlist-badge" id="wishlist-badge">0</span>
+                    </button>
+                    <div class="user-profile-dropdown">
+                        <div class="user-profile" onclick="toggleProfileDropdown()">
+                            <div class="user-avatar">{{ current_user.username[0]|upper }}</div>
+                            <div class="user-name">{{ current_user.username }}</div>
+                            <i class="fas fa-chevron-down dropdown-arrow"></i>
+                        </div>
+                        <div class="profile-dropdown-menu" id="profileDropdown">
+                            <a href="{{ url_for('auth.profile') }}" class="dropdown-item">
+                                <i class="fas fa-user"></i> Profile
+                            </a>
+                            <a href="{{ url_for('auth.settings') }}" class="dropdown-item">
+                                <i class="fas fa-cog"></i> Settings
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="{{ url_for('auth.logout') }}" class="dropdown-item">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <h1 class="policy-title" style="color: black;">Booking Policy</h1>
+                    <p class="policy-subtitle">Please read our booking terms and conditions carefully before making your reservation.</p>
+                                
+            <div class="last-updated-section">
+                <i class="fas fa-clock"></i>
+                <span>Last Updated: July 27, 2025</span>
+            </div>
+
+            <div class="policy-cards">
+                <div class="policy-card">
+                    <div class="card-header">
+                        <i class="fas fa-calendar-check card-icon"></i>
+                        <h3>Booking Confirmation</h3>
+                            </div>
+                            <div class="card-content">
+                                <ul>
+                                    <li><i class="fas fa-check"></i> All bookings are subject to availability and confirmation</li>
+                                    <li><i class="fas fa-check"></i> A confirmation email will be sent within 24 hours of booking</li>
+                                    <li><i class="fas fa-check"></i> Your booking is not confirmed until you receive our confirmation email</li>
+                                    <li><i class="fas fa-check"></i> We reserve the right to decline any booking at our discretion</li>
+                                </ul>
+                            </div>
+                    </div>
+
+            <div class="policy-card">
+                <div class="card-header">
+                    <i class="fas fa-credit-card card-icon"></i>
+                    <h3>Payment Terms</h3>
+            </div>
+            
+            <div class="card-content">
+                <ul>
+                    <li><i class="fas fa-check"></i> Full payment is required at the time of booking for tours under 30 days</li>
+                    <li><i class="fas fa-check"></i> For tours over 30 days away, a 50% deposit is required with balance due 30 days before departure</li>
+                    <li><i class="fas fa-check"></i> We accept major credit cards, mobile money (MTN, Airtel), and bank transfers</li>
+                    <li><i class="fas fa-check"></i> All prices are quoted in USD but can be paid in local currencies</li>
+                    <li><i class="fas fa-check"></i> Payment confirmation may take 24-48 hours for mobile money transactions</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="policy-card">
+            <div class="card-header">
+                <i class="fas fa-users card-icon"></i>
+                <h3>Group Bookings</h3>
+            </div>
+            <div class="card-content">
+                <ul>
+                    <li><i class="fas fa-check"></i> Special rates available for groups of 6 or more travelers</li>
+                    <li><i class="fas fa-check"></i> Group bookings require a 60% deposit at time of reservation</li>
+                    <li><i class="fas fa-check"></i> Final payment due 45 days before departure for group tours</li>
+                    <li><i class="fas fa-check"></i> Custom itineraries available for large groups</li>
+                    <li><i class="fas fa-check"></i> Dedicated group coordinator assigned for groups of 10+</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="policy-card">
+            <div class="card-header">
+                <i class="fas fa-clock card-icon"></i>
+                <h3>Booking Timeline</h3>
+            </div>
+            <div class="card-content">
+                <ul>
+                    <li><i class="fas fa-check"></i> Peak season bookings: Reserve 6-12 months in advance</li>
+                    <li><i class="fas fa-check"></i> Off-season bookings: Reserve 2-4 months in advance</li>
+                    <li><i class="fas fa-check"></i> Last-minute bookings subject to availability</li>
+                    <li><i class="fas fa-check"></i> Custom tours require 8-12 weeks planning time</li>
+                    <li><i class="fas fa-check"></i> Changes to confirmed bookings may incur fees</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Travel Requirements Section -->
+    <div>
+        <h2 class="policy-title" style="color: var(--dark-green); font-size: 2rem; margin-bottom: 0.5rem;">Travel Requirements</h2>
+        <p class="policy-subtitle" style="text-align: center; margin-bottom: 2rem;">Essential requirements for all travelers</p>
+
+        <div class="policy-section">
+            <h3 style="color: var(--primary-green); font-size: 1.3rem; margin-bottom: 1rem;">Passport & Visas</h3>
+            <ul style="list-style: none; padding-left: 0;">
+                <li style="color: var(--secondary-green); line-height: 1.6; margin-bottom: 0.8rem; padding-left: 1.5rem; position: relative;">
+                    <span style="color: var(--orange); font-weight: bold; position: absolute; left: 0;">•</span>
+                    Valid passport with at least 6 months remaining validity
+                </li>
+                <li style="color: var(--secondary-green); line-height: 1.6; margin-bottom: 0.8rem; padding-left: 1.5rem; position: relative;">
+                    <span style="color: var(--orange); font-weight: bold; position: absolute; left: 0;">•</span>
+                    Appropriate visas for all countries on your itinerary
+                </li>
+                <li style="color: var(--secondary-green); line-height: 1.6; margin-bottom: 0.8rem; padding-left: 1.5rem; position: relative;">
+                    <span style="color: var(--orange); font-weight: bold; position: absolute; left: 0;">•</span>
+                    Yellow fever vaccination certificate (required for some destinations)
+                </li>
+                <li style="color: var(--secondary-green); line-height: 1.6; margin-bottom: 0.8rem; padding-left: 1.5rem; position: relative;">
+                    <span style="color: var(--orange); font-weight: bold; position: absolute; left: 0;">•</span>
+                    Passport photos may be required for certain permits
+                </li>
+            </ul>
+        </div>
+
+        <div class="policy-section">
+            <h3 style="color: var(--primary-green); font-size: 1.3rem; margin-bottom: 1rem;">Health Requirements</h3>
+            <ul style="list-style: none; padding-left: 0;">
+                <li style="color: var(--secondary-green); line-height: 1.6; margin-bottom: 0.8rem; padding-left: 1.5rem; position: relative;">
+                    <span style="color: var(--orange); font-weight: bold; position: absolute; left: 0;">•</span>
+                    Consult your doctor about required vaccinations 4-6 weeks before travel
+                </li>
+                <li style="color: var(--secondary-green); line-height: 1.6; margin-bottom: 0.8rem; padding-left: 1.5rem; position: relative;">
+                    <span style="color: var(--orange); font-weight: bold; position: absolute; left: 0;">•</span>
+                    Malaria prophylaxis may be recommended for certain areas
+                </li>
+                <li style="color: var(--secondary-green); line-height: 1.6; margin-bottom: 0.8rem; padding-left: 1.5rem; position: relative;">
+                    <span style="color: var(--orange); font-weight: bold; position: absolute; left: 0;">•</span>
+                    Travel with adequate supplies of personal medications
+                </li>
+                <li style="color: var(--secondary-green); line-height: 1.6; margin-bottom: 0.8rem; padding-left: 1.5rem; position: relative;">
+                    <span style="color: var(--orange); font-weight: bold; position: absolute; left: 0;">•</span>
+                    Inform us of any medical conditions that may affect your tour
+                </li>
+            </ul>
+        </div>
+
+        <div class="policy-section">
+            <h3 style="color: var(--primary-green); font-size: 1.3rem; margin-bottom: 1rem;">Age Restrictions</h3>
+            <ul style="list-style: none; padding-left: 0;">
+                <li style="color: var(--secondary-green); line-height: 1.6; margin-bottom: 0.8rem; padding-left: 1.5rem; position: relative;">
+                    <span style="color: var(--orange); font-weight: bold; position: absolute; left: 0;">•</span>
+                    Minimum age for most tours is 12 years unless specified otherwise
+                </li>
+                <li style="color: var(--secondary-green); line-height: 1.6; margin-bottom: 0.8rem; padding-left: 1.5rem; position: relative;">
+                    <span style="color: var(--orange); font-weight: bold; position: absolute; left: 0;">•</span>
+                    Children under 18 must be accompanied by a parent or guardian
+                </li>
+                <li style="color: var(--secondary-green); line-height: 1.6; margin-bottom: 0.8rem; padding-left: 1.5rem; position: relative;">
+                    <span style="color: var(--orange); font-weight: bold; position: absolute; left: 0;">•</span>
+                    Some adventure tours have minimum age requirements of 16 or 18
+                </li>
+                <li style="color: var(--secondary-green); line-height: 1.6; margin-bottom: 0.8rem; padding-left: 1.5rem; position: relative;">
+                    <span style="color: var(--orange); font-weight: bold; position: absolute; left: 0;">•</span>
+                    Senior travelers (65+) may need medical clearance for certain activities
+                </li>
+            </ul>
+        </div>
+
+        <!-- Important Notice Section -->
+        <div class="policy-note" style="background: #ffebee; border-left: 4px solid #f44336; margin-top: 2rem;">
+            <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                <i class="fas fa-exclamation-triangle" style="color: #f44336; margin-right: 0.5rem; font-size: 1.2rem;"></i>
+                <h4 style="color: #f44336; margin: 0; font-weight: 600;">Important Notice</h4>
+            </div>
+            <p style="margin: 0; color: #d32f2f; font-style: italic; line-height: 1.6;">
+                By making a booking with Tourizo, you acknowledge that you have read, understood, and agree to be bound by our booking policy, cancellation policy, and terms & conditions.
+            </p>
+            <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                <a href="{{ url_for('policies.cancellation') }}" class="btn" style="border: 2px solid #f44336; color: #f44336; background: transparent; padding: 0.5rem 1rem; text-decoration: none; border-radius: 5px; transition: all 0.3s ease;">View Cancellation Policy</a>
+                <a href="{{ url_for('policies.terms_conditions') }}" class="btn" style="border: 2px solid #f44336; color: #f44336; background: transparent; padding: 0.5rem 1rem; text-decoration: none; border-radius: 5px; transition: all 0.3s ease;">View Terms & Conditions</a>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+<div class="bottom-sections" style="margin-top: 1rem;">
+    <!-- Questions Banner Section -->
+<div style="background: var(--primary-green); padding: 3rem 2rem; text-align: center; margin-top: 3rem;">
+    <h2 style="color: white; font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem;">Questions About Our Policies?</h2>
+    <p style="color: #f5f5f5; font-size: 1.2rem; margin-bottom: 2rem;">Our travel experts are here to help clarify any concerns</p>
+    <a href="{{ url_for('contact.contact_form') }}" class="btn" style="background: white; color: var(--primary-green); padding: 0.75rem 2rem; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; display: inline-block;">Contact Our Team</a>
+</div>
+    <div class="footer-bottom">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <!-- Tourizo Column -->
+                <div>
+                    <h3 class="footer-title">Tourizo</h3>
+                    <p style="color: #ccc; margin-bottom: 1rem;">Your gateway to unforgettable African safari adventures.</p>
+                    <div class="footer-social">
+                        <div class="footer-social-dot"></div>
+                        <div class="footer-social-dot"></div>
+                        <div class="footer-social-dot"></div>
+                    </div>
+                </div>
+                <!-- Quick Links Column -->
+                <div>
+                    <h4 class="footer-link-title">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="{{ url_for('tours.list_tours') }}">Tours</a></li>
+                        <li><a href="{{ url_for('bookings.book') }}">Bookings</a></li>
+                        <li><a href="{{ url_for('about') }}">About Us</a></li>
+                        <li><a href="{{ url_for('contact.contact_form') }}">Contact</a></li>
+                    </ul>
+                </div>
+                <!-- Support Column -->
+                <div>
+                    <h4 class="footer-link-title">Support</h4>
+                                            <ul class="footer-support">
+                    <li><a href="{{ url_for('policies.booking_policy') }}">Booking Policy</a></li>
+                    <li><a href="{{ url_for('policies.cancellation') }}">Cancellation</a></li>
+                    <li><a href="{{ url_for('policies.terms_conditions') }}">Terms & Conditions</a></li>
+                    <li><a href="{{ url_for('policies.privacy_policy') }}">Privacy Policy</a></li>
+                </ul>
+                </div>
+                <!-- Contact Info Column -->
+                <div>
+                    <h4 class="footer-link-title">Contact Info</h4>
+                    <div class="footer-contact-info">
+                        <p><i class="fas fa-envelope" style="margin-right: 0.5rem;"></i>info@tourizo.com</p>
+                        <p><i class="fas fa-phone" style="margin-right: 0.5rem;"></i>+1 (555) 123-4567</p>
+                        <p><i class="fas fa-map-marker-alt" style="margin-right: 0.5rem;"></i>123 Safari Street, Adventure City</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Copyright -->
+            <div class="footer-copyright">
+                © 2024 Tourizo. All rights reserved.
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="{{ url_for('static', filename='js/user_dashboard_navbar.js') }}"></script>
+</body>
+
+</html> 

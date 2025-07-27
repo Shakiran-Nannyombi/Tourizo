@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Terms & Conditions - Tourizo</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user_page.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/policy.css') }}" />
+</head>
+
+<body>
+    <div class="user-dashboard-wrapper">
+        <div class="user-dashboard-main">
+            <!-- Navbar -->
+            <nav class="navbar-welcome">
+                <div class="navbar-container">
+                    <div class="navbar-logo">
+                        <i class="fas fa-leaf logo-icon"></i>
+                        <span class="logo-text">Tourizo</span>
+                    </div>
+
+                    <ul class="navbar-links">
+                        <li><a href="{{ url_for('auth.user_dashboard') }}" class="{% if request.endpoint == 'auth.user_dashboard' %}active{% endif %}">Home</a></li>
+                        <li><a href="{{ url_for('tours.list_tours') }}" class="{% if request.endpoint == 'tours.list_tours' %}active{% endif %}">Tours</a></li>
+                        <li><a href="{{ url_for('bookings.book') }}" class="{% if request.endpoint == 'bookings.my_bookings' %}active{% endif %}">Bookings</a></li>
+                        <li><a href="{{ url_for('reviews.my_reviews') }}" class="{% if request.endpoint == 'reviews.my_reviews' %}active{% endif %}">Reviews</a></li>
+                        <li><a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %}">About</a></li>
+                        <li><a href="{{ url_for('contact.contact_form') }}" class="{% if request.endpoint == 'contact.contact_form' %}active{% endif %}">Contact</a></li>
+                    </ul>
+
+                    <div class="navbar-actions">
+                        <button class="wishlist-btn" id="navbar-wishlist-btn" title="Wishlist" onclick="window.location.href='/tours/wishlist'">
+                            <i class="far fa-heart"></i>
+                            <span class="wishlist-badge" id="wishlist-badge">0</span>
+                        </button>
+                        <div class="user-profile-dropdown">
+                            <div class="user-profile" onclick="toggleProfileDropdown()">
+                                <div class="user-avatar">{{ current_user.username[0]|upper }}</div>
+                                <div class="user-name">{{ current_user.username }}</div>
+                                <i class="fas fa-chevron-down dropdown-arrow"></i>
+                            </div>
+                            <div class="profile-dropdown-menu" id="profileDropdown">
+                                <a href="{{ url_for('auth.profile') }}" class="dropdown-item">
+                                    <i class="fas fa-user"></i> Profile
+                                </a>
+                                <a href="{{ url_for('auth.settings') }}" class="dropdown-item">
+                                    <i class="fas fa-cog"></i> Settings
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a href="{{ url_for('auth.logout') }}" class="dropdown-item">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <h1 class="policy-title" style="color: black;">Terms & Conditions</h1>
+            <p class="policy-subtitle">Legal terms governing the use of Tourizo services and website</p>
+            
+            <div class="last-updated-section">
+                <i class="fas fa-clock"></i>
+                <span>Last Updated: January 15, 2024</span>
+            </div>
+        </div>
+
+        <!-- Table of Contents -->
+        <div class="policy-content">
+                <div class="card-header">
+                    <h3>Table of Contents</h3>
+                </div>
+                <div class="card-content">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                        <div>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: black; margin-bottom: 0.8rem;">
+                                    <span style="color: black; font-weight: 600;">1.</span> Acceptance of Terms
+                                </li>
+                                <li style="color: black; margin-bottom: 0.8rem;">
+                                    <span style="color: black; font-weight: 600;">3.</span> Booking and Payment
+                                </li>
+                                <li style="color: black; margin-bottom: 0.8rem;">
+                                    <span style="color: black; font-weight: 600;">5.</span> Traveler Responsibilities
+                                </li>
+                                <li style="color: black; margin-bottom: 0.8rem;">
+                                    <span style="color: black; font-weight: 600;">7.</span> Intellectual Property
+                                </li>
+                                <li style="color: black; margin-bottom: 0.8rem;">
+                                    <span style="color: black; font-weight: 600;">9.</span> Dispute Resolution
+                                </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="color: black; margin-bottom: 0.8rem;">
+                                    <span style="color: black; font-weight: 600;">2.</span> Description of Services
+                                </li>
+                                <li style="color: black; margin-bottom: 0.8rem;">
+                                    <span style="color: black; font-weight: 600;">4.</span> Cancellation and Refunds
+                                </li>
+                                <li style="color: black; margin-bottom: 0.8rem;">
+                                    <span style="color: black; font-weight: 600;">6.</span> Limitation of Liability
+                                </li>
+                                <li style="color: black; margin-bottom: 0.8rem;">
+                                    <span style="color: black; font-weight: 600;">8.</span> Privacy and Data Protection
+                                </li>
+                                <li style="color: black; margin-bottom: 0.8rem;">
+                                    <span style="color: black; font-weight: 600;">10.</span> General Provisions
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Policy Sections Grid -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem auto; max-width: 1200px; width: 90%;">
+            <!-- Section 1 -->
+            <div class="policy-content" style="margin: 0; padding: 2rem;">
+                <h2 style="color: black;">1. Acceptance of Terms</h2>
+                <p style="color: black;">By accessing and using the Tourizo website and services, you accept and agree to be bound by the terms and provision of this agreement.</p>
+                <p style="color: black;">If you do not agree to abide by the above, please do not use this service.</p>
+                <p style="color: black;">These terms apply to all visitors, users, and others who access or use the service.</p>
+                <p style="color: black;">We reserve the right to update these terms at any time without prior notice.</p>
+            </div>
+
+            <!-- Section 2 -->
+            <div class="policy-content" style="margin: 0; padding: 2rem;">
+                <h2 style="color: black;">2. Description of Services</h2>
+                <p style="color: black;">Tourizo provides travel booking and tour arrangement services for destinations across Africa.</p>
+                <p style="color: black;">We act as an intermediary between travelers and local tour operators, accommodation providers, and activity suppliers.</p>
+                <p style="color: black;">All tours are operated by licensed local partners who maintain appropriate insurance and certifications.</p>
+                <p style="color: black;">We reserve the right to modify or discontinue any service at any time without notice.</p>
+            </div>
+
+            <!-- Section 3 -->
+            <div class="policy-content" style="margin: 0; padding: 2rem;">
+                <h2 style="color: black;">3. Booking and Payment</h2>
+                <p style="color: black;">All bookings are subject to availability and confirmation by our local partners.</p>
+                <p style="color: black;">Prices are quoted in USD but may be paid in various currencies as indicated on our website.</p>
+                <p style="color: black;">Full payment or deposit is required to secure your booking as outlined in our booking policy.</p>
+                <p style="color: black;">We reserve the right to cancel any booking if payment is not received within the specified timeframe.</p>
+                <p style="color: black;">Additional fees may apply for special requests, dietary requirements, or accessibility accommodations.</p>
+            </div>
+
+            <!-- Section 4 -->
+            <div class="policy-content" style="margin: 0; padding: 2rem;">
+                <h2 style="color: black;">4. Cancellation and Refunds</h2>
+                <p style="color: black;">Cancellations must be made in writing and are subject to our cancellation policy.</p>
+                <p style="color: black;">Refunds will be processed according to the timeframe specified in our cancellation policy.</p>
+                <p style="color: black;">We are not responsible for refunds due to circumstances beyond our control, such as weather, natural disasters, or political unrest.</p>
+                <p style="color: black;">We strongly recommend purchasing comprehensive travel insurance to protect against unforeseen circumstances.</p>
+            </div>
+
+            <!-- Section 5 -->
+            <div class="policy-content" style="margin: 0; padding: 2rem;">
+                <h2 style="color: black;">5. Traveler Responsibilities</h2>
+                <p style="color: black;">Travelers are responsible for ensuring they have valid passports, visas, and required vaccinations.</p>
+                <p style="color: black;">You must inform us of any medical conditions, dietary requirements, or accessibility needs before booking.</p>
+                <p style="color: black;">Travelers must follow the instructions of tour guides and respect local customs and laws.</p>
+                <p style="color: black;">You are responsible for any damage to property or equipment during your tour.</p>
+                <p style="color: black;">Inappropriate behavior may result in immediate termination of services without refund.</p>
+            </div>
+
+            <!-- Section 6 -->
+            <div class="policy-content" style="margin: 0; padding: 2rem;">
+                <h2 style="color: black;">6. Limitation of Liability</h2>
+                <p style="color: black;">Tourizo acts as an agent and is not liable for the acts or omissions of tour operators, accommodation providers, or other service providers.</p>
+                <p style="color: black;">We are not responsible for delays, cancellations, or changes beyond our control.</p>
+                <p style="color: black;">Our liability is limited to the amount paid for the specific service in question.</p>
+                <p style="color: black;">We strongly recommend comprehensive travel insurance to cover any potential losses.</p>
+                <p style="color: black;">Travelers participate in tours and activities at their own risk.</p>
+            </div>
+
+            <!-- Section 7 -->
+            <div class="policy-content" style="margin: 0; padding: 2rem;">
+                <h2 style="color: black;">7. Intellectual Property</h2>
+                <p style="color: black;">All content on the Tourizo website, including text, graphics, logos, and images, is our property or used with permission.</p>
+                <p style="color: black;">You may not reproduce, distribute, or create derivative works from our content without written permission.</p>
+                <p style="color: black;">User-generated content, such as reviews and photos, may be used by Tourizo for marketing purposes.</p>
+                <p style="color: black;">By submitting content, you grant us a non-exclusive, royalty-free license to use it.</p>
+            </div>
+
+            <!-- Section 8 -->
+            <div class="policy-content" style="margin: 0; padding: 2rem;">
+                <h2 style="color: black;">8. Privacy and Data Protection</h2>
+                <p style="color: black;">We collect and process personal information in accordance with our Privacy Policy.</p>
+                <p style="color: black;">Your information may be shared with tour operators and service providers as necessary to fulfill your booking.</p>
+                <p style="color: black;">We implement appropriate security measures to protect your personal information.</p>
+                <p style="color: black;">You have the right to access, correct, or delete your personal information as outlined in our Privacy Policy.</p>
+            </div>
+
+            <!-- Section 9 -->
+            <div class="policy-content" style="margin: 0; padding: 2rem;">
+                <h2 style="color: black;">9. Dispute Resolution</h2>
+                <p style="color: black;">Any disputes arising from these terms or our services will be resolved through binding arbitration.</p>
+                <p style="color: black;">The arbitration will be conducted in Nairobi, Kenya, under Kenyan law.</p>
+                <p style="color: black;">You waive the right to participate in class action lawsuits against Tourizo.</p>
+                <p style="color: black;">We encourage customers to contact us directly to resolve any issues before pursuing legal action.</p>
+            </div>
+
+            <!-- Section 10 -->
+            <div class="policy-content" style="margin: 0; padding: 2rem;">
+                <h2 style="color: black;">10. General Provisions</h2>
+                <p style="color: black;">These terms constitute the entire agreement between you and Tourizo.</p>
+                <p style="color: black;">If any provision is found to be unenforceable, the remaining provisions will remain in effect.</p>
+                <p style="color: black;">Our failure to enforce any right or provision does not constitute a waiver of such right or provision.</p>
+                <p style="color: black;">These terms are governed by the laws of Kenya.</p>
+            </div>
+        </div>
+
+        <!-- Important Legal Notice -->
+        <div class="policy-content" style="margin: 2rem auto; background: #fff5f5; border-left: 4px solid #dc2626;">
+            <div style="display: flex; align-items: flex-start; margin-bottom: 1rem;">
+                <i class="fas fa-exclamation-triangle" style="color: #dc2626; font-size: 1.5rem; margin-right: 1rem; margin-top: 0.2rem;"></i>
+                <h3 style="color: #dc2626; margin: 0; font-weight: 700;">Important Legal Notice</h3>
+            </div>
+            <p style="color: #dc2626; margin-bottom: 1rem; line-height: 1.6;">By using Tourizo's services, you acknowledge that you have read, understood, and agree to be bound by these Terms & Conditions. If you do not agree with any part of these terms, you must not use our services.</p>
+            <p style="color: #dc2626; margin: 0; line-height: 1.6;">These terms may be updated from time to time. Continued use of our services after changes are posted constitutes acceptance of the new terms.</p>
+        </div>
+
+        <!-- Bottom Sections -->
+        <div class="bottom-sections" style="margin-top: 2rem;">
+            <!-- Questions Section -->
+            <div style="background: var(--gray); padding: 3rem 2rem; text-align: center; width: 100%; border-radius: 0;">
+                <h2 style="color: var(--dark-green); font-size: 2rem; font-weight: 700; margin-bottom: 1rem;">Questions About These Terms?</h2>
+                <p style="color: var(--secondary-green); font-size: 1.1rem; margin-bottom: 2rem;">If you have any questions about these Terms & Conditions, please contact our legal team</p>
+                
+                <div style="margin-bottom: 2rem;">
+                    <p style="color: var(--secondary-green); margin-bottom: 0.5rem;"><strong>Email:</strong> legal@tourizo.com</p>
+                    <p style="color: var(--secondary-green); margin-bottom: 0;"><strong>Address:</strong> 123 Safari Street, Westlands, Nairobi, Kenya</p>
+                </div>
+                
+                <button style="background: var(--secondary-green); color: var(--white); border: none; padding: 1rem 2rem; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s ease;" onmouseover="this.style.background='#e68900'" onmouseout="this.style.background='var(--orange)'">
+                    Contact Us
+                </button>
+            </div>
+
+            <!-- Related Policies Section -->
+            <div style="background: var(--secondary-green); padding: 3rem 2rem; text-align: center; width: 100%; border-radius: 0;">
+                <h2 style="color: var(--white); font-size: 2rem; font-weight: 700; margin-bottom: 2rem;">Related Policies</h2>
+                
+                <div style="display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;">
+                    <a href="{{ url_for('policies.booking_policy') }}" style="background: transparent; color: var(--white); border: 2px solid var(--white); padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.2s ease;" onmouseover="this.style.background='var(--white)'; this.style.color='var(--orange)'" onmouseout="this.style.background='transparent'; this.style.color='var(--white)'">
+                        Booking Policy
+                    </a>
+                    <a href="{{ url_for('policies.cancellation') }}" style="background: transparent; color: var(--white); border: 2px solid var(--white); padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.2s ease;" onmouseover="this.style.background='var(--white)'; this.style.color='var(--orange)'" onmouseout="this.style.background='transparent'; this.style.color='var(--white)'">
+                        Cancellation Policy
+                    </a>
+                    <a href="{{ url_for('policies.privacy_policy') }}" style="background: transparent; color: var(--white); border: 2px solid var(--white); padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.2s ease;" onmouseover="this.style.background='var(--white)'; this.style.color='var(--orange)'" onmouseout="this.style.background='transparent'; this.style.color='var(--white)'">
+                        Privacy Policy
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="bottom-sections">
+            <div class="footer-bottom">
+                <div class="footer-container">
+                    <div class="footer-grid">
+                        <!-- Tourizo Column -->
+                        <div>
+                            <h3 class="footer-title">Tourizo</h3>
+                            <p style="color: #ccc; margin-bottom: 1rem;">Your gateway to unforgettable African safari adventures.</p>
+                            <div class="footer-social">
+                                <div class="footer-social-dot"></div>
+                                <div class="footer-social-dot"></div>
+                                <div class="footer-social-dot"></div>
+                            </div>
+                        </div>
+                        <!-- Quick Links Column -->
+                        <div>
+                            <h4 class="footer-link-title">Quick Links</h4>
+                            <ul class="footer-links">
+                                <li><a href="{{ url_for('tours.list_tours') }}">Tours</a></li>
+                                <li><a href="{{ url_for('bookings.book') }}">Bookings</a></li>
+                                <li><a href="{{ url_for('about') }}">About Us</a></li>
+                                <li><a href="{{ url_for('contact.contact_form') }}">Contact</a></li>
+                            </ul>
+                        </div>
+                        <!-- Support Column -->
+                        <div>
+                            <h4 class="footer-link-title">Support</h4>
+                            <ul class="footer-support">
+                                <li><a href="{{ url_for('policies.booking_policy') }}">Booking Policy</a></li>
+                                <li><a href="{{ url_for('policies.cancellation') }}">Cancellation</a></li>
+                                <li><a href="{{ url_for('policies.terms_conditions') }}">Terms & Conditions</a></li>
+                                <li><a href="{{ url_for('policies.privacy_policy') }}">Privacy Policy</a></li>
+                            </ul>
+                        </div>
+                        <!-- Contact Info Column -->
+                        <div>
+                            <h4 class="footer-link-title">Contact Info</h4>
+                            <div class="footer-contact-info">
+                                <p><i class="fas fa-envelope" style="margin-right: 0.5rem;"></i>info@tourizo.com</p>
+                                <p><i class="fas fa-phone" style="margin-right: 0.5rem;"></i>+1 (555) 123-4567</p>
+                                <p><i class="fas fa-map-marker-alt" style="margin-right: 0.5rem;"></i>123 Safari Street, Adventure City</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Copyright -->
+                    <div class="footer-copyright">
+                        © 2024 Tourizo. All rights reserved.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="{{ url_for('static', filename='js/user_dashboard_navbar.js') }}"></script>
+</body>
+
+</html> 

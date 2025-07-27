@@ -1,0 +1,451 @@
+/* Policy Pages CSS */
+:root {
+    --primary-green: #43a047;
+    --secondary-green: #388e3c;
+    --accent-green: #a5d6a7;
+    --light-green: #c8e6c9;
+    --dark-green: #1b5e20;
+    --yellow: #ffd700;
+    --white: #fff;
+    --gray: #e2e8f0;
+    --orange: #ff9800;
+}
+
+.policy-content {
+    background: var(--white);
+    padding: 3rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin: 2rem auto;
+    max-width: 1200px;
+    width: 90%;
+}
+
+.policy-title {
+    color: var(--dark-green);
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.policy-subtitle {
+    text-align: center;
+    color: var(--secondary-green);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    font-style: italic;
+}
+
+.last-updated-section {
+    background: var(--light-green);
+    color: var(--dark-green);
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-weight: 500;
+}
+
+.last-updated-section i {
+    margin-right: 0.5rem;
+}
+
+.policy-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.policy-card {
+    background: var(--white);
+    border: 1px solid var(--gray);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.policy-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.card-icon {
+    color: var(--orange);
+    font-size: 1.5rem;
+    margin-right: 1rem;
+}
+
+.card-header h3 {
+    color: var(--dark-green);
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.card-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.card-content ul li {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 0.8rem;
+    color: var(--secondary-green);
+    line-height: 1.5;
+}
+
+.card-content ul li i {
+    color: var(--primary-green);
+    margin-right: 0.8rem;
+    margin-top: 0.2rem;
+    flex-shrink: 0;
+}
+
+.policy-section {
+    margin-bottom: 2.5rem;
+}
+
+.policy-section h2 {
+    color: var(--primary-green);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    border-left: 4px solid var(--primary-green);
+    padding-left: 1rem;
+}
+
+.policy-section h3 {
+    color: var(--primary-green);
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.5rem 0;
+}
+
+.policy-section p {
+    color: var(--secondary-green);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.policy-section ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.policy-section ul li {
+    color: var(--secondary-green);
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.policy-section ul li:before {
+    content: "•";
+    color: var(--primary-green);
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+.policy-note {
+    background: var(--light-green);
+    border-left: 4px solid var(--orange);
+    padding: 1.5rem;
+    border-radius: 0 8px 8px 0;
+    margin-top: 2rem;
+}
+
+.policy-note p {
+    margin: 0;
+    color: var(--dark-green);
+    font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .policy-cards {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .policy-card {
+        padding: 1.5rem;
+    }
+    
+    .policy-content {
+        padding: 2rem;
+        width: 95%;
+    }
+    
+    .policy-title {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .policy-content {
+        padding: 1.5rem;
+        width: 98%;
+    }
+    
+    .policy-title {
+        font-size: 1.8rem;
+    }
+    
+    .card-header h3 {
+        font-size: 1.1rem;
+    }
+}
+
+/* Cancellation Policy Specific Styles */
+.cancellation-timeline {
+    background: var(--light-green);
+    border-radius: 10px;
+    padding: 2rem;
+    margin: 1.5rem 0;
+}
+
+.timeline-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--gray);
+}
+
+.timeline-item:last-child {
+    border-bottom: none;
+}
+
+.timeline-period {
+    font-weight: 600;
+    color: var(--primary-green);
+    flex: 1;
+}
+
+.timeline-refund {
+    font-weight: 500;
+    color: var(--secondary-green);
+    flex: 1;
+    text-align: right;
+}
+
+/* Cancellation Fees Timeline Styles */
+.cancellation-fees-timeline {
+    margin: 2rem 0;
+}
+
+.cancellation-fees-timeline .timeline-item {
+    background: var(--light-green);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cancellation-fees-timeline .timeline-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.cancellation-fees-timeline .timeline-item .timeline-content {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.cancellation-fees-timeline .timeline-item .timeline-icon {
+    color: var(--primary-green);
+    font-size: 1.5rem;
+    margin-right: 1rem;
+}
+
+.cancellation-fees-timeline .timeline-item .timeline-details h4 {
+    color: var(--primary-green);
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin: 0 0 0.25rem 0;
+}
+
+.cancellation-fees-timeline .timeline-item .timeline-details p {
+    color: var(--primary-green);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.cancellation-fees-timeline .timeline-item .timeline-refund {
+    color: var(--primary-green);
+    font-weight: 700;
+    font-size: 1.3rem;
+    flex: 1;
+    text-align: right;
+}
+
+/* Tier-specific colors using root variables */
+.cancellation-fees-timeline .timeline-item.tier-1 {
+    background: var(--light-green);
+}
+
+.cancellation-fees-timeline .timeline-item.tier-1 .timeline-icon,
+.cancellation-fees-timeline .timeline-item.tier-1 .timeline-details h4,
+.cancellation-fees-timeline .timeline-item.tier-1 .timeline-details p,
+.cancellation-fees-timeline .timeline-item.tier-1 .timeline-refund {
+    color: var(--primary-green);
+}
+
+.cancellation-fees-timeline .timeline-item.tier-2 {
+    background: #fff3cd;
+}
+
+.cancellation-fees-timeline .timeline-item.tier-2 .timeline-icon,
+.cancellation-fees-timeline .timeline-item.tier-2 .timeline-details h4,
+.cancellation-fees-timeline .timeline-item.tier-2 .timeline-details p,
+.cancellation-fees-timeline .timeline-item.tier-2 .timeline-refund {
+    color: #856404;
+}
+
+.cancellation-fees-timeline .timeline-item.tier-3 {
+    background: #ffeaa7;
+}
+
+.cancellation-fees-timeline .timeline-item.tier-3 .timeline-icon,
+.cancellation-fees-timeline .timeline-item.tier-3 .timeline-details h4,
+.cancellation-fees-timeline .timeline-item.tier-3 .timeline-details p,
+.cancellation-fees-timeline .timeline-item.tier-3 .timeline-refund {
+    color: #d68910;
+}
+
+.cancellation-fees-timeline .timeline-item.tier-4 {
+    background: #f8d7da;
+}
+
+.cancellation-fees-timeline .timeline-item.tier-4 .timeline-icon,
+.cancellation-fees-timeline .timeline-item.tier-4 .timeline-details h4,
+.cancellation-fees-timeline .timeline-item.tier-4 .timeline-details p,
+.cancellation-fees-timeline .timeline-item.tier-4 .timeline-refund {
+    color: #721c24;
+}
+
+.cancellation-fees-timeline .timeline-item.tier-5 {
+    background: #e9ecef;
+}
+
+.cancellation-fees-timeline .timeline-item.tier-5 .timeline-icon,
+.cancellation-fees-timeline .timeline-item.tier-5 .timeline-details h4,
+.cancellation-fees-timeline .timeline-item.tier-5 .timeline-details p,
+.cancellation-fees-timeline .timeline-item.tier-5 .timeline-refund {
+    color: #495057;
+}
+
+@media (max-width: 768px) {
+    .timeline-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .timeline-refund {
+        text-align: left;
+    }
+    
+    .cancellation-fees-timeline .timeline-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .cancellation-fees-timeline .timeline-item .timeline-refund {
+        text-align: left;
+        align-self: flex-start;
+    }
+}
+
+/* Refund Process Steps Styles */
+.refund-steps {
+    margin: 2rem 0;
+}
+
+.refund-step {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.refund-step:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.step-number {
+    background: var(--orange);
+    color: var(--white);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-right: 1.5rem;
+    flex-shrink: 0;
+}
+
+.step-content {
+    flex: 1;
+}
+
+.step-content h4 {
+    color: var(--dark-green);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.step-content p {
+    color: var(--secondary-green);
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+}
+
+.step-content .timeframe {
+    display: flex;
+    align-items: center;
+    color: var(--secondary-green);
+    font-size: 0.9rem;
+}
+
+.step-content .timeframe i {
+    margin-right: 0.5rem;
+    color: var(--orange);
+}
+
+@media (max-width: 768px) {
+    .refund-step {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .step-number {
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
+} 
