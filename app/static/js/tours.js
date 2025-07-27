@@ -1,28 +1,12 @@
 // Tours page functionality
 function updateWishlistBadge() {
-  const badge = document.getElementById('wishlist-badge');
-  if (window.isLoggedIn) {
-    fetch('/tours/wishlist/count')
-      .then(res => res.json())
-      .then(data => {
-        if (badge) {
-          badge.textContent = data.count;
-          badge.style.display = 'flex'; // Always show badge
-        }
-      })
-      .catch(() => {
-        if (badge) {
-          badge.textContent = 0;
-          badge.style.display = 'flex'; // Always show badge
-        }
+  fetch('/tours/wishlist/count')
+    .then(res => res.json())
+    .then(data => {
+      document.querySelectorAll('.wishlist-badge').forEach(badge => {
+        badge.textContent = data.wishlist_count;
       });
-  } else {
-    const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
-    if (badge) {
-      badge.textContent = wishlist.length;
-      badge.style.display = 'flex'; // Always show badge
-    }
-  }
+    });
 }
 
 function setWishlistButtonState(tourId) {
@@ -52,14 +36,13 @@ function setWishlistButtonState(tourId) {
 
 function toggleWishlist(tourId) {
   if (window.isLoggedIn) {
-    const btn = document.getElementById('wishlist-toggle-btn') || document.querySelector('.tour-wishlist-btn[data-tour-id="' + tourId + '"]');
-    const isActive = btn && (btn.classList.contains('btn-wishlist-remove') || btn.classList.contains('active'));
+    const btn = document.querySelector('.tour-wishlist-btn[data-tour-id="' + tourId + '"]');
+    const isActive = btn && btn.classList.contains('active');
     const url = isActive ? `/tours/wishlist/remove/${tourId}` : `/tours/wishlist/add/${tourId}`;
     fetch(url, { method: 'POST' })
       .then(res => res.json())
       .then(data => {
         updateWishlistBadge();
-        location.reload();
         // Toggle the button state and icon
         if (btn) {
           btn.classList.toggle('active', !isActive);
@@ -74,6 +57,10 @@ function toggleWishlist(tourId) {
             }
           }
         }
+      })
+      .catch(error => {
+        alert('Could not update wishlist. Please try again.');
+        console.error(error);
       });
   } else {
     let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
@@ -86,7 +73,6 @@ function toggleWishlist(tourId) {
     }
     localStorage.setItem('wishlist', JSON.stringify(wishlist));
     updateWishlistBadge();
-    location.reload();
     // Toggle the button state and icon
     const btn = document.getElementById('wishlist-toggle-btn') || document.querySelector('.tour-wishlist-btn[data-tour-id="' + tourId + '"]');
     if (btn) {
@@ -152,7 +138,6 @@ document.addEventListener('DOMContentLoaded', function() {
           .then(res => res.json())
           .then(data => {
             updateWishlistBadge();
-            location.reload();
             // Only toggle state after server confirms
             this.classList.toggle('active', !isActive);
             const icon = this.querySelector('i');
@@ -176,7 +161,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         localStorage.setItem('wishlist', JSON.stringify(wishlist));
         updateWishlistBadge();
-        location.reload();
         // Toggle state visually
         this.classList.toggle('active', !inWishlist);
         const icon = this.querySelector('i');
@@ -235,12 +219,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (heartIcon.classList.contains('far')) {
                     heartIcon.classList.remove('far');
                     heartIcon.classList.add('fas');
-                    this.style.color = '#e74c3c';
                     // Add to wishlist logic here
                 } else {
                     heartIcon.classList.remove('fas');
                     heartIcon.classList.add('far');
-                    this.style.color = 'var(--primary-green)';
                     // Remove from wishlist logic here
                 }
             });
@@ -279,10 +261,9 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
 
-    // Tour detail page: wishlist toggle button
-    const detailWishlistBtn = document.getElementById('wishlist-toggle-btn');
-    if (detailWishlistBtn) {
-      detailWishlistBtn.addEventListener('click', function(e) {
+    // Attach to all wishlist buttons (tours page and detail page)
+    document.querySelectorAll('.tour-wishlist-btn, #wishlist-toggle-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
         e.preventDefault();
         const tourId = this.dataset.tourId;
         const isActive = this.classList.contains('active') || this.classList.contains('btn-wishlist-remove');
@@ -305,10 +286,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 icon.classList.add('far');
               }
             }
-            this.innerHTML = `<i class="${!isActive ? 'fas' : 'far'} fa-heart"></i> ${!isActive ? 'Remove from Wishlist' : 'Add to Wishlist'}`;
+            // If on detail page, update button text
+            if (this.id === 'wishlist-toggle-btn') {
+              this.innerHTML = `<i class="${!isActive ? 'fas' : 'far'} fa-heart"></i> ${!isActive ? 'Remove from Wishlist' : 'Add to Wishlist'}`;
+            }
           });
       });
-    }
+    });
 
     // Responsive behavior
     function handleResponsive() {

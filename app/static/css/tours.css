@@ -9,6 +9,167 @@
     --gray: #e2e8f0;
 }
 
+/* Tours Page Navbar Styles */
+.navbar-welcome {
+    width: 100%;
+    background: rgba(235, 249, 233, 0.95);
+    backdrop-filter: blur(30px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    height: 70px;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 80px;
+    height: 70px;
+}
+
+.navbar-logo {
+    display: flex;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.logo-icon {
+    color: var(--primary-green);
+    margin-right: 8px;
+    font-size: 1.5rem;
+}
+
+.logo-text {
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 700;
+    color: var(--primary-green);
+}
+
+.navbar-links {
+    list-style: none;
+    display: flex;
+    gap: 32px;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-links li a {
+    text-decoration: none;
+    color: black;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: color 0.2s, border-bottom 0.2s;
+    padding: 2px 0;
+    border-bottom: 2px solid transparent;
+}
+
+.navbar-links li a.active,
+.navbar-links li a:hover {
+    color: var(--primary-green);
+    border-bottom: 2px solid var(--primary-green);
+}
+
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.wishlist-btn {
+    background: none;
+    border: none;
+    color: var(--primary-green);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.2s;
+    padding: 0;
+    position: relative;
+}
+
+.wishlist-badge {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: var(--primary-green);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(67,160,71,0.15);
+    border: 2px solid #fff;
+    z-index: 2;
+}
+
+.wishlist-btn:hover {
+    color: var(--dark-green);
+}
+
+.navbar-login {
+    color: var(--dark-green);
+    border-radius: 8px;
+    border: 2px solid var(--dark-green);
+    background: transparent;
+    padding: 8px 20px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.navbar-login:hover {
+    color: var(--white);
+    background: var(--dark-green);
+    text-decoration: none;
+}
+
+/* Responsive Navbar */
+@media (max-width: 900px) {
+    .navbar-container {
+        padding: 0 20px;
+    }
+    
+    .navbar-links {
+        gap: 20px;
+    }
+    
+    .navbar-links li a {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar-links {
+        gap: 16px;
+    }
+    
+    .navbar-links li a {
+        font-size: 0.9rem;
+    }
+    
+    .navbar-actions {
+        gap: 12px;
+    }
+    
+    .navbar-login {
+        padding: 6px 16px;
+        font-size: 0.9rem;
+    }
+}
+
+
 /* Tours page specific styles */
 .tours-container {
     margin-top: 100px;
@@ -1205,6 +1366,119 @@
     }
 } 
 
+/* Pagination Styles */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.page-item {
+    margin: 0;
+}
+
+.page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: 2px solid var(--primary-green);
+    background: white;
+    color: var(--primary-green);
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(67, 160, 71, 0.15);
+}
+
+.page-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.page-link:hover::before {
+    left: 100%;
+}
+
+.page-link:hover {
+    background: var(--primary-green);
+    color: white;
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(67, 160, 71, 0.25);
+}
+
+.page-item.active .page-link {
+    background: var(--primary-green);
+    color: white;
+    border-color: var(--primary-green);
+    box-shadow: 0 4px 12px rgba(67, 160, 71, 0.3);
+    transform: translateY(-1px);
+}
+
+.page-item.disabled .page-link {
+    background: #f8f9fa;
+    color: #adb5bd;
+    border-color: #dee2e6;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+.page-item.disabled .page-link:hover {
+    background: #f8f9fa;
+    color: #adb5bd;
+    transform: none;
+    box-shadow: none;
+}
+
+.page-item.disabled .page-link::before {
+    display: none;
+}
+
+/* Responsive pagination */
+@media (max-width: 768px) {
+    .pagination {
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+    }
+    
+    .page-link {
+        width: 38px;
+        height: 38px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .pagination {
+        gap: 0.25rem;
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .page-link {
+        width: 35px;
+        height: 35px;
+        font-size: 0.85rem;
+    }
+}
+
+/* Tour Wishlist Button Styles */
 .tour-wishlist-btn {
     background: #fff;
     border: none;
@@ -1233,4 +1507,14 @@
 .tour-wishlist-btn:focus {
     outline: none;
     box-shadow: 0 0 0 2px var(--primary-green, #43a047);
+} 
+
+/* Wishlist heart icon styles */
+.tour-wishlist-btn i {
+  color: #fff; /* white for inactive */
+  transition: color 0.2s;
+}
+.tour-wishlist-btn.active i,
+.tour-wishlist-btn.btn-wishlist-remove i {
+  color: #3cb371; /* green for active */
 } 

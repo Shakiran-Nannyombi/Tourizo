@@ -19,7 +19,7 @@ body, html {
 .auth-bg {
     min-height: 100vh;
     width: 100vw;
-    background: linear-gradient(135deg, #c8e6c9 0%, #fff 100%);
+    background: #fff;
     display: flex;
     flex-direction: column;
     align-items: center;
