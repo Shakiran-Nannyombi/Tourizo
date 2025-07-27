@@ -1,429 +1,238 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% block title %}Add Review - {{ tour.title }} - Tourizo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/user_page.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/reviews.css') }}">
+{% endblock %}
+
 {% block content %}
-<style>
-  :root {
-    --primary-color: #2c5530;
-    --secondary-color: #4a7c59;
-    --accent-color: #ff6b35;
-    --text-dark: #2d3436;
-    --text-light: #636e72;
-    --success-color: #28a745;
-    --warning-color: #ffc107;
-  }
-
-  body {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
-    position: relative;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-
-  /* Animated background particles */
-  body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image:
-      radial-gradient(circle at 25% 75%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 75% 25%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
-    animation: float 25s ease-in-out infinite;
-    z-index: -1;
-  }
-
-  @keyframes float {
-
-    0%,
-    100% {
-      transform: translateY(0px) rotate(0deg);
-    }
-
-    33% {
-      transform: translateY(-10px) rotate(1deg);
-    }
-
-    66% {
-      transform: translateY(10px) rotate(-1deg);
-    }
-  }
-
-  /* Main Container */
-  .container {
-    position: relative;
-    z-index: 1;
-  }
-
-  /* Form Container */
-  .form-container {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(15px);
-    border-radius: 25px;
-    padding: 3rem;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-    margin: 2rem auto;
-    max-width: 800px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .form-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 6px;
-    background: linear-gradient(90deg, var(--accent-color), var(--primary-color), var(--secondary-color));
-    border-radius: 25px 25px 0 0;
-  }
-
-  /* Page Title */
-  .page-title {
-    text-align: center;
-    margin-bottom: 2.5rem;
-    position: relative;
-  }
-
-  .page-title h2 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--primary-color);
-    margin-bottom: 0.5rem;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-
-  .page-title::after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100px;
-    height: 4px;
-    background: linear-gradient(to right, var(--accent-color), var(--secondary-color));
-    border-radius: 2px;
-  }
-
-  .tour-name {
-    color: var(--accent-color);
-    font-style: italic;
-    font-weight: 600;
-  }
-
-  /* Form Styling */
-  .form-group {
-    margin-bottom: 2rem;
-    position: relative;
-  }
-
-  .form-label {
-    font-weight: 600;
-    color: var(--text-dark);
-    margin-bottom: 0.75rem;
-    font-size: 1.1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .form-control,
-  .form-select {
-    border: 2px solid #e9ecef;
-    border-radius: 15px;
-    padding: 1rem 1.25rem;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(5px);
-  }
-
-  .form-control:focus,
-  .form-select:focus {
-    border-color: var(--secondary-color);
-    box-shadow: 0 0 0 0.2rem rgba(74, 124, 89, 0.25);
-    background: white;
-    transform: translateY(-2px);
-  }
-
-  .form-control:hover,
-  .form-select:hover {
-    border-color: var(--secondary-color);
-    transform: translateY(-1px);
-  }
-
-  /* Rating Select Special Styling */
-  .rating-select {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23ffc107' viewBox='0 0 16 16'%3e%3cpath d='M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z'/%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 1rem center;
-    background-size: 1.2rem;
-    padding-right: 3rem;
-  }
-
-  /* Textarea Special Styling */
-  textarea.form-control {
-    resize: vertical;
-    min-height: 120px;
-    line-height: 1.6;
-  }
-
-  /* Error Messages */
-  .text-danger {
-    font-size: 0.875rem;
-    margin-top: 0.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-weight: 500;
-  }
-
-  .text-danger::before {
-    content: '⚠️';
-    font-size: 1rem;
-  }
-
-  /* Submit Button */
-  .btn-submit {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    border: none;
-    color: white;
-    padding: 1rem 3rem;
-    font-size: 1.1rem;
-    font-weight: 600;
-    border-radius: 50px;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    box-shadow: 0 8px 25px rgba(44, 85, 48, 0.3);
-  }
-
-  .btn-submit:hover {
-    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
-    transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(44, 85, 48, 0.4);
-    color: white;
-  }
-
-  .btn-submit:active {
-    transform: translateY(-1px);
-  }
-
-  .btn-submit::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.5s;
-  }
-
-  .btn-submit:hover::before {
-    left: 100%;
-  }
-
-  /* Form Icons */
-  .icon-star::before {
-    content: '⭐';
-  }
-
-  .icon-user::before {
-    content: '👤';
-  }
-
-  .icon-email::before {
-    content: '📧';
-  }
-
-  .icon-comment::before {
-    content: '💬';
-  }
-
-  /* Rating Options Enhancement */
-  .form-select option {
-    padding: 0.5rem;
-    font-weight: 500;
-  }
-
-  /* Button Container */
-  .button-container {
-    text-align: center;
-    margin-top: 2.5rem;
-    padding-top: 2rem;
-    border-top: 2px solid rgba(74, 124, 89, 0.1);
-  }
-
-  /* Mobile Responsiveness */
-  @media (max-width: 768px) {
-    .form-container {
-      margin: 1rem;
-      padding: 2rem 1.5rem;
-    }
-
-    .page-title h2 {
-      font-size: 2rem;
-    }
-
-    .form-control,
-    .form-select {
-      padding: 0.875rem 1rem;
-    }
-
-    .btn-submit {
-      padding: 0.875rem 2rem;
-      font-size: 1rem;
-    }
-  }
-
-  /* Floating Labels Effect */
-  .form-floating {
-    position: relative;
-  }
-
-  .form-floating .form-control:focus~.floating-label,
-  .form-floating .form-control:not(:placeholder-shown)~.floating-label {
-    transform: translateY(-1.5rem) scale(0.85);
-    color: var(--secondary-color);
-  }
-
-  /* Tour Info Card */
-  .tour-info {
-    background: linear-gradient(135deg, rgba(74, 124, 89, 0.1), rgba(255, 107, 53, 0.1));
-    border-radius: 15px;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-    border-left: 5px solid var(--accent-color);
-  }
-
-  .tour-info h3 {
-    color: var(--primary-color);
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-  }
-
-  .tour-info p {
-    color: var(--text-light);
-    margin-bottom: 0;
-    font-style: italic;
-  }
-
-  /* Success Animation */
-  @keyframes submitSuccess {
-    0% {
-      transform: scale(1);
-    }
-
-    50% {
-      transform: scale(1.05);
-    }
-
-    100% {
-      transform: scale(1);
-    }
-  }
-
-  .btn-submit.submitted {
-    animation: submitSuccess 0.3s ease;
-  }
-</style>
-
-<div class="container py-5">
-  <div class="form-container">
-    <div class="page-title">
-      <h2 class="mb-4">📝 Leave a Review for <span class="tour-name">{{ tour.title }}</span></h2>
+<!-- Navbar -->
+<nav class="navbar-welcome">
+    <div class="navbar-container">
+        <div class="navbar-logo">
+            <i class="fas fa-leaf logo-icon"></i>
+            <span class="logo-text">Tourizo</span>
+        </div>
+        <ul class="navbar-links">
+            <li><a href="{{ url_for('auth.user_dashboard') }}" class="{% if request.endpoint == 'auth.user_dashboard' %}active{% endif %}">Home</a></li>
+            <li><a href="{{ url_for('tours.list_tours') }}" class="{% if request.endpoint == 'tours.list_tours' %}active{% endif %}">Tours</a></li>
+            <li><a href="{{ url_for('bookings.book') }}" class="{% if request.endpoint == 'bookings.my_bookings' %}active{% endif %}">Bookings</a></li>
+            <li><a href="{{ url_for('reviews.my_reviews') }}" class="{% if request.endpoint == 'reviews.my_reviews' %}active{% endif %}">Reviews</a></li>
+            <li><a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %}">About</a></li>
+            <li><a href="{{ url_for('contact.contact_form') }}" class="{% if request.endpoint == 'contact.contact_form' %}active{% endif %}">Contact</a></li>
+        </ul>
+        <div class="navbar-actions">
+            <button class="wishlist-btn" id="navbar-wishlist-btn" title="Wishlist" onclick="window.location.href='/tours/wishlist'">
+                <i class="far fa-heart"></i>
+                <span class="wishlist-badge" id="wishlist-badge">0</span>
+            </button>
+            <div class="user-profile-dropdown">
+                <div class="user-profile" onclick="toggleProfileDropdown()">
+                    <div class="user-avatar">{{ current_user.username[0]|upper }}</div>
+                    <div class="user-name">{{ current_user.username }}</div>
+                    <i class="fas fa-chevron-down dropdown-arrow"></i>
+                </div>
+                <div class="profile-dropdown-menu" id="profileDropdown">
+                    <a href="{{ url_for('auth.profile') }}" class="dropdown-item">
+                        <i class="fas fa-user"></i> Profile
+                    </a>
+                    <a href="{{ url_for('auth.settings') }}" class="dropdown-item">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="{{ url_for('auth.logout') }}" class="dropdown-item">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
+</nav>
 
-    <div class="tour-info">
-      <h3>🎯 Share Your Experience</h3>
-      <p>Help fellow travelers by sharing your authentic experience with this tour. Your feedback matters!</p>
+<!-- Main Content -->
+<div class="main-content">
+    <div class="add-review-page">
+        <div class="add-review-container">
+            <!-- Page Header -->
+            <div class="add-review-header">
+                <h1 class="add-review-title">
+                    <i class="fas fa-star"></i>
+                    Leave a Review for <span class="tour-name">{{ tour.title }}</span>
+                </h1>
+                <p class="add-review-subtitle">Share your experience and help fellow travelers</p>
+            </div>
+
+            <!-- Tour Info Card -->
+            <div class="tour-info-card">
+                <div class="tour-info-header">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h3>Tour Information</h3>
+                </div>
+                <div class="tour-info-content">
+                    <p><strong>Destination:</strong> {{ tour.destination.name if tour.destination else 'Not specified' }}</p>
+                    <p><strong>Duration:</strong> {{ tour.duration }} days</p>
+                    <p><strong>Price:</strong> ${{ tour.price }}</p>
+                </div>
+            </div>
+
+            <!-- Review Form -->
+            <div class="review-form-card">
+                <form method="POST" id="reviewForm">
+                    {{ form.hidden_tag() }}
+
+                    <!-- Rating Section -->
+                    <div class="form-section">
+                        <label class="form-label">
+                            <i class="fas fa-star"></i>
+                            {{ form.rating.label }}
+                        </label>
+                        {{ form.rating(class="form-control rating-select") }}
+                        {% for error in form.rating.errors %}
+                        <div class="error-message">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Name Section -->
+                    <div class="form-section">
+                        <label class="form-label">
+                            <i class="fas fa-user"></i>
+                            {{ form.reviewer_name.label }}
+                        </label>
+                        {{ form.reviewer_name(class="form-control", placeholder="Enter your full name") }}
+                        {% for error in form.reviewer_name.errors %}
+                        <div class="error-message">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Email Section -->
+                    <div class="form-section">
+                        <label class="form-label">
+                            <i class="fas fa-envelope"></i>
+                            {{ form.reviewer_email.label }}
+                        </label>
+                        {{ form.reviewer_email(class="form-control", placeholder="Enter your email address") }}
+                        {% for error in form.reviewer_email.errors %}
+                        <div class="error-message">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Review Comment Section -->
+                    <div class="form-section">
+                        <label class="form-label">
+                            <i class="fas fa-comment"></i>
+                            {{ form.comment.label }}
+                        </label>
+                        {{ form.comment(class="form-control review-textarea", rows=5, placeholder="Share your detailed experience, what you loved, and any suggestions...") }}
+                        {% for error in form.comment.errors %}
+                        <div class="error-message">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="form-actions">
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-paper-plane"></i>
+                            Submit Review
+                        </button>
+                        <a href="{{ url_for('reviews.my_reviews') }}" class="btn-cancel">
+                            <i class="fas fa-arrow-left"></i>
+                            Back to Reviews
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-
-    <form method="POST" id="reviewForm">
-      {{ form.hidden_tag() }}
-
-      <div class="form-group mb-3">
-        {{ form.rating.label(class="form-label icon-star") }}
-        {{ form.rating(class="form-select rating-select") }}
-        {% for error in form.rating.errors %}
-        <div class="text-danger small">{{ error }}</div>
-        {% endfor %}
-      </div>
-
-      <div class="form-group mb-3">
-        {{ form.reviewer_name.label(class="form-label icon-user") }}
-        {{ form.reviewer_name(class="form-control", placeholder="Enter your full name") }}
-        {% for error in form.reviewer_name.errors %}
-        <div class="text-danger small">{{ error }}</div>
-        {% endfor %}
-      </div>
-
-      <div class="form-group mb-3">
-        {{ form.reviewer_email.label(class="form-label icon-email") }}
-        {{ form.reviewer_email(class="form-control", placeholder="Enter your email address") }}
-        {% for error in form.reviewer_email.errors %}
-        <div class="text-danger small">{{ error }}</div>
-        {% endfor %}
-      </div>
-
-      <div class="form-group mb-3">
-        {{ form.comment.label(class="form-label icon-comment") }}
-        {{ form.comment(class="form-control", rows=5, placeholder="Share your detailed experience, what you loved, and
-        any suggestions...") }}
-        {% for error in form.comment.errors %}
-        <div class="text-danger small">{{ error }}</div>
-        {% endfor %}
-      </div>
-
-      <div class="button-container">
-        <button type="submit" class="btn btn-submit">
-          ✨ Submit Review
-        </button>
-      </div>
-    </form>
-  </div>
 </div>
 
+<!-- Footer -->
+<div class="bottom-sections" style="margin-top: 1rem;">
+    <div class="footer-bottom">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <!-- Tourizo Column -->
+                <div>
+                    <h3 class="footer-title">Tourizo</h3>
+                    <p style="color: #ccc; margin-bottom: 1rem;">Your gateway to unforgettable African safari adventures.</p>
+                    <div class="footer-social">
+                        <div class="footer-social-dot"></div>
+                        <div class="footer-social-dot"></div>
+                        <div class="footer-social-dot"></div>
+                    </div>
+                </div>
+                <!-- Quick Links Column -->
+                <div>
+                    <h4 class="footer-link-title">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="{{ url_for('tours.list_tours') }}">Tours</a></li>
+                        <li><a href="{{ url_for('bookings.book') }}">Bookings</a></li>
+                        <li><a href="{{ url_for('about') }}">About Us</a></li>
+                        <li><a href="{{ url_for('contact.contact_form') }}">Contact</a></li>
+                    </ul>
+                </div>
+                <!-- Support Column -->
+                <div>
+                    <h4 class="footer-link-title">Support</h4>
+                                            <ul class="footer-support">
+                            <li><a href="{{ url_for('policies.booking_policy') }}">Booking Policy</a></li>
+                            <li><a href="{{ url_for('policies.cancellation') }}">Cancellation</a></li>
+                            <li><a href="{{ url_for('policies.terms_conditions') }}">Terms & Conditions</a></li>
+                            <li><a href="{{ url_for('policies.privacy_policy') }}">Privacy Policy</a></li>
+                        </ul>
+                </div>
+                <!-- Contact Info Column -->
+                <div>
+                    <h4 class="footer-link-title">Contact Info</h4>
+                    <div class="footer-contact-info">
+                        <p><i class="fas fa-envelope" style="margin-right: 0.5rem;"></i>info@tourizo.com</p>
+                        <p><i class="fas fa-phone" style="margin-right: 0.5rem;"></i>+1 (555) 123-4567</p>
+                        <p><i class="fas fa-map-marker-alt" style="margin-right: 0.5rem;"></i>123 Safari Street, Adventure City</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Copyright -->
+            <div class="footer-copyright">
+                © 2024 Tourizo. All rights reserved.
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Profile Dropdown JavaScript -->
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    // Add form submission animation
-    const form = document.getElementById('reviewForm');
-    const submitBtn = document.querySelector('.btn-submit');
-
-    form.addEventListener('submit', function () {
-      submitBtn.classList.add('submitted');
-      submitBtn.innerHTML = '🚀 Submitting...';
-      submitBtn.disabled = true;
-    });
-
-    // Add smooth focus effects
-    const formControls = document.querySelectorAll('.form-control, .form-select');
-    formControls.forEach(control => {
-      control.addEventListener('focus', function () {
-        this.parentElement.style.transform = 'translateY(-2px)';
-      });
-
-      control.addEventListener('blur', function () {
-        this.parentElement.style.transform = 'translateY(0)';
-      });
-    });
-
-    // Rating select enhancement
-    const ratingSelect = document.querySelector('.rating-select');
-    if (ratingSelect) {
-      ratingSelect.addEventListener('change', function () {
-        const value = this.value;
-        if (value) {
-          this.style.color = '#ffc107';
-          this.style.fontWeight = '600';
-        }
-      });
+    function toggleProfileDropdown() {
+        const dropdown = document.querySelector('.user-profile-dropdown');
+        dropdown.classList.toggle('active');
     }
-  });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdown = document.querySelector('.user-profile-dropdown');
+        const profileButton = document.querySelector('.user-profile');
+        
+        if (!dropdown.contains(event.target)) {
+            dropdown.classList.remove('active');
+        }
+    });
+    
+    // Close dropdown when pressing Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            const dropdown = document.querySelector('.user-profile-dropdown');
+            dropdown.classList.remove('active');
+        }
+    });
+
+    // Form submission animation
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('reviewForm');
+        const submitBtn = document.querySelector('.btn-submit');
+
+        form.addEventListener('submit', function () {
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+            submitBtn.disabled = true;
+        });
+    });
 </script>
 {% endblock %}

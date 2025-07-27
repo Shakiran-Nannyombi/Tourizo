@@ -1,112 +1,269 @@
-{% extends 'base.html' %}
-{% block title %}My Profile{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block content %}
-<style>
-    body {
-        background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e');
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-    }
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Profile - Tourizo</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user_page.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}" />
+</head>
 
-    .card {
-        background-color: rgba(255, 255, 255, 0.95);
-        border-radius: 20px;
-        padding: 30px;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-    }
+<body>
+    <!-- Navbar -->
+    <nav class="navbar-welcome">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <i class="fas fa-leaf logo-icon"></i>
+                <span class="logo-text">Tourizo</span>
+            </div>
 
-    .form-label {
-        font-weight: 600;
-        color: #333;
-        margin-bottom: 6px;
-    }
+            <ul class="navbar-links">
+                <li><a href="{{ url_for('auth.user_dashboard') }}" class="{% if request.endpoint == 'auth.user_dashboard' %}active{% endif %}">Home</a></li>
+                <li><a href="{{ url_for('tours.list_tours') }}" class="{% if request.endpoint == 'tours.list_tours' %}active{% endif %}">Tours</a></li>
+                <li><a href="{{ url_for('bookings.my_bookings') }}" class="{% if request.endpoint == 'bookings.my_bookings' %}active{% endif %}">Bookings</a></li>
+                <li><a href="{{ url_for('reviews.my_reviews') }}" class="{% if request.endpoint == 'reviews.my_reviews' %}active{% endif %}">Reviews</a></li>
+                <li><a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %}">About</a></li>
+                <li><a href="{{ url_for('contact.contact_form') }}" class="{% if request.endpoint == 'contact.contact_form' %}active{% endif %}">Contact</a></li>
+            </ul>
 
-    .form-control {
-        border-radius: 12px;
-        padding: 10px 15px;
-        border: 1px solid #ced4da;
-        transition: all 0.3s ease-in-out;
-        box-shadow: none;
-    }
+            <div class="navbar-actions">
+                <button class="wishlist-btn" id="navbar-wishlist-btn" title="Wishlist" onclick="window.location.href='/tours/wishlist'">
+                    <i class="far fa-heart"></i>
+                    <span class="wishlist-badge" id="wishlist-badge">0</span>
+                </button>
+                <div class="user-profile-dropdown">
+                    <div class="user-profile" onclick="toggleProfileDropdown()">
+                        <div class="user-avatar">{{ current_user.username[0]|upper }}</div>
+                        <div class="user-name">{{ current_user.username }}</div>
+                        <i class="fas fa-chevron-down dropdown-arrow"></i>
+                    </div>
+                    <div class="profile-dropdown-menu" id="profileDropdown">
+                        <a href="{{ url_for('auth.profile') }}" class="dropdown-item">
+                            <i class="fas fa-user"></i> Profile
+                        </a>
+                        <a href="{{ url_for('auth.settings') }}" class="dropdown-item">
+                            <i class="fas fa-cog"></i> Settings
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="{{ url_for('auth.logout') }}" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-    .form-control:focus {
-        border-color: #1e88e5;
-        box-shadow: 0 0 0 0.2rem rgba(30, 136, 229, 0.25);
-    }
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <div class="avatar-circle">
+                    <span class="avatar-text">{{ current_user.username[0]|upper }}</span>
+                </div>
+            </div>
+            <div class="profile-info">
+                <h1 class="profile-name">{{ current_user.username }}</h1>
+                <p class="profile-email">{{ current_user.email }}</p>
+            </div>
+        </div>
 
-    .btn-primary {
-        background-color: #1e88e5;
-        border: none;
-        border-radius: 25px;
-        padding: 12px 25px;
-        font-weight: bold;
-        letter-spacing: 0.5px;
-        transition: all 0.3s ease;
-    }
+        <!-- Profile Form -->
+        <div class="profile-form-container">
+            <div class="profile-form-card">
+                <div class="form-header">
+                    <h2><i class="fas fa-user-edit"></i> Edit Profile</h2>
+                    <p>Update your personal information and preferences</p>
+                </div>
 
-    .btn-primary:hover {
-        background-color: #1565c0;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(21, 101, 192, 0.4);
-    }
-
-    h3 {
-        color: #2e7d32;
-        font-weight: bold;
-        text-align: center;
-        margin-bottom: 25px;
-    }
-
-    .text-danger {
-        font-size: 0.875rem;
-        margin-top: 5px;
-    }
-
-    .form-text {
-        font-size: 0.875rem;
-        color: #6c757d;
-    }
-</style>
-
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 90vh;">
-    <div class="col-md-6">
-        <div class="card">
-            <h3>Manage Your Profile</h3>
-            <form method="POST">
+                <form method="POST" class="profile-form">
                 {{ form.hidden_tag() }}
 
-                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form.first_name.label(class="form-label") }}
+                                {{ form.first_name(class="form-control", placeholder="Enter your first name", value=current_user.first_name or '') }}
+                                {% for error in form.first_name.errors %}
+                                <div class="error-message">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form.last_name.label(class="form-label") }}
+                                {{ form.last_name(class="form-control", placeholder="Enter your last name", value=current_user.last_name or '') }}
+                                {% for error in form.last_name.errors %}
+                                <div class="error-message">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
                     {{ form.username.label(class="form-label") }}
-                    {{ form.username(class="form-control") }}
+                                {{ form.username(class="form-control", placeholder="Choose a unique username", value=current_user.username) }}
                     {% for error in form.username.errors %}
-                    <div class="text-danger">{{ error }}</div>
+                                <div class="error-message">{{ error }}</div>
                     {% endfor %}
                 </div>
-
-                <div class="mb-3">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
                     {{ form.email.label(class="form-label") }}
-                    {{ form.email(class="form-control") }}
+                                {{ form.email(class="form-control", placeholder="your.email@example.com", value=current_user.email) }}
                     {% for error in form.email.errors %}
-                    <div class="text-danger">{{ error }}</div>
+                                <div class="error-message">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form.phone.label(class="form-label") }}
+                                {{ form.phone(class="form-control", placeholder="+1234567890", value=current_user.phone or '') }}
+                                {% for error in form.phone.errors %}
+                                <div class="error-message">{{ error }}</div>
                     {% endfor %}
                 </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Date of Birth</label>
+                                <input type="date" name="date_of_birth" class="form-control" placeholder="Select your birth date" value="{{ current_user.date_of_birth.strftime('%Y-%m-%d') if current_user.date_of_birth else '' }}">
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="mb-3">
+                    <div class="form-group">
+                        <label class="form-label">Bio</label>
+                        <textarea name="bio" class="form-control" rows="4" placeholder="Tell us about yourself...">{{ current_user.bio or '' }}</textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Country</label>
+                                <select class="form-control">
+                                    <option value="">Select your country</option>
+                                    <option value="uganda">Uganda</option>
+                                    <option value="kenya">Kenya</option>
+                                    <option value="tanzania">Tanzania</option>
+                                    <option value="usa">United States</option>
+                                    <option value="uk">United Kingdom</option>
+                                    <option value="canada">Canada</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">City</label>
+                                <input type="text" class="form-control" placeholder="Enter your city">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Preferred Language</label>
+                                <select class="form-control">
+                                    <option value="en">English</option>
+                                    <option value="sw">Swahili</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Travel Preferences</label>
+                                <select class="form-control">
+                                    <option value="">Select preferences</option>
+                                    <option value="adventure">Adventure</option>
+                                    <option value="cultural">Cultural</option>
+                                    <option value="wildlife">Wildlife</option>
+                                    <option value="relaxation">Relaxation</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="form-divider">
+
+                    <div class="password-section">
+                        <h3><i class="fas fa-lock"></i> Change Password</h3>
+                        <p class="section-description">Leave blank to keep your current password</p>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
                     {{ form.password.label(class="form-label") }}
-                    {{ form.password(class="form-control") }}
-                    <small class="form-text">Leave blank to keep your current password</small>
+                                    {{ form.password(class="form-control", placeholder="Enter new password") }}
                     {% for error in form.password.errors %}
-                    <div class="text-danger">{{ error }}</div>
+                                    <div class="error-message">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.confirm_password.label(class="form-label") }}
+                                    {{ form.confirm_password(class="form-control", placeholder="Confirm new password") }}
+                                    {% for error in form.confirm_password.errors %}
+                                    <div class="error-message">{{ error }}</div>
                     {% endfor %}
+                                </div>
+                            </div>
+                        </div>
                 </div>
 
-                <div class="d-grid mt-4">
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary">Cancel</button>
                     {{ form.submit(class="btn btn-primary") }}
                 </div>
             </form>
         </div>
     </div>
 </div>
-{% endblock %}
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+     <!-- Custom JavaScript -->
+     <script src="{{ url_for('static', filename='js/user_dashboard_navbar.js') }}"></script>
+    <!-- Profile Dropdown JavaScript -->
+    <script>
+        function toggleProfileDropdown() {
+            const dropdown = document.querySelector('.user-profile-dropdown');
+            dropdown.classList.toggle('active');
+        }
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.querySelector('.user-profile-dropdown');
+            const profileButton = document.querySelector('.user-profile');
+            
+            if (!dropdown.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+        
+        // Close dropdown when pressing Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const dropdown = document.querySelector('.user-profile-dropdown');
+                dropdown.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+
+</html>

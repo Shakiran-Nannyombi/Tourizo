@@ -1,312 +1,342 @@
 {% extends 'base.html' %}
-
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bookings.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/user_page.css') }}">
+{% endblock %}
 {% block content %}
-<div class="container mt-4">
-  <!-- Hero Header with Background Image -->
-  <div class="card bg-dark text-white mb-4 border-0" style="border-radius: 12px; overflow: hidden;">
-    <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" 
-         class="card-img" alt="Travel Adventure" style="height: 200px; object-fit: cover;">
-    <div class="card-img-overlay d-flex align-items-center" style="background-color: rgba(0,0,0,0.3);">
-      <div>
-        <h1 class="card-title display-6"><i class="fas fa-bookmark me-2"></i> My Bookings</h1>
-        <p class="card-text">Manage your upcoming adventures and experiences</p>
-      </div>
-    </div>
-  </div>
+    <!-- Navbar -->
+    <nav class="navbar-welcome">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <i class="fas fa-leaf logo-icon"></i>
+                <span class="logo-text">Tourizo</span>
+            </div>
+            <ul class="navbar-links">
+                <li><a href="{{ url_for('auth.user_dashboard') }}" class="{% if request.endpoint == 'auth.user_dashboard' %}active{% endif %}">Home</a></li>
+                <li><a href="{{ url_for('tours.list_tours') }}" class="{% if request.endpoint == 'tours.list_tours' %}active{% endif %}">Tours</a></li>
+                <li><a href="{{ url_for('bookings.book') }}" class="{% if request.endpoint == 'bookings.my_bookings' %}active{% endif %}">Bookings</a></li>
+                <li><a href="{{ url_for('reviews.my_reviews') }}" class="{% if request.endpoint == 'reviews.my_reviews' %}active{% endif %}">Reviews</a></li>
+                <li><a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %}">About</a></li>
+                <li><a href="{{ url_for('contact.contact_form') }}" class="{% if request.endpoint == 'contact.contact_form' %}active{% endif %}">Contact</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <button class="wishlist-btn" id="navbar-wishlist-btn" title="Wishlist" onclick="window.location.href='/tours/wishlist'">
+                    <i class="far fa-heart"></i>
+                    <span class="wishlist-badge" id="wishlist-badge">0</span>
+                </button>
+                <div class="user-profile-dropdown">
+                    <div class="user-profile" onclick="toggleProfileDropdown()">
+                        <div class="user-avatar">{{ current_user.username[0]|upper }}</div>
+                        <div class="user-name">{{ current_user.username }}</div>
+                        <i class="fas fa-chevron-down dropdown-arrow"></i>
+                    </div>
+                    <div class="profile-dropdown-menu" id="profileDropdown">
+                        <a href="{{ url_for('auth.profile') }}" class="dropdown-item">
+                            <i class="fas fa-user"></i> Profile
+                        </a>
+                        <a href="{{ url_for('auth.settings') }}" class="dropdown-item">
+                            <i class="fas fa-cog"></i> Settings
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="{{ url_for('auth.logout') }}" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-  {% if bookings %}
-  <div class="row row-cols-1 row-cols-md-2 g-4">
-    {% for b in bookings %}
-    <div class="col">
-      <div class="card h-100 shadow-sm" style="border-radius: 12px; border: none;">
-        <div class="card-header" style="background-color: #3a5a40; color: white; border-radius: 12px 12px 0 0 !important;">
-          <div class="d-flex justify-content-between align-items-center">
-            <div>
-              <h5 class="mb-0"><i class="fas fa-receipt me-2"></i> {{ b.reference }}</h5>
+    <div class="my-bookings-container">
+        <div class="container mt-4">
+            <!-- Hero Header with Background Image -->
+            <div class="card bg-dark text-white mb-4 border-0" style="border-radius: 12px; overflow: hidden;">
+                <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" 
+                     class="card-img" alt="Travel Adventure" style="height: 200px; object-fit: cover;">
+                <div class="card-img-overlay d-flex align-items-center" style="background-color: rgba(0,0,0,0.3);">
+                    <div>
+                        <h1 class="card-title display-6"><i class="fas fa-bookmark me-2"></i> My Bookings</h1>
+                        <p class="card-text">Manage your upcoming adventures and experiences</p>
+                    </div>
+                </div>
             </div>
-            <div>
-              {% set badge = 'success' if b.payment_status|lower == 'paid'
-              else 'danger' if b.payment_status|lower == 'cancelled'
-              else 'warning' %}
-              <span class="badge bg-{{ badge }} text-white">
-                {% if b.payment_status|lower == 'paid' %}
-                <i class="fas fa-check-circle me-1"></i>
-                {% elif b.payment_status|lower == 'cancelled' %}
-                <i class="fas fa-times-circle me-1"></i>
-                {% else %}
-                <i class="fas fa-hourglass-half me-1"></i>
-                {% endif %}
-                {{ b.payment_status|capitalize }}
-              </span>
+
+            {% if bookings %}
+            <div class="row row-cols-1 row-cols-md-2 g-4">
+                {% for b in bookings %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm" style="border-radius: 12px; border: none;">
+                        <div class="card-header" style="background-color: #3a5a40; color: white; border-radius: 12px 12px 0 0 !important;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="mb-0"><i class="fas fa-receipt me-2"></i> {{ b.reference }}</h5>
+                                </div>
+                                <div>
+                                    {% set badge = 'success' if b.payment_status|lower == 'paid'
+                                    else 'danger' if b.payment_status|lower == 'cancelled'
+                                    else 'warning' %}
+                                    <span class="badge bg-{{ badge }} text-white">
+                                        {% if b.payment_status|lower == 'paid' %}
+                                        <i class="fas fa-check-circle me-1"></i>
+                                        {% elif b.payment_status|lower == 'cancelled' %}
+                                        <i class="fas fa-times-circle me-1"></i>
+                                        {% else %}
+                                        <i class="fas fa-hourglass-half me-1"></i>
+                                        {% endif %}
+                                        {{ b.payment_status|capitalize }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-body">
+                            <div class="d-flex mb-3">
+                                <div class="flex-shrink-0">
+                                    <img src="https://images.unsplash.com/photo-1508672019048-805c876b67e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" 
+                                         class="rounded" alt="Travel" style="width: 100px; height: 100px; object-fit: cover;">
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h5 class="card-title">{{ b.full_name }}</h5>
+                                    <div class="d-flex flex-wrap gap-2 mb-2">
+                                        <span class="badge bg-info text-dark">
+                                            <i class="fas fa-users me-1"></i> {{ b.num_people }} person(s)
+                                        </span>
+                                        <span class="badge bg-success text-white">
+                                            <i class="fas fa-money-bill-wave me-1"></i> {{ '{:,.0f}'.format(b.total_amount) }} UGX
+                                        </span>
+                                    </div>
+                                    {% if b.booking_date %}
+                                    <p class="mb-1"><i class="fas fa-calendar-day me-2 text-primary"></i> {{ b.booking_date }}</p>
+                                    {% endif %}
+                                    {% if b.booking_time %}
+                                    <p class="mb-0"><i class="fas fa-clock me-2 text-primary"></i> {{ b.booking_time.strftime('%H:%M') }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer bg-transparent border-top-0">
+                            <div class="d-flex justify-content-between">
+                                <a href="{{ url_for('bookings.edit_booking', booking_id=b.id) }}" 
+                                   class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-edit me-1"></i> Edit
+                                </a>
+                                
+                                {% if b.payment_status|lower != 'cancelled' %}
+                                <button type="button" class="btn btn-outline-danger btn-sm" 
+                                        data-bs-toggle="modal" data-bs-target="#cancelModal{{ b.id }}">
+                                    <i class="fas fa-ban me-1"></i> Cancel
+                                </button>
+                                {% endif %}
+                                
+                                {% if b.payment_status|lower == 'cancelled' %}
+                                <form method="post" action="{{ url_for('bookings.delete_booking', booking_id=b.id) }}"
+                                      onsubmit="return confirm('Permanently delete this booking?');">
+                                    {{ delete_form.csrf_token }}
+                                    <button class="btn btn-outline-dark btn-sm" type="submit">
+                                        <i class="fas fa-trash-alt me-1"></i> Delete
+                                    </button>
+                                </form>
+                                {% endif %}
+                                
+                                {% if b.payment_status|lower != 'paid' %}
+                                <button class="btn btn-success btn-sm" data-bs-toggle="modal" 
+                                        data-bs-target="#payModal" data-booking-id="{{ b.id }}">
+                                    <i class="fas fa-credit-card me-1"></i> Pay Now
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cancel Modal -->
+                <div class="modal fade" id="cancelModal{{ b.id }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <form method="POST" action="{{ url_for('bookings.cancel_booking', booking_id=b.id) }}">
+                            {{ cancel_form.hidden_tag() }}
+                            <div class="modal-content">
+                                <div class="modal-header bg-danger text-white">
+                                    <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i> Cancel Booking</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to cancel booking <strong>{{ b.reference }}</strong>?</p>
+                                    <div class="mb-3">
+                                        <label for="reason" class="form-label">Reason for cancellation</label>
+                                        <select class="form-select" name="reason" required>
+                                            <option value="">Select reason...</option>
+                                            <option value="plans_changed">Plans changed</option>
+                                            <option value="found_better">Found a better option</option>
+                                            <option value="unhappy_service">Unhappy with service</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-danger">Confirm Cancellation</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
-          </div>
-        </div>
-        
-        <div class="card-body">
-          <div class="d-flex mb-3">
-            <div class="flex-shrink-0">
-              <img src="https://images.unsplash.com/photo-1508672019048-805c876b67e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" 
-                   class="rounded" alt="Travel" style="width: 100px; height: 100px; object-fit: cover;">
+            {% else %}
+            <div class="text-center py-5">
+                <img src="https://images.unsplash.com/photo-1530789253388-582c481c54b0?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" 
+                     class="img-fluid mb-4" alt="No bookings" style="max-height: 200px; border-radius: 12px;">
+                <h4 class="text-muted"><i class="fas fa-compass me-2"></i> No bookings found</h4>
+                <p class="text-muted">Start your adventure by making a new booking!</p>
+                <a href="#" class="btn btn-primary mt-3">
+                    <i class="fas fa-plus me-2"></i> Book Now
+                </a>
             </div>
-            <div class="flex-grow-1 ms-3">
-              <h5 class="card-title">{{ b.full_name }}</h5>
-              <div class="d-flex flex-wrap gap-2 mb-2">
-                <span class="badge bg-info text-dark">
-                  <i class="fas fa-users me-1"></i> {{ b.num_people }} person(s)
-                </span>
-                <span class="badge bg-success text-white">
-                  <i class="fas fa-money-bill-wave me-1"></i> {{ '{:,.0f}'.format(b.total_amount) }} UGX
-                </span>
-              </div>
-              {% if b.booking_date %}
-              <p class="mb-1"><i class="fas fa-calendar-day me-2 text-primary"></i> {{ b.booking_date }}</p>
-              {% endif %}
-              {% if b.booking_time %}
-              <p class="mb-0"><i class="fas fa-clock me-2 text-primary"></i> {{ b.booking_time.strftime('%H:%M') }}</p>
-              {% endif %}
-            </div>
-          </div>
-        </div>
-        
-        <div class="card-footer bg-transparent border-top-0">
-          <div class="d-flex justify-content-between">
-            <a href="{{ url_for('bookings.edit_booking', booking_id=b.id) }}" 
-               class="btn btn-outline-primary btn-sm">
-              <i class="fas fa-edit me-1"></i> Edit
-            </a>
-            
-            {% if b.payment_status|lower != 'cancelled' %}
-            <button type="button" class="btn btn-outline-danger btn-sm" 
-                    data-bs-toggle="modal" data-bs-target="#cancelModal{{ b.id }}">
-              <i class="fas fa-ban me-1"></i> Cancel
-            </button>
             {% endif %}
-            
-            {% if b.payment_status|lower == 'cancelled' %}
-            <form method="post" action="{{ url_for('bookings.delete_booking', booking_id=b.id) }}"
-                  onsubmit="return confirm('Permanently delete this booking?');">
-              {{ delete_form.csrf_token }}
-              <button class="btn btn-outline-dark btn-sm" type="submit">
-                <i class="fas fa-trash-alt me-1"></i> Delete
-              </button>
-            </form>
-            {% endif %}
-            
-            {% if b.payment_status|lower != 'paid' %}
-            <button class="btn btn-success btn-sm" data-bs-toggle="modal" 
-                    data-bs-target="#payModal" data-booking-id="{{ b.id }}">
-              <i class="fas fa-credit-card me-1"></i> Pay Now
-            </button>
-            {% endif %}
-          </div>
+
+            <!-- Payment Modal -->
+            <div class="modal fade" id="payModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <form method="POST" action="{{ url_for('bookings.pay') }}">
+                        {{ payment_form.csrf_token }}
+                        <input type="hidden" name="booking_id" id="modal-booking-id">
+
+                        <div class="modal-content">
+                            <div class="modal-header bg-success text-white">
+                                <h5 class="modal-title"><i class="fas fa-credit-card me-2"></i> Complete Payment</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <div class="modal-body">
+                                <div class="mb-4">
+                                    <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                                         class="img-fluid rounded mb-3" alt="Payment options">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Payment Method</label>
+                                        <select class="form-select" name="payment_method" id="payment_method" required>
+                                            <option value="">Select payment method</option>
+                                            <option value="momo">Mobile Money</option>
+                                            <option value="card">Credit/Debit Card</option>
+                                        </select>
+                                    </div>
+
+                                    <div id="momo_fields" class="d-none mt-3 p-3 bg-light rounded">
+                                        <h6 class="mb-3 text-success"><i class="fas fa-mobile-alt me-2"></i> Mobile Money Details</h6>
+                                        <div class="mb-3">
+                                            <label class="form-label">Service Provider</label>
+                                            <select class="form-select" name="momo_provider" id="momo_provider">
+                                                <option value="">Select Provider</option>
+                                                <option value="mtn">MTN Mobile Money</option>
+                                                <option value="airtel">Airtel Money</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Mobile Number</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">+256</span>
+                                                <input type="text" class="form-control" name="momo_number" id="momo_number" placeholder="7XXXXXXXX">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="card_fields" class="d-none mt-3 p-3 bg-light rounded">
+                                        <h6 class="mb-3 text-success"><i class="far fa-credit-card me-2"></i> Card Payment Details</h6>
+                                        <div class="mb-3">
+                                            <label class="form-label">Card Number</label>
+                                            <input type="text" class="form-control" name="card_number" placeholder="1234 5678 9012 3456" id="card_number">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Expiry Date</label>
+                                                <input type="text" class="form-control" name="expiry_date" placeholder="MM/YY" id="expiry_date">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">CVV</label>
+                                                <input type="text" class="form-control" name="cvv" placeholder="CVV" id="cvv">
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Cardholder Name</label>
+                                            <input type="text" class="form-control" name="cardholder_name" placeholder="Name on card" id="cardholder_name">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-lock me-1"></i> Complete Secure Payment
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-
-    <!-- Cancel Modal -->
-    <div class="modal fade" id="cancelModal{{ b.id }}" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog">
-        <form method="POST" action="{{ url_for('bookings.cancel_booking', booking_id=b.id) }}">
-          {{ cancel_form.hidden_tag() }}
-          <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-              <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i> Cancel Booking</h5>
-              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-              <p>Are you sure you want to cancel booking <strong>{{ b.reference }}</strong>?</p>
-              <div class="mb-3">
-                <label for="reason" class="form-label">Reason for cancellation</label>
-                <select class="form-select" name="reason" required>
-                  <option value="">Select reason...</option>
-                  <option value="plans_changed">Plans changed</option>
-                  <option value="found_better">Found a better option</option>
-                  <option value="unhappy_service">Unhappy with service</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-danger">Confirm Cancellation</button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
-  {% else %}
-  <div class="text-center py-5">
-    <img src="https://images.unsplash.com/photo-1530789253388-582c481c54b0?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" 
-         class="img-fluid mb-4" alt="No bookings" style="max-height: 200px; border-radius: 12px;">
-    <h4 class="text-muted"><i class="fas fa-compass me-2"></i> No bookings found</h4>
-    <p class="text-muted">Start your adventure by making a new booking!</p>
-    <a href="#" class="btn btn-primary mt-3">
-      <i class="fas fa-plus me-2"></i> Book Now
-    </a>
-  </div>
-  {% endif %}
-
-  <!-- Payment Modal -->
-  <div class="modal fade" id="payModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <form method="POST" action="{{ url_for('bookings.pay') }}">
-        {{ payment_form.csrf_token }}
-        <input type="hidden" name="booking_id" id="modal-booking-id">
-
-        <div class="modal-content">
-          <div class="modal-header bg-success text-white">
-            <h5 class="modal-title"><i class="fas fa-credit-card me-2"></i> Complete Payment</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-          </div>
-
-          <div class="modal-body">
-            <div class="mb-4">
-              <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
-                   class="img-fluid rounded mb-3" alt="Payment options">
-              <div class="mb-3">
-                <label class="form-label fw-bold">Payment Method</label>
-                <select class="form-select" name="payment_method" id="payment_method" required>
-                  <option value="">Select payment method</option>
-                  <option value="momo">Mobile Money</option>
-                  <option value="card">Credit/Debit Card</option>
-                </select>
-              </div>
-
-              <div id="momo_fields" class="d-none mt-3 p-3 bg-light rounded">
-                <h6 class="mb-3 text-success"><i class="fas fa-mobile-alt me-2"></i> Mobile Money Details</h6>
-                <div class="mb-3">
-                  <label class="form-label">Service Provider</label>
-                  <select class="form-select" name="momo_provider" id="momo_provider">
-                    <option value="">Select Provider</option>
-                    <option value="mtn">MTN Mobile Money</option>
-                    <option value="airtel">Airtel Money</option>
-                  </select>
-                </div>
-                <div class="mb-3">
-                  <label class="form-label">Mobile Number</label>
-                  <div class="input-group">
-                    <span class="input-group-text">+256</span>
-                    <input type="text" class="form-control" name="momo_number" id="momo_number" placeholder="7XXXXXXXX">
-                  </div>
-                </div>
-              </div>
-
-              <div id="card_fields" class="d-none mt-3 p-3 bg-light rounded">
-                <h6 class="mb-3 text-success"><i class="far fa-credit-card me-2"></i> Card Payment Details</h6>
-                <div class="mb-3">
-                  <label class="form-label">Card Number</label>
-                  <input type="text" class="form-control" name="card_number" placeholder="1234 5678 9012 3456" id="card_number">
-                </div>
-                <div class="row">
-                  <div class="col-md-6 mb-3">
-                    <label class="form-label">Expiry Date</label>
-                    <input type="text" class="form-control" name="expiry_date" placeholder="MM/YY" id="expiry_date">
-                  </div>
-                  <div class="col-md-6 mb-3">
-                    <label class="form-label">CVV</label>
-                    <input type="text" class="form-control" name="cvv" placeholder="CVV" id="cvv">
-                  </div>
-                </div>
-                <div class="mb-3">
-                  <label class="form-label">Cardholder Name</label>
-                  <input type="text" class="form-control" name="cardholder_name" placeholder="Name on card" id="cardholder_name">
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-success">
-              <i class="fas fa-lock me-1"></i> Complete Secure Payment
-            </button>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
 </div>
+ <!-- Custom JavaScript -->
+ <script src="{{ url_for('static', filename='js/user_dashboard_navbar.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('payModal');
+            const bookingIdInput = modal.querySelector('#modal-booking-id');
+            const methodSelect = modal.querySelector('#payment_method');
 
-<style>
-  .card:hover {
-    transform: translateY(-5px);
-    transition: transform 0.3s ease;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
-  }
-  
-  .badge {
-    font-weight: 500;
-    letter-spacing: 0.5px;
-  }
-  
-  .form-control, .form-select {
-    border-radius: 8px;
-    padding: 10px 15px;
-  }
-</style>
+            const momoFields = modal.querySelector('#momo_fields');
+            const cardFields = modal.querySelector('#card_fields');
 
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const modal = document.getElementById('payModal');
-    const bookingIdInput = modal.querySelector('#modal-booking-id');
-    const methodSelect = modal.querySelector('#payment_method');
+            const momoNumber = modal.querySelector('#momo_number');
+            const momoProvider = modal.querySelector('#momo_provider');
 
-    const momoFields = modal.querySelector('#momo_fields');
-    const cardFields = modal.querySelector('#card_fields');
+            const cardNumber = modal.querySelector('#card_number');
+            const expiryDate = modal.querySelector('#expiry_date');
+            const cvv = modal.querySelector('#cvv');
+            const cardholderName = modal.querySelector('#cardholder_name');
 
-    const momoNumber = modal.querySelector('#momo_number');
-    const momoProvider = modal.querySelector('#momo_provider');
+            modal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+                const bookingId = button.getAttribute('data-booking-id');
+                bookingIdInput.value = bookingId;
 
-    const cardNumber = modal.querySelector('#card_number');
-    const expiryDate = modal.querySelector('#expiry_date');
-    const cvv = modal.querySelector('#cvv');
-    const cardholderName = modal.querySelector('#cardholder_name');
+                // reset everything
+                methodSelect.value = '';
+                momoFields.classList.add('d-none');
+                cardFields.classList.add('d-none');
 
-    modal.addEventListener('show.bs.modal', function (event) {
-      const button = event.relatedTarget;
-      const bookingId = button.getAttribute('data-booking-id');
-      bookingIdInput.value = bookingId;
+                momoNumber.required = false;
+                momoProvider.required = false;
+                cardNumber.required = false;
+                expiryDate.required = false;
+                cvv.required = false;
+                cardholderName.required = false;
+            });
 
-      // reset everything
-      methodSelect.value = '';
-      momoFields.classList.add('d-none');
-      cardFields.classList.add('d-none');
+            methodSelect.addEventListener('change', () => {
+                momoFields.classList.add('d-none');
+                cardFields.classList.add('d-none');
 
-      momoNumber.required = false;
-      momoProvider.required = false;
-      cardNumber.required = false;
-      expiryDate.required = false;
-      cvv.required = false;
-      cardholderName.required = false;
-    });
+                momoNumber.required = false;
+                momoProvider.required = false;
+                cardNumber.required = false;
+                expiryDate.required = false;
+                cvv.required = false;
+                cardholderName.required = false;
 
-    methodSelect.addEventListener('change', () => {
-      momoFields.classList.add('d-none');
-      cardFields.classList.add('d-none');
-
-      momoNumber.required = false;
-      momoProvider.required = false;
-      cardNumber.required = false;
-      expiryDate.required = false;
-      cvv.required = false;
-      cardholderName.required = false;
-
-      if (methodSelect.value === 'momo') {
-        momoFields.classList.remove('d-none');
-        momoNumber.required = true;
-        momoProvider.required = true;
-      } else if (methodSelect.value === 'card') {
-        cardFields.classList.remove('d-none');
-        cardNumber.required = true;
-        expiryDate.required = true;
-        cvv.required = true;
-        cardholderName.required = true;
-      }
-    });
-  });
-</script>
-
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+                if (methodSelect.value === 'momo') {
+                    momoFields.classList.remove('d-none');
+                    momoNumber.required = true;
+                    momoProvider.required = true;
+                } else if (methodSelect.value === 'card') {
+                    cardFields.classList.remove('d-none');
+                    cardNumber.required = true;
+                    expiryDate.required = true;
+                    cvv.required = true;
+                    cardholderName.required = true;
+                }
+            });
+        });
+    </script>
 {% endblock %}
