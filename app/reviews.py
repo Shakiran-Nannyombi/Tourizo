@@ -36,3 +36,16 @@ def add_review(tour_id):
         return redirect(url_for('tours.tour_detail', tour_id=tour.id))
 
     return render_template('reviews/add_review.html', form=form, tour=tour)
+
+@reviews_bp.route('/my-reviews')
+@login_required
+def my_reviews():
+    reviews = Review.query.filter_by(user_id=current_user.id).order_by(Review.created_at.desc()).all()
+    return render_template('reviews/my_reviews.html', reviews=reviews)
+
+@reviews_bp.route('/add')
+@login_required
+def add_review_select():
+    # Get all tours that the user can review
+    tours = Tour.query.all()
+    return render_template('reviews/select_tour.html', tours=tours)

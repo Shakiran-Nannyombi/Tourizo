@@ -22,17 +22,33 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    otp_code = db.Column(db.String(8))
-    otp_expiry = db.Column(db.DateTime)
-    last_login = db.Column(db.DateTime)
-    login_attempts = db.Column(db.Integer, default=0)
+    is_active = db.Column(db.Boolean, default=True)
     account_locked = db.Column(db.Boolean, default=False)
-
+    phone = db.Column(db.String(20))
+    first_name = db.Column(db.String(50))
+    last_name = db.Column(db.String(50))
+    date_of_birth = db.Column(db.Date)
+    bio = db.Column(db.Text)
+    
+    # Settings fields
+    email_notifications = db.Column(db.Boolean, default=True)
+    newsletter = db.Column(db.Boolean, default=False)
+    sms_notifications = db.Column(db.Boolean, default=False)
+    language = db.Column(db.String(10), default='en')
+    timezone = db.Column(db.String(20), default='UTC')
+    two_factor_auth = db.Column(db.Boolean, default=False)
+    public_profile = db.Column(db.Boolean, default=True)
+    
+    # Timestamps
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    last_login = db.Column(db.DateTime)
+    
     # Relationships
     bookings = db.relationship('Booking', backref='user', lazy=True)
     reviews = db.relationship('Review', backref='user', lazy=True)
-    wishlist = db.relationship('Tour', secondary=wishlist_table, backref='wishlisted_by')
+    inquiries = db.relationship('Inquiry', backref='user', lazy=True)
+    wishlist = db.relationship('Tour', secondary=wishlist_table, lazy='subquery',
+                              backref=db.backref('wishlisted_by', lazy=True))
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -113,6 +129,10 @@ class User(UserMixin, db.Model):
             return False
 
         return secrets.compare_digest(self.otp_code, otp)
+
+    @property
+    def is_active(self):
+        return bool(self.__dict__.get('is_active', True))
 
     @classmethod
     def create_test_user(cls, username, email, password, is_admin=False):

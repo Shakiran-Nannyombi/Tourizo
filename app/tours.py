@@ -16,7 +16,8 @@ def register_routes():
     def list_tours():
         search = request.args.get('search', '')
         category_id = request.args.get('category', type=int)
-        duration = request.args.get('duration', '')
+        destination = request.args.get('destination', '')
+        difficulty = request.args.get('difficulty', '')
         page = request.args.get('page', 1, type=int)
 
         query = Tour.query.filter_by(is_active=True)
@@ -29,14 +30,13 @@ def register_routes():
         if category_id:
             query = query.filter_by(category_id=category_id)
         
-        # Duration filter
-        if duration:
-            if duration == '1-3':
-                query = query.filter(Tour.duration.between(1, 3))
-            elif duration == '4-7':
-                query = query.filter(Tour.duration.between(4, 7))
-            elif duration == '8+':
-                query = query.filter(Tour.duration >= 8)
+        # Destination filter
+        if destination:
+            query = query.filter(Tour.destination.contains(destination))
+        
+        # Difficulty filter
+        if difficulty:
+            query = query.filter_by(difficulty_level=difficulty)
 
         # Order by creation date (newest first)
         query = query.order_by(Tour.created_at.desc())
@@ -80,7 +80,7 @@ def register_routes():
             current_user.wishlist.append(tour)
             from app.extensions import db
             db.session.commit()
-        return {'success': True, 'count': len(current_user.wishlist)}
+        return {'success': True, 'wishlist_count': len(current_user.wishlist)}
 
     @tours_bp.route('/wishlist/remove/<int:tour_id>', methods=['POST'])
     @login_required
@@ -90,11 +90,11 @@ def register_routes():
             current_user.wishlist.remove(tour)
             from app.extensions import db
             db.session.commit()
-        return {'success': True, 'count': len(current_user.wishlist)}
+        return {'success': True, 'wishlist_count': len(current_user.wishlist)}
 
     @tours_bp.route('/wishlist/count', methods=['GET'])
     @login_required
     def wishlist_count():
-        return {'count': len(current_user.wishlist)}
+        return {'wishlist_count': len(current_user.wishlist)}
 
 register_routes()

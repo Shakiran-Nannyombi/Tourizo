@@ -209,6 +209,8 @@ class TourDateForm(FlaskForm):
             raise ValidationError('Date cannot be in the past')
 # At the bottom of your forms file
 class ProfileForm(FlaskForm):
+    first_name = StringField('First Name', validators=[DataRequired(), Length(max=50)])
+    last_name = StringField('Last Name', validators=[DataRequired(), Length(max=50)])
     username = StringField('Username', validators=[DataRequired(), Length(min=3, max=80)])
     email = StringField('Email', validators=[DataRequired(), Email()])
     phone = StringField('Phone Number', validators=[Optional(), Length(min=7, max=15)])
@@ -224,6 +226,27 @@ class ProfileForm(FlaskForm):
     ])
 
     submit = SubmitField('Update Profile')
+
+class LoginForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember_me = BooleanField('Remember Me')
+    submit = SubmitField('Sign In')
+
+class RegistrationForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired(), Length(min=3, max=80)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    first_name = StringField('First Name', validators=[DataRequired(), Length(max=50)])
+    last_name = StringField('Last Name', validators=[DataRequired(), Length(max=50)])
+    password = PasswordField('Password', validators=[
+        DataRequired(),
+        Length(min=6, message='Password should be at least 6 characters')
+    ])
+    confirm_password = PasswordField('Confirm Password', validators=[
+        DataRequired(),
+        EqualTo('password', message='Passwords must match')
+    ])
+    submit = SubmitField('Register')
     
 class ContactForm(FlaskForm):
     name = StringField('Your Name', validators=[DataRequired()])

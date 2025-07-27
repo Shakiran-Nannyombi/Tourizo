@@ -160,7 +160,7 @@ def contact():
         flash('Thank you for your inquiry!', 'success')
         return redirect(url_for('admin.contact'))
 
-    return render_template('contact_form.html')
+    return render_template('contact.html')
 
 # Reports routes
 @admin_bp.route('/reports/booking-report')

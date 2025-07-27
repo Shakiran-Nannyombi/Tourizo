@@ -8,6 +8,7 @@ from app.bookings import bookings_bp
 from app.admin import admin_bp
 from app.reviews import reviews_bp
 from app.contact import contact_bp  # Contact blueprint
+from app.policies import policies_bp  # Policies blueprint
 
 # Extension imports
 from app.extensions import db, login_manager, mail, moment
@@ -32,11 +33,17 @@ def create_app():
     app.register_blueprint(admin_bp)
     app.register_blueprint(reviews_bp)
     app.register_blueprint(contact_bp)
+    app.register_blueprint(policies_bp)
 
     # Home route - welcome page
     @app.route('/')
     def welcome():
         return render_template('welcome.html')
+
+    # About route
+    @app.route('/about')
+    def about():
+        return render_template('about.html')
 
     # Context processors
     @app.context_processor

@@ -1,8 +1,11 @@
 # app/auth.py
 
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session, make_response
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session, make_response, jsonify
 from app.forms import ProfileForm
 from app.models.Booking import Booking
+from app.models.Review import Review
+from app.models.Inquiry import Inquiry
+from app.forms import LoginForm, RegistrationForm
 
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -16,6 +19,7 @@ import secrets
 import string
 import random
 from urllib.parse import urlparse, urljoin
+import json
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 contact = Blueprint('contact', __name__)
@@ -126,12 +130,12 @@ def login():
         if not email or not password:
             print("❌ Email or password is empty")
             flash('Please enter both email and password.', 'danger')
-            return render_template('login.html')
+            return render_template('auth/login.html')
         
         if not is_valid_email(email):
             print(f"❌ Invalid email format: {email}")
             flash('Please enter a valid email address.', 'danger')
-            return render_template('login.html')
+            return render_template('auth/login.html')
         
         # Find user by email (case-insensitive)
         user = User.query.filter(User.email.ilike(email)).first()
@@ -173,15 +177,15 @@ def login():
                     flash('Invalid email or password.', 'danger')
                     
             except Exception as password_error:
-                print(f"❌ Password check exception: {password_error}")
-                flash('An error occurred during login. Please try again.', 'danger')
+                            print(f"❌ Password check exception: {password_error}")
+            flash('An error occurred during login. Please try again.', 'danger')
         else:
             print(f"❌ No user found with email: {email}")
             flash('Invalid email or password.', 'danger')
     
     # GET request - pass next parameter to template
     next_page = request.args.get('next')
-    return render_template('login.html', next=next_page)
+    return render_template('auth/login.html', next=next_page)
 
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
@@ -252,7 +256,7 @@ def register():
         if errors:
             for error in errors:
                 flash(error, 'danger')
-            return render_template('register.html', next=request.args.get('next'))
+            return render_template('auth/register.html', next=request.args.get('next'))
         
         try:
             # Create new user with combined username, no first_name/last_name fields
@@ -295,7 +299,7 @@ def register():
     
     # GET request - pass next parameter to template
     next_page = request.args.get('next')
-    return render_template('register.html', next=next_page)
+    return render_template('auth/register.html', next=next_page)
 
 
 @auth_bp.route('/user/dashboard')
@@ -330,32 +334,164 @@ def contact_form():
 @login_required
 def profile():
     form = ProfileForm()
-
     if form.validate_on_submit():
-        current_user.username = form.username.data
+        current_user.first_name = form.first_name.data
+        current_user.last_name = form.last_name.data
         current_user.email = form.email.data
         current_user.phone = form.phone.data
-        current_user.bio = form.bio.data
-
+        
+        # Handle additional fields from the form
+        date_of_birth = request.form.get('date_of_birth')
+        if date_of_birth:
+            try:
+                current_user.date_of_birth = datetime.strptime(date_of_birth, '%Y-%m-%d').date()
+            except ValueError:
+                pass
+        
+        current_user.bio = request.form.get('bio', '')
+        
         if form.password.data:
-            current_user.set_password(form.password.data)
-
-        try:
-            db.session.commit()
-            flash('Profile updated successfully.', 'success')
-        except Exception as e:
-            db.session.rollback()
-            flash('Error updating profile.', 'danger')
-            print(f"Error updating profile: {e}")
+            current_user.password_hash = generate_password_hash(form.password.data)
+        
+        db.session.commit()
+        flash('Profile updated successfully!', 'success')
         return redirect(url_for('auth.profile'))
+    
+    elif request.method == 'GET':
+        form.first_name.data = current_user.first_name
+        form.last_name.data = current_user.last_name
+        form.email.data = current_user.email
+        form.phone.data = current_user.phone
+    
+    return render_template('profile.html', form=form)
 
-    # Pre-fill form with current user data
-    form.username.data = current_user.username
-    form.email.data = current_user.email
-    form.phone.data = getattr(current_user, 'phone', '')  # default to empty if missing
-    form.bio.data = getattr(current_user, 'bio', '')
 
-    return render_template('profile.html', user=current_user, form=form)
+@auth_bp.route('/settings')
+@login_required
+def settings():
+    return render_template('settings.html')
+
+
+@auth_bp.route('/settings/save', methods=['POST'])
+@login_required
+def save_settings():
+    try:
+        # For now, just return success since the database fields don't exist yet
+        # In a real implementation, you would update the user's settings here
+        # current_user.email_notifications = request.form.get('email_notifications') == 'on'
+        # current_user.newsletter = request.form.get('newsletter') == 'on'
+        # current_user.sms_notifications = request.form.get('sms_notifications') == 'on'
+        # current_user.language = request.form.get('language', 'en')
+        # current_user.timezone = request.form.get('timezone', 'UTC')
+        # current_user.two_factor_auth = request.form.get('two_factor_auth') == 'on'
+        # current_user.public_profile = request.form.get('public_profile') == 'on'
+        # db.session.commit()
+        
+        return jsonify({'success': True, 'message': 'Settings saved successfully'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'message': str(e)})
+
+@auth_bp.route('/settings/change-password', methods=['POST'])
+@login_required
+def change_password():
+    try:
+        current_password = request.form.get('current_password')
+        new_password = request.form.get('new_password')
+        confirm_password = request.form.get('confirm_password')
+        
+        # Verify current password
+        if not check_password_hash(current_user.password_hash, current_password):
+            return jsonify({'success': False, 'message': 'Current password is incorrect'})
+        
+        # Check if new passwords match
+        if new_password != confirm_password:
+            return jsonify({'success': False, 'message': 'New passwords do not match'})
+        
+        # Update password
+        current_user.password_hash = generate_password_hash(new_password)
+        db.session.commit()
+        
+        return jsonify({'success': True, 'message': 'Password changed successfully'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'message': str(e)})
+
+@auth_bp.route('/settings/export-data')
+@login_required
+def export_data():
+    try:
+        # Prepare user data for export
+        user_data = {
+            'user_info': {
+                'username': current_user.username,
+                'email': current_user.email,
+                'first_name': current_user.first_name,
+                'last_name': current_user.last_name,
+                'phone': current_user.phone,
+                'date_of_birth': current_user.date_of_birth.isoformat() if current_user.date_of_birth else None,
+                'bio': current_user.bio,
+                'date_created': current_user.date_created.isoformat() if current_user.date_created else None,
+                'last_login': current_user.last_login.isoformat() if current_user.last_login else None
+            },
+            'settings': {
+                'email_notifications': current_user.email_notifications,
+                'newsletter': current_user.newsletter,
+                'sms_notifications': current_user.sms_notifications,
+                'language': current_user.language,
+                'timezone': current_user.timezone,
+                'two_factor_auth': current_user.two_factor_auth,
+                'public_profile': current_user.public_profile
+            },
+            'bookings': [
+                {
+                    'tour_name': booking.tour.name if booking.tour else 'N/A',
+                    'booking_date': booking.booking_date.isoformat() if booking.booking_date else None,
+                    'status': booking.status,
+                    'amount': float(booking.amount) if booking.amount else 0
+                }
+                for booking in current_user.bookings
+            ],
+            'reviews': [
+                {
+                    'tour_name': review.tour.name if review.tour else 'N/A',
+                    'rating': review.rating,
+                    'comment': review.comment,
+                    'created_at': review.created_at.isoformat() if review.created_at else None
+                }
+                for review in current_user.reviews
+            ]
+        }
+        
+        # Create JSON response
+        response = jsonify(user_data)
+        response.headers['Content-Disposition'] = 'attachment; filename=user-data.json'
+        return response
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
+
+@auth_bp.route('/settings/delete-account', methods=['POST'])
+@login_required
+def delete_account():
+    try:
+        # Delete user's bookings
+        Booking.query.filter_by(user_id=current_user.id).delete()
+        
+        # Delete user's reviews
+        Review.query.filter_by(user_id=current_user.id).delete()
+        
+        # Delete user's inquiries
+        Inquiry.query.filter_by(user_id=current_user.id).delete()
+        
+        # Delete user
+        db.session.delete(current_user)
+        db.session.commit()
+        
+        logout_user()
+        return jsonify({'success': True, 'message': 'Account deleted successfully'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'message': str(e)})
 
 
 @auth_bp.route('/logout')
@@ -400,7 +536,7 @@ def forgot_password():
         
         if not email or not is_valid_email(email):
             flash('Please enter a valid email address.', 'danger')
-            return render_template('forgot_password.html')
+            return render_template('auth/forgot_password.html')
         
         user = User.query.filter(User.email.ilike(email)).first()
         
@@ -431,7 +567,7 @@ def forgot_password():
             # Security: Don't reveal if email exists
             flash('If an account with that email exists, a reset code has been sent.', 'info')
     
-    return render_template('forgot_password.html')
+    return render_template('auth/forgot_password.html')
 
 
 @auth_bp.route('/reset-password', methods=['GET', 'POST'])
@@ -456,7 +592,7 @@ def reset_password():
                     print(f"🔑 New OTP for {email}: {otp}")
                     flash(f'New reset code sent. (Debug: {otp})', 'info')
                 
-                return render_template('reset_password.html', email=email)
+                return render_template('auth/reset_password.html', email=email)
                 
             except Exception as e:
                 db.session.rollback()
@@ -475,15 +611,15 @@ def reset_password():
             
             if not all([otp, new_password, confirm_password]):
                 flash('All fields are required.', 'danger')
-                return render_template('reset_password.html', email=email)
+                return render_template('auth/reset_password.html', email=email)
             
             if new_password != confirm_password:
                 flash('Passwords do not match.', 'danger')
-                return render_template('reset_password.html', email=email)
+                return render_template('auth/reset_password.html', email=email)
             
             if len(new_password) < 6:
                 flash('Password must be at least 6 characters long.', 'danger')
-                return render_template('reset_password.html', email=email)
+                return render_template('auth/reset_password.html', email=email)
             
             # Verify OTP
             if (user.otp_code == otp and 
