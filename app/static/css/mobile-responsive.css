@@ -1,0 +1,1066 @@
+/* ==============================================
+   MOBILE RESPONSIVE & ANIMATIONS CSS
+   Comprehensive mobile responsiveness for all Tourizo pages
+   ============================================== */
+
+/* CSS Variables for consistent theming */
+:root {
+    --primary-green: #43a047;
+    --secondary-green: #388e3c;
+    --accent-green: #a5d6a7;
+    --light-green: #c8e6c9;
+    --dark-green: #1b5e20;
+    --yellow: #ffd700;
+    --white: #fff;
+    --gray: #e2e8f0;
+    --light-gray: #f8f9fa;
+    --border-color: #e9ecef;
+    --text-dark: #333;
+    --text-muted: #6c757d;
+    --danger: #dc3545;
+    --success: #28a745;
+    --warning: #ffc107;
+    --info: #17a2b8;
+    
+    /* Animation variables */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    --bounce-timing: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* ==============================================
+   GLOBAL MOBILE RESPONSIVENESS
+   ============================================== */
+
+/* Base mobile-first approach */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Container responsive adjustments */
+.container, .container-fluid {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+/* ==============================================
+   NAVBAR MOBILE RESPONSIVENESS
+   ============================================== */
+
+/* Mobile navbar adjustments */
+@media (max-width: 768px) {
+    .navbar-welcome {
+        height: 60px;
+    }
+    
+    .navbar-container {
+        padding: 0 1rem;
+        height: 60px;
+    }
+    
+    .navbar-logo {
+        font-size: 1.5rem;
+    }
+    
+    .logo-icon {
+        font-size: 1.2rem;
+    }
+    
+    .navbar-links {
+        position: fixed;
+        top: 60px;
+        left: -100%;
+        width: 100%;
+        height: calc(100vh - 60px);
+        background: rgba(235, 249, 233, 0.98);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        padding-top: 2rem;
+        gap: 1.5rem;
+        transition: left var(--transition-normal);
+        z-index: 99;
+    }
+    
+    .navbar-links.active {
+        left: 0;
+    }
+    
+    .navbar-links li a {
+        font-size: 1.1rem;
+        padding: 1rem 2rem;
+        width: 100%;
+        text-align: center;
+        border-radius: 8px;
+        margin: 0 1rem;
+    }
+    
+    .navbar-actions {
+        gap: 0.5rem;
+    }
+    
+    .wishlist-btn {
+        padding: 0.5rem;
+        font-size: 1rem;
+    }
+    
+    .user-profile {
+        padding: 0.3rem 0.8rem;
+    }
+    
+    .user-avatar {
+        width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+    }
+    
+    .user-name {
+        display: none;
+    }
+    
+    .dropdown-arrow {
+        display: none;
+    }
+    
+    /* Mobile menu toggle button */
+    .mobile-menu-toggle {
+        display: block;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: var(--primary-green);
+        cursor: pointer;
+        padding: 0.5rem;
+    }
+    
+    .mobile-menu-toggle .bar {
+        width: 25px;
+        height: 3px;
+        background: var(--primary-green);
+        margin: 5px 0;
+        transition: var(--transition-normal);
+    }
+    
+    .mobile-menu-toggle.active .bar:nth-child(1) {
+        transform: rotate(-45deg) translate(-5px, 6px);
+    }
+    
+    .mobile-menu-toggle.active .bar:nth-child(2) {
+        opacity: 0;
+    }
+    
+    .mobile-menu-toggle.active .bar:nth-child(3) {
+        transform: rotate(45deg) translate(-5px, -6px);
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar-container {
+        padding: 0 0.5rem;
+    }
+    
+    .navbar-logo {
+        font-size: 1.3rem;
+    }
+    
+    .logo-icon {
+        font-size: 1rem;
+        margin-right: 4px;
+    }
+    
+    .wishlist-btn {
+        padding: 0.4rem;
+        font-size: 0.9rem;
+    }
+    
+    .wishlist-badge {
+        font-size: 0.7rem;
+        min-width: 16px;
+        height: 16px;
+        line-height: 16px;
+    }
+}
+
+/* ==============================================
+   MAIN CONTENT MOBILE RESPONSIVENESS
+   ============================================== */
+
+@media (max-width: 768px) {
+    .main-content {
+        margin-top: 60px;
+        padding: 1rem;
+    }
+    
+    /* Page headers */
+    h1 {
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+        margin-bottom: 0.8rem;
+    }
+    
+    h3 {
+        font-size: 1.3rem;
+        margin-bottom: 0.6rem;
+    }
+    
+    /* Cards and containers */
+    .card {
+        margin-bottom: 1rem;
+        border-radius: 12px;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    /* Grid layouts */
+    .row {
+        margin-left: -0.5rem;
+        margin-right: -0.5rem;
+    }
+    
+    .col, .col-md-6, .col-lg-4, .col-xl-3 {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+    
+    /* Buttons */
+    .btn {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.9rem;
+        border-radius: 8px;
+    }
+    
+    .btn-sm {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+    
+    .btn-lg {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-content {
+        padding: 0.5rem;
+    }
+    
+    h1 {
+        font-size: 1.6rem;
+    }
+    
+    h2 {
+        font-size: 1.4rem;
+    }
+    
+    h3 {
+        font-size: 1.2rem;
+    }
+    
+    .btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.85rem;
+    }
+}
+
+/* ==============================================
+   SPECIFIC PAGE MOBILE RESPONSIVENESS
+   ============================================== */
+
+/* Welcome Page Mobile */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2rem;
+        line-height: 1.2;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .hero-description {
+        font-size: 0.9rem;
+    }
+    
+    .btn-container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .btn {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .destinations-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .top-right-auth-buttons {
+        position: fixed;
+        top: 70px;
+        right: 1rem;
+        flex-direction: column;
+        gap: 0.5rem;
+        z-index: 98;
+    }
+    
+    .hero-signup-btn,
+    .hero-login-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+    
+    .live-chat {
+        bottom: 1rem;
+        right: 1rem;
+    }
+    
+    .chat-window {
+        width: 300px;
+        height: 400px;
+    }
+    
+    .dark-mode-toggle {
+        bottom: 1rem;
+        left: 1rem;
+        width: 45px;
+        height: 45px;
+        font-size: 1rem;
+    }
+    
+    .translate-widget {
+        bottom: 5rem;
+        right: 1rem;
+    }
+    
+    .instant-search {
+        top: 70px;
+        left: 1rem;
+        right: 1rem;
+        width: auto;
+    }
+    
+    .search-input {
+        font-size: 0.9rem;
+        padding: 0.8rem 1rem;
+    }
+}
+
+/* Tours Page Mobile */
+@media (max-width: 768px) {
+    .tours-container {
+        margin-top: 60px;
+        padding: 1rem;
+    }
+    
+    .explore-tours-title {
+        font-size: 1.8rem;
+    }
+    
+    .explore-tours-subtitle {
+        font-size: 1rem;
+    }
+    
+    .search-filter-bar {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+    
+    .search-input,
+    .filter-dropdown {
+        width: 100%;
+        padding: 0.8rem 1rem;
+    }
+    
+    .apply-filters-btn {
+        width: 100%;
+        padding: 1rem;
+    }
+    
+    .tours-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .tour-card {
+        margin-bottom: 1rem;
+    }
+    
+    .tour-image {
+        height: 200px;
+    }
+    
+    .tour-details {
+        padding: 1rem;
+    }
+    
+    .tour-title {
+        font-size: 1.2rem;
+    }
+    
+    .tour-price {
+        font-size: 1.1rem;
+    }
+}
+
+/* Contact Page Mobile */
+@media (max-width: 768px) {
+    .contact-page-container {
+        margin-top: 60px;
+        padding: 1rem;
+    }
+    
+    .get-in-touch-title {
+        font-size: 1.8rem;
+    }
+    
+    .get-in-touch-description {
+        font-size: 1rem;
+    }
+    
+    .contact-cards-container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .contact-card {
+        padding: 1.5rem;
+    }
+    
+    .contact-form-container {
+        padding: 1.5rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-control {
+        padding: 0.8rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .submit-btn {
+        width: 100%;
+        padding: 1rem;
+    }
+}
+
+/* About Page Mobile */
+@media (max-width: 768px) {
+    .about-container {
+        margin-top: 60px;
+        padding: 1rem;
+    }
+    
+    .about-content h1 {
+        font-size: 1.8rem;
+    }
+    
+    .stats-section {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .stat-item {
+        padding: 1rem;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+    }
+    
+    .story-container {
+        flex-direction: column;
+        gap: 2rem;
+    }
+    
+    .story-content {
+        padding: 1rem;
+    }
+    
+    .founders-section {
+        padding: 1rem;
+    }
+    
+    .founders-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .founder-card {
+        padding: 1rem;
+    }
+}
+
+/* FAQ Page Mobile */
+@media (max-width: 768px) {
+    .faq-page {
+        margin-top: 60px;
+        padding: 1rem;
+    }
+    
+    .faq-title {
+        font-size: 1.8rem;
+    }
+    
+    .faq-subtitle {
+        font-size: 1rem;
+    }
+    
+    .faq-search-form {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .faq-search-input {
+        width: 100%;
+        padding: 0.8rem 1rem;
+    }
+    
+    .faq-search-btn {
+        width: 100%;
+        padding: 1rem;
+    }
+    
+    .faq-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .faq-item {
+        padding: 1rem;
+    }
+    
+    .faq-question {
+        font-size: 1rem;
+        padding: 1rem;
+    }
+    
+    .faq-answer {
+        padding: 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Wishlist Page Mobile */
+@media (max-width: 768px) {
+    .wishlist-container {
+        margin-top: 60px;
+        padding: 1rem;
+    }
+    
+    .wishlist-title {
+        font-size: 1.8rem;
+    }
+    
+    .wishlist-subtitle {
+        font-size: 1rem;
+    }
+    
+    .wishlist-tours-list {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .wishlist-tour-card {
+        margin-bottom: 1rem;
+    }
+    
+    .wishlist-tour-img {
+        height: 180px;
+    }
+    
+    .wishlist-tour-info {
+        padding: 1rem;
+    }
+    
+    .wishlist-tour-title {
+        font-size: 1.1rem;
+    }
+    
+    .wishlist-tour-actions {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+    
+    .btn-book-now,
+    .btn-remove {
+        width: 100%;
+        padding: 0.8rem;
+    }
+}
+
+/* Admin Dashboard Mobile */
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 280px;
+        height: 100vh;
+        z-index: 1001;
+        transition: left var(--transition-normal);
+    }
+    
+    .sidebar.active {
+        left: 0;
+    }
+    
+    .main-content {
+        margin-left: 0;
+        padding: 1rem;
+        margin-top: 70px;
+    }
+    
+    .header {
+        padding: 0 1rem;
+    }
+    
+    .search-box {
+        display: none;
+    }
+    
+    .user-profile {
+        padding: 0.3rem 0.8rem;
+    }
+    
+    .user-avatar {
+        width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .stat-card {
+        padding: 1rem;
+    }
+    
+    .chart-container {
+        height: 300px;
+    }
+    
+    .recent-activity {
+        padding: 1rem;
+    }
+    
+    .activity-item {
+        padding: 0.8rem;
+    }
+}
+
+/* ==============================================
+   ANIMATIONS FOR UNTRACKED PAGES
+   ============================================== */
+
+/* Fade In Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInDown {
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-5px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(5px);
+    }
+}
+
+/* Animation Classes */
+.animate-fade-in {
+    animation: fadeIn 0.6s ease-out;
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.animate-fade-in-left {
+    animation: fadeInLeft 0.6s ease-out;
+}
+
+.animate-fade-in-right {
+    animation: fadeInRight 0.6s ease-out;
+}
+
+.animate-slide-in-up {
+    animation: slideInUp 0.5s ease-out;
+}
+
+.animate-slide-in-down {
+    animation: slideInDown 0.5s ease-out;
+}
+
+.animate-scale-in {
+    animation: scaleIn 0.5s ease-out;
+}
+
+.animate-bounce-in {
+    animation: bounceIn 0.8s var(--bounce-timing);
+}
+
+.animate-pulse {
+    animation: pulse 2s infinite;
+}
+
+.animate-shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+/* Staggered animations for lists */
+.animate-stagger > * {
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.animate-stagger > *:nth-child(1) { animation-delay: 0.1s; }
+.animate-stagger > *:nth-child(2) { animation-delay: 0.2s; }
+.animate-stagger > *:nth-child(3) { animation-delay: 0.3s; }
+.animate-stagger > *:nth-child(4) { animation-delay: 0.4s; }
+.animate-stagger > *:nth-child(5) { animation-delay: 0.5s; }
+.animate-stagger > *:nth-child(6) { animation-delay: 0.6s; }
+
+/* Hover animations */
+.hover-lift {
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.hover-scale {
+    transition: transform var(--transition-normal);
+}
+
+.hover-scale:hover {
+    transform: scale(1.05);
+}
+
+.hover-glow {
+    transition: box-shadow var(--transition-normal);
+}
+
+.hover-glow:hover {
+    box-shadow: 0 0 20px rgba(67, 160, 71, 0.3);
+}
+
+/* Loading animations */
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--light-gray);
+    border-top: 4px solid var(--primary-green);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-dots {
+    display: inline-block;
+}
+
+.loading-dots::after {
+    content: '';
+    animation: dots 1.5s steps(5, end) infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: ''; }
+    40% { content: '.'; }
+    60% { content: '..'; }
+    80%, 100% { content: '...'; }
+}
+
+/* ==============================================
+   INTERACTIVE ELEMENTS
+   ============================================== */
+
+/* Mobile menu toggle */
+.mobile-menu-toggle {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .mobile-menu-toggle {
+        display: block;
+    }
+    
+    .navbar-links {
+        display: none;
+    }
+    
+    .navbar-links.active {
+        display: flex;
+    }
+}
+
+/* Touch-friendly buttons */
+@media (max-width: 768px) {
+    .btn, button, a {
+        min-height: 44px;
+        min-width: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    input, select, textarea {
+        min-height: 44px;
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+}
+
+/* ==============================================
+   UTILITY CLASSES
+   ============================================== */
+
+/* Spacing utilities */
+.mt-mobile { margin-top: 1rem; }
+.mb-mobile { margin-bottom: 1rem; }
+.pt-mobile { padding-top: 1rem; }
+.pb-mobile { padding-bottom: 1rem; }
+
+@media (max-width: 768px) {
+    .mt-mobile { margin-top: 0.5rem; }
+    .mb-mobile { margin-bottom: 0.5rem; }
+    .pt-mobile { padding-top: 0.5rem; }
+    .pb-mobile { padding-bottom: 0.5rem; }
+}
+
+/* Text utilities */
+.text-center-mobile {
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .text-center-mobile {
+        text-align: center;
+    }
+}
+
+/* Hide/show utilities */
+.hide-mobile {
+    display: block;
+}
+
+.show-mobile {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .hide-mobile {
+        display: none;
+    }
+    
+    .show-mobile {
+        display: block;
+    }
+}
+
+/* ==============================================
+   ACCESSIBILITY IMPROVEMENTS
+   ============================================== */
+
+/* Focus styles */
+.btn:focus,
+input:focus,
+select:focus,
+textarea:focus,
+a:focus {
+    outline: 2px solid var(--primary-green);
+    outline-offset: 2px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .btn {
+        border: 2px solid currentColor;
+    }
+    
+    .card {
+        border: 2px solid var(--text-dark);
+    }
+}
+
+/* ==============================================
+   PRINT STYLES
+   ============================================== */
+
+@media print {
+    .navbar-welcome,
+    .mobile-menu-toggle,
+    .live-chat,
+    .dark-mode-toggle,
+    .translate-widget,
+    .instant-search,
+    .btn {
+        display: none !important;
+    }
+    
+    body {
+        background: white !important;
+        color: black !important;
+    }
+    
+    .main-content {
+        margin-top: 0 !important;
+        padding: 0 !important;
+    }
+} 
