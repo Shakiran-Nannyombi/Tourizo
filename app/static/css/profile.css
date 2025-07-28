@@ -395,4 +395,190 @@ input[type="date"].form-control::-webkit-calendar-picker-indicator {
     right: 0;
     top: 0;
     width: auto;
+}
+
+/* Live Chat (Universal AI Chatbot) */
+.live-chat {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.chat-toggle {
+    background: var(--primary-green);
+    color: var(--white);
+    border: none;
+    border-radius: 50px;
+    padding: 15px 20px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.chat-toggle:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.4);
+}
+
+.chat-window {
+    display: none;
+    position: absolute;
+    bottom: 60px;
+    right: 0;
+    width: 340px;
+    max-height: 500px;
+    background: var(--background-main);
+    border: 1.5px solid var(--primary-green);
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+    overflow: hidden;
+    flex-direction: column;
+    padding: 0;
+    transition: box-shadow 0.2s;
+}
+
+.chat-header {
+    background: linear-gradient(90deg, var(--primary-green), var(--accent-green));
+    color: var(--white);
+    padding: 15px 18px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--accent-green);
+}
+
+.chat-messages {
+    padding: 12px 10px 12px 10px;
+    overflow-y: auto;
+    flex-grow: 1;
+    background: var(--light-green);
+    max-height: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.chat-messages div {
+    max-width: 85%;
+    word-break: break-word;
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 2px;
+    box-shadow: 0 2px 8px rgba(67,160,71,0.04);
+}
+
+.chat-messages div strong {
+    font-weight: 600;
+    margin-right: 4px;
+}
+
+.chat-messages div[style*='background: #e9f7fd'] {
+    background: linear-gradient(90deg, #e9f7fd 80%, #d0f0e0 100%);
+    color: black !important;
+    align-self: flex-end;
+    border: 1px solid #b2e0d6;
+}
+
+.chat-messages div[style*='background: #f4f4f4'] {
+    background: linear-gradient(90deg, #f4f4f4 80%, #e0e0e0 100%);
+    color: black !important;
+    align-self: flex-start;
+    border: 1px solid #e0e0e0;
+}
+
+.chat-messages div span[style*='color:red'] {
+    border-left: 4px solid #e74c3c;
+    padding-left: 8px;
+    background: #fff0f0;
+    color: #e74c3c !important;
+    font-weight: 500;
+}
+
+.chat-input-area {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    background-color: var(--background-main);
+    gap: 6px;
+}
+
+.chat-input {
+    flex-grow: 1;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1.5px solid var(--primary-green);
+    margin-right: 5px;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.2s;
+}
+
+.chat-input:focus {
+    border: 1.5px solid var(--accent-green);
+}
+
+.chat-send {
+    padding: 8px 14px;
+    background: linear-gradient(90deg, var(--primary-green), var(--accent-green));
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: background 0.2s;
+}
+
+.chat-send:hover {
+    background: linear-gradient(90deg, var(--accent-green), var(--primary-green));
+}
+
+/* Dark Mode Toggle */
+.dark-mode-toggle-bottom {
+    position: fixed;
+    left: 20px;
+    bottom: 20px; /* Same level as chat button */
+    z-index: 1200;
+    background: var(--background-main);
+    color: var(--primary-green);
+    border: 2px solid var(--primary-green);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(67,160,71,0.07);
+    transition: background 0.2s, color 0.2s, border 0.2s;
+}
+
+.dark-mode-toggle-bottom:hover {
+    background: var(--primary-green);
+    color: var(--white);
+    border: 2px solid var(--primary-green);
+    transform: scale(1.05);
+}
+
+/* Mobile Responsive for Chat and Dark Mode Toggle */
+@media (max-width: 900px) {
+    .dark-mode-toggle-bottom {
+        left: 16px;
+        bottom: 16px; /* Same level as chat button */
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
+    .live-chat {
+        right: 16px;
+        bottom: 16px;
+    }
+    .chat-window {
+        width: 95vw;
+        right: 0;
+        left: 0;
+        margin: 0 auto;
+    }
 } 
