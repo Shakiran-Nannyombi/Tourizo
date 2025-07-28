@@ -29,7 +29,7 @@
                 <div class="bar"></div>
                 <div class="bar"></div>
             </button>
-            
+
             <ul class="navbar-links">
                 <li><a href="{{ url_for('auth.user_dashboard') }}" class="{% if request.endpoint == 'auth.user_dashboard' %}active{% endif %}">Home</a></li>
                 <li><a href="{{ url_for('tours.list_tours') }}" class="{% if request.endpoint == 'tours.list_tours' %}active{% endif %}">Tours</a></li>

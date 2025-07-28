@@ -7,6 +7,97 @@
     --yellow: #ffd700;
     --white: #fff;
     --gray: #e2e8f0;
+    --animation-duration: 0.3s;
+    --animation-timing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Animation Keyframes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes bounce {
+    0%, 20%, 53%, 80%, 100% {
+        transform: translate3d(0, 0, 0);
+    }
+    40%, 43% {
+        transform: translate3d(0, -8px, 0);
+    }
+    70% {
+        transform: translate3d(0, -4px, 0);
+    }
+    90% {
+        transform: translate3d(0, -2px, 0);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200px 0;
+    }
+    100% {
+        background-position: calc(200px + 100%) 0;
+    }
 }
 
 * {
@@ -57,6 +148,7 @@ body {
     height: 70px;
     display: flex;
     align-items: center;
+    animation: slideInDown var(--animation-duration) var(--animation-timing);
 }
 
 .navbar-container {
@@ -75,6 +167,12 @@ body {
     align-items: center;
     font-size: 2rem;
     font-weight: 700;
+    animation: fadeInLeft var(--animation-duration) var(--animation-timing);
+    transition: transform var(--animation-duration) var(--animation-timing);
+}
+
+.navbar-logo:hover {
+    transform: scale(1.05);
 }
 
 .logo-icon {
@@ -177,11 +275,16 @@ body {
     padding: 8px 16px;
     border-radius: 20px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all var(--animation-duration) var(--animation-timing);
+    animation: scaleIn var(--animation-duration) var(--animation-timing);
+    animation-delay: 0.3s;
+    animation-fill-mode: both;
 }
 
 .user-profile:hover {
     background: rgba(67, 160, 71, 0.2);
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(67,160,71,0.2);
 }
 
 .dropdown-arrow {
@@ -311,6 +414,9 @@ body {
     margin-bottom: 40px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     text-align: center;
+    animation: fadeInUp var(--animation-duration) var(--animation-timing);
+    animation-delay: 0.2s;
+    animation-fill-mode: both;
 }
 
 .welcome-title {
@@ -348,11 +454,14 @@ body {
     font-size: 1rem;
     padding: 0.75rem 2rem;
     border-radius: 0.75rem;
-    transition: background 0.2s, box-shadow 0.2s;
+    transition: all var(--animation-duration) var(--animation-timing);
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    animation: scaleIn var(--animation-duration) var(--animation-timing);
+    animation-delay: 0.4s;
+    animation-fill-mode: both;
 }
 
 .btn-explore:hover {
@@ -360,6 +469,8 @@ body {
     color: var(--white);
     box-shadow: 0 4px 16px rgba(67,160,71,0.15);
     text-decoration: none;
+    transform: translateY(-2px);
+    animation: pulse 0.6s ease-in-out;
 }
 
 .btn-watch {
@@ -370,11 +481,14 @@ body {
     font-size: 1rem;
     padding: 0.75rem 2rem;
     border-radius: 0.75rem;
-    transition: all 0.2s;
+    transition: all var(--animation-duration) var(--animation-timing);
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    animation: scaleIn var(--animation-duration) var(--animation-timing);
+    animation-delay: 0.5s;
+    animation-fill-mode: both;
 }
 
 .btn-watch:hover {
@@ -382,6 +496,8 @@ body {
     border-color: var(--secondary-green);
     color: var(--secondary-green);
     text-decoration: none;
+    transform: translateY(-2px);
+    animation: pulse 0.6s ease-in-out;
 }
 
 /* Stats Grid */
@@ -398,11 +514,20 @@ body {
     border-radius: 16px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     text-align: center;
-    transition: transform 0.3s ease;
+    transition: all var(--animation-duration) var(--animation-timing);
+    animation: fadeInUp var(--animation-duration) var(--animation-timing);
+    animation-delay: calc(0.6s + var(--animation-duration) * 0.1 * var(--i, 0));
+    animation-fill-mode: both;
 }
 
+.stat-card:nth-child(1) { --i: 1; }
+.stat-card:nth-child(2) { --i: 2; }
+.stat-card:nth-child(3) { --i: 3; }
+.stat-card:nth-child(4) { --i: 4; }
+
 .stat-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
 }
 
 .stat-icon {
@@ -536,12 +661,19 @@ body {
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     overflow: hidden;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: all var(--animation-duration) var(--animation-timing);
+    animation: fadeInUp var(--animation-duration) var(--animation-timing);
+    animation-delay: calc(0.8s + var(--animation-duration) * 0.1 * var(--i, 0));
+    animation-fill-mode: both;
 }
 
+.tour-card:nth-child(1) { --i: 1; }
+.tour-card:nth-child(2) { --i: 2; }
+.tour-card:nth-child(3) { --i: 3; }
+
 .tour-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.2);
 }
 
 .tour-image {
@@ -607,11 +739,15 @@ body {
     border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
+    transition: all var(--animation-duration) var(--animation-timing);
     transition: background 0.2s;
 }
 
 .tour-btn:hover {
     background: var(--secondary-green);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(67,160,71,0.3);
+    animation: pulse 0.6s ease-in-out;
 }
 
 /* Alerts */
