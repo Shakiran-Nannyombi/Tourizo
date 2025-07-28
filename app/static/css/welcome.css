@@ -7,6 +7,11 @@
     --yellow: #ffd700;
     --white: #fff;
     --gray: #e2e8f0;
+    --text-main: #222;
+    --background-main: #fff;
+    --overlay-dark: rgba(34, 34, 34, 0.65);
+    --overlay-light: rgba(255,255,255,0.02);
+    --shadow-main: 0 10px 20px rgba(0,0,0,0.2);
 }
 
 * {
@@ -17,8 +22,8 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #fff;
-    color: #222;
+    background: var(--white);
+    color: var(--dark-green);
     overflow-x: hidden;
     scrollbar-width: none;
     /* Firefox */
@@ -33,8 +38,8 @@ body::-webkit-scrollbar {
 
 /* Dark Mode Support */
 body.dark-mode {
-    background-color: #121212;
-    color: #f0f0f0;
+    background-color: var(--dark-green);
+    color: var(--white);
 }
 
 body.dark-mode h1,
@@ -42,15 +47,15 @@ body.dark-mode h2,
 body.dark-mode h3,
 body.dark-mode p,
 body.dark-mode a {
-    color: #ffffff;
+    color: var(--white);
 }
 
 body.dark-mode .card,
 body.dark-mode .chat-window,
 body.dark-mode .translate-widget select {
-    background-color: #1e1e1e;
-    border-color: #444;
-    color: white;
+    background-color: var(--dark-green);
+    border-color: var(--gray);
+    color: var(--white);
 }
 
 /* Video Background */
@@ -79,12 +84,12 @@ body.dark-mode .translate-widget select {
     bottom: 10px;
     right: 10px;
     font-size: 12px;
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--white);
     z-index: 1;
 }
 
 .video-credit a {
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--white);
     text-decoration: none;
 }
 
@@ -135,7 +140,7 @@ body.dark-mode .translate-widget select {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.45) 100%);
+    background: linear-gradient(180deg, var(--overlay-dark) 0%, var(--overlay-dark) 100%);
     z-index: 3;
 }
 
@@ -187,7 +192,7 @@ body.dark-mode .translate-widget select {
     font-size: 1.8rem;
     margin-bottom: 15px;
     font-weight: 400;
-    color: #ff9800;
+    color: var(--yellow);
 }
 
 .hero-description {
@@ -248,42 +253,42 @@ body.dark-mode .translate-widget select {
 }
 
 .btn-primary {
-    background: linear-gradient(45deg, #43a047, #388e3c);
-    color: #fff;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: linear-gradient(45deg, var(--primary-green), var(--secondary-green));
+    color: var(--white);
+    border: 2px solid var(--accent-green);
     box-shadow: 0 8px 25px rgba(67, 160, 71, 0.3);
 }
 
 .btn-primary:hover {
     transform: translateY(-3px);
     box-shadow: 0 15px 35px rgba(67, 160, 71, 0.4);
-    background: linear-gradient(45deg, #388e3c, #43a047);
+    background: linear-gradient(45deg, var(--secondary-green), var(--primary-green));
 }
 
 .btn-secondary {
     background: rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    color: #222;
+    border: 2px solid var(--accent-green);
+    color: var(--dark-green);
 }
 
 .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.5);
+    background: var(--light-green);
+    border-color: var(--primary-green);
     transform: translateY(-3px);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
 }
 
 .btn-accent {
-    background: linear-gradient(45deg, #a5d6a7, #c8e6c9);
-    color: #1b5e20;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: linear-gradient(45deg, var(--accent-green), var(--light-green));
+    color: var(--dark-green);
+    border: 2px solid var(--accent-green);
     box-shadow: 0 8px 25px rgba(165, 214, 167, 0.3);
 }
 
 .btn-accent:hover {
     transform: translateY(-3px);
     box-shadow: 0 15px 35px rgba(165, 214, 167, 0.4);
-    background: linear-gradient(45deg, #c8e6c9, #a5d6a7);
+    background: linear-gradient(45deg, var(--light-green), var(--accent-green));
 }
 
 .slider-dots {
@@ -298,15 +303,15 @@ body.dark-mode .translate-widget select {
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: #fff;
-    border: 2px solid #ff9800;
+    background: var(--white);
+    border: 2px solid var(--yellow);
     opacity: 0.5;
     transition: opacity 0.3s, background 0.3s;
     cursor: pointer;
 }
 
 .slider-dot.active {
-    background: #ff9800;
+    background: var(--yellow);
     opacity: 1;
 }
 
@@ -315,7 +320,7 @@ body.dark-mode .translate-widget select {
     padding: 100px 20px;
     position: relative;
     z-index: 2;
-    background: #fff;
+    background: var(--white);
 }
 
 .features-container {
@@ -334,7 +339,7 @@ body.dark-mode .translate-widget select {
     font-size: 1.8rem;
     margin-bottom: 60px;
     opacity: 0.8;
-    color: black;
+    color: var(--dark-green);
 }
 
 .features-grid {
@@ -348,7 +353,7 @@ body.dark-mode .translate-widget select {
     background: var(--primary-green);
     padding: 40px 30px;
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--accent-green);
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
     position: relative;
@@ -385,7 +390,7 @@ body.dark-mode .translate-widget select {
 .feature-title {
     font-size: 1.8rem;
     margin-bottom: 15px;
-    color: black;
+    color: var(--white);
 }
 
 .feature-description {
@@ -400,7 +405,7 @@ body.dark-mode .translate-widget select {
     padding: 100px 20px;
     position: relative;
     z-index: 2;
-    background: #d4f7cf;
+    background: var(--light-green);
 }
 
 .destinations-container {
@@ -446,7 +451,7 @@ body.dark-mode .translate-widget select {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.4);
+    background: var(--overlay-dark);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -457,13 +462,13 @@ body.dark-mode .translate-widget select {
 }
 
 .destination-card:hover .destination-overlay {
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(34, 34, 34, 0.2);
 }
 
 .destination-icon {
     font-size: 4rem;
     margin-bottom: 15px;
-    color: #ffd700;
+    color: var(--yellow);
     text-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
     transition: all 0.3s ease;
 }
@@ -476,14 +481,14 @@ body.dark-mode .translate-widget select {
     font-size: 1.8rem;
     font-weight: 600;
     margin-bottom: 10px;
-    color: white;
+    color: var(--white);
     text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
 }
 
 .destination-description {
     font-size: 1.1rem;
     opacity: 0.9;
-    color: #e2e8f0;
+    color: var(--gray);
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
     max-width: 80%;
     margin: 0 auto;
@@ -565,7 +570,7 @@ body.dark-mode .translate-widget select {
 
 .hero-signup-btn {
     background: linear-gradient(90deg, var(--primary-green) 0%, var(--accent-green) 100%);
-    color: #fff;
+    color: var(--white);
     font-weight: 700;
     font-size: 1.2rem;
     border: none;
@@ -577,7 +582,7 @@ body.dark-mode .translate-widget select {
 
 .hero-signup-btn:hover {
     background: linear-gradient(90deg, var(--accent-green) 0%, var(--primary-green) 100%);
-    color: #fff;
+    color: var(--white);
     box-shadow: 0 8px 32px rgba(67, 160, 71, 0.25);
 }
 
@@ -594,7 +599,7 @@ body.dark-mode .translate-widget select {
 
 .hero-login-btn:hover {
     background: var(--primary-green);
-    color: #fff;
+    color: var(--white);
     border: 2px solid var(--accent-green);
 }
 
@@ -652,8 +657,8 @@ body.dark-mode .translate-widget select {
 }
 
 .chat-toggle {
-    background: #007bff;
-    color: white;
+    background: var(--primary-green);
+    color: var(--white);
     border: none;
     border-radius: 50px;
     padding: 15px 20px;
@@ -669,8 +674,8 @@ body.dark-mode .translate-widget select {
     right: 0;
     width: 320px;
     max-height: 500px;
-    background: #ffffff;
-    border: 1px solid #ccc;
+    background: var(--white);
+    border: 1px solid var(--gray);
     border-radius: 12px;
     box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
     overflow: hidden;
@@ -678,8 +683,8 @@ body.dark-mode .translate-widget select {
 }
 
 .chat-header {
-    background: #007bff;
-    color: white;
+    background: var(--primary-green);
+    color: var(--white);
     padding: 15px;
     font-weight: bold;
 }
@@ -688,7 +693,7 @@ body.dark-mode .translate-widget select {
     padding: 10px;
     overflow-y: auto;
     flex-grow: 1;
-    background: #f9f9f9;
+    background: var(--light-green);
     max-height: 300px;
 }
 
@@ -696,21 +701,21 @@ body.dark-mode .translate-widget select {
     display: flex;
     padding: 10px;
     border-top: 1px solid #ccc;
-    background-color: #fff;
+    background-color: var(--white);
 }
 
 .chat-input {
     flex-grow: 1;
     padding: 8px;
     border-radius: 6px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--gray);
     margin-right: 5px;
 }
 
 .chat-send {
     padding: 8px 12px;
-    background-color: #007bff;
-    color: white;
+    background-color: var(--primary-green);
+    color: var(--white);
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -721,7 +726,7 @@ body.dark-mode .translate-widget select {
     position: fixed;
     top: 100px;
     left: 20px;
-    background: white;
+    background: var(--white);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
@@ -740,12 +745,12 @@ body.dark-mode .translate-widget select {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    background: #007bff;
-    color: white;
+    background: var(--primary-green);
+    color: var(--white);
 }
 
 .geo-btn:hover {
-    background: #0056b3;
+    background: var(--secondary-green);
 }
 
 /* Dark Mode Toggle */
@@ -755,12 +760,38 @@ body.dark-mode .translate-widget select {
     left: 20px;
     z-index: 1000;
     padding: 12px;
-    background: #007bff;
-    color: white;
+    background: var(--primary-green);
+    color: var(--white);
     border: none;
     border-radius: 50%;
     cursor: pointer;
     font-size: 16px;
+}
+
+.dark-mode-toggle-bottom {
+    position: fixed;
+    right: 32px;
+    bottom: 100px; /* Adjust so it's above the chat icon */
+    z-index: 1200;
+    background: var(--white);
+    color: var(--primary-green);
+    border: 2px solid var(--primary-green);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(67,160,71,0.07);
+    transition: background 0.2s, color 0.2s, border 0.2s;
+}
+
+.dark-mode-toggle-bottom:hover {
+    background: var(--primary-green);
+    color: var(--white);
+    border: 2px solid var(--primary-green);
 }
 
 .translate-widget {
@@ -768,10 +799,10 @@ body.dark-mode .translate-widget select {
     top: 20px;
     left: 20px;
     z-index: 1000;
-    background: rgba(255, 255, 255, 0.8);
     padding: 4px 8px;
     border-radius: 6px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    background: var(--primary-green);
 }
 
 /* Interactive Map */
@@ -781,7 +812,7 @@ body.dark-mode .translate-widget select {
     left: 20px;
     transform: translateY(-50%);
     width: 250px;
-    background: white;
+    background: var(--white);
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     z-index: 1000;
@@ -789,19 +820,19 @@ body.dark-mode .translate-widget select {
 }
 
 .map-header {
-    background: #007bff;
-    color: white;
+    background: var(--primary-green);
+    color: var(--white);
     padding: 15px;
     font-weight: bold;
 }
 
 .map-content {
     height: 200px;
-    background: #f0f0f0;
+    background: var(--gray);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #666;
+    color: var(--dark-green);
 }
 
 /* Instant Search */
@@ -855,7 +886,7 @@ body.dark-mode .translate-widget select {
     font-size: 1.3rem;
     margin-bottom: 60px;
     opacity: 0.8;
-    color: #666;
+    color: var(--dark-green);
     text-align: center;
     max-width: 800px;
     margin-left: auto;
@@ -865,7 +896,7 @@ body.dark-mode .translate-widget select {
 /* Offers Section */
 .offers-section {
     padding: 100px 20px;
-    background: #f9f9f9;
+    background: var(--gray);
     position: relative;
     z-index: 2;
 }
@@ -878,7 +909,7 @@ body.dark-mode .translate-widget select {
 }
 
 .offer-card {
-    background: white;
+    background: var(--white);
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
@@ -917,7 +948,7 @@ body.dark-mode .translate-widget select {
 }
 
 .card-content p {
-    color: #666;
+    color: var(--dark-green);
     line-height: 1.6;
     margin-bottom: 20px;
 }
@@ -939,29 +970,29 @@ body.dark-mode .translate-widget select {
 }
 
 .discount-badge {
-    background: #e8f5e8;
+    background: var(--light-green);
     color: var(--primary-green);
 }
 
 .offer-badge {
-    background: #fff3e0;
-    color: #ff9800;
+    background: var(--yellow);
+    color: var(--primary-green);
 }
 
 .exclusive-badge {
-    background: #f3e5f5;
-    color: #9c27b0;
+    background: var(--accent-green);
+    color: var(--primary-green);
 }
 
 .price-badge {
-    background: #e3f2fd;
-    color: #2196f3;
+    background: var(--gray);
+    color: var(--primary-green);
 }
 
 /* Insurance Guide Section */
 .insurance-guide-section {
     padding: 100px 20px;
-    background: white;
+    background: var(--white);
     position: relative;
     z-index: 2;
 }
@@ -974,7 +1005,7 @@ body.dark-mode .translate-widget select {
 }
 
 .insurance-card {
-    background: white;
+    background: var(--white);
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
@@ -994,7 +1025,7 @@ body.dark-mode .translate-widget select {
 
 .feature-list li {
     padding: 5px 0;
-    color: #666;
+    color: var(--dark-green);
     position: relative;
     padding-left: 20px;
 }
@@ -1010,7 +1041,7 @@ body.dark-mode .translate-widget select {
 /* Upcoming Packages Section */
 .upcoming-packages-section {
     padding: 100px 20px;
-    background: #f9f9f9;
+    background: var(--gray);
     position: relative;
     z-index: 2;
 }
@@ -1023,7 +1054,7 @@ body.dark-mode .translate-widget select {
 }
 
 .package-card {
-    background: white;
+    background: var(--white);
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
@@ -1126,3 +1157,120 @@ body.dark-mode .translate-widget select {
         left: 10px;
     }
 }
+
+@media (max-width: 900px) {
+  .navbar-welcome {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px 8px 0 8px;
+    gap: 8px;
+  }
+  .navbar-left, .navbar-center, .navbar-right {
+    min-width: 0;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 8px;
+  }
+  .navbar-right {
+    justify-content: center;
+    gap: 8px;
+  }
+  .hero-title, .features-title, .destinations-title, .section-title {
+    font-size: 1.5rem;
+  }
+  .welcome-heading {
+    font-size: 2rem;
+  }
+  .hero-subtitle, .features-subtitle, .section-subtitle {
+    font-size: 1rem;
+  }
+  .btn, .btn-primary, .btn-secondary, .btn-accent {
+    width: 100%;
+    max-width: 320px;
+    font-size: 1rem;
+    padding: 12px 0;
+    margin: 8px auto;
+    display: block;
+  }
+  .features-grid,
+  .destinations-grid,
+  .offers-grid,
+  .insurance-grid,
+  .packages-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .destination-card, .feature-card, .offer-card, .insurance-card, .package-card {
+    height: auto;
+    min-width: 0;
+    max-width: 100%;
+    box-shadow: var(--shadow-main);
+  }
+  .floating-elements, .interactive-map {
+    display: none;
+  }
+  .dark-mode-toggle-bottom {
+    right: 16px;
+    bottom: 80px;
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+  .live-chat {
+    right: 16px;
+    bottom: 16px;
+  }
+  .chat-window {
+    width: 95vw;
+    right: 0;
+    left: 0;
+    margin: 0 auto;
+    max-width: 400px;
+  }
+  .translate-widget {
+    position: static;
+    width: 100%;
+    min-width: 0;
+    margin: 0 auto 8px auto;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.navbar-welcome {
+    position: relative;
+    z-index: 10;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 40px 0 40px;
+    background: rgba(255,255,255,0.02); /* transparent, but can adjust for readability */
+    box-shadow: none;
+    gap: 0;
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+    min-width: 60px;
+}
+
+.navbar-center {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 200px;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 260px;
+    justify-content: flex-end;
+}
+
+/* Remove old .top-bar styles if present */
+.top-bar, .top-bar-left, .top-bar-center, .top-bar-right { display: none !important; }

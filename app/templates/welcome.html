@@ -4,17 +4,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome - Tour Management</title>
+    <title>Welcome to Tourizo</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/welcome.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile-responsive.css') }}">
 </head>
 
 <body>
-    <!-- ==============================================
-         HEADER AND UTILITY COMPONENTS
-    ============================================== -->
-    <!-- Place this where your current video-background div is (around line 120) -->
+    <nav class="navbar-welcome">
+        <div class="navbar-left">
+            <!-- Removed dark mode toggle from here -->
+        </div>
+        <div class="navbar-center">
+            <div class="translate-widget" id="google_translate_element"></div>
+        </div>
+        <div class="navbar-right">
+            <a href="{{ url_for('auth.register') }}" class="btn btn-primary hero-signup-btn">
+                <i class="fas fa-user-plus"></i> Register
+            </a>
+            <a href="{{ url_for('auth.login') }}" class="btn btn-secondary hero-login-btn">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </a>
+        </div>
+    </nav>
+
+    <!-- Place dark mode toggle above live chat -->
+    <button class="dark-mode-toggle-bottom" onclick="toggleDarkMode()">
+        <i class="fas fa-moon" id="darkModeIcon"></i>
+    </button>
+
+{# video background #}
     <div class="video-background">
         <video autoplay muted loop playsinline id="bg-video">
             <!-- Primary Safari Video -->
@@ -61,39 +80,12 @@
     </div>
 
 
-    <!-- Dark Mode Toggle -->
-    <button class="dark-mode-toggle" onclick="toggleDarkMode()">
-        <i class="fas fa-moon" id="darkModeIcon"></i>
-    </button>
-
-    <!-- Translate Widget -->
-    <div class="translate-widget" id="google_translate_element"></div>
-
-
-
-    <!-- Instant Search -->
-    <div class="instant-search">
-        <input type="text" class="search-input" placeholder="🔍 Search tours instantly..."
-            oninput="instantSearch(this.value)">
-        <div class="search-results" id="searchResults"></div>
-    </div>
-
     <!-- Floating Elements -->
     <div class="floating-elements">
         <div class="floating-element"></div>
         <div class="floating-element"></div>
         <div class="floating-element"></div>
         <div class="floating-element"></div>
-    </div>
-
-    <!-- Top Right Auth Buttons -->
-    <div class="top-right-auth-buttons">
-        <a href="{{ url_for('auth.register') }}" class="btn btn-primary hero-signup-btn">
-            <i class="fas fa-user-plus"></i> Register
-        </a>
-        <a href="{{ url_for('auth.login') }}" class="btn btn-secondary hero-login-btn">
-            <i class="fas fa-sign-in-alt"></i> Login
-        </a>
     </div>
 
     <!-- ==============================================
@@ -126,7 +118,7 @@
                 From wildlife safaris to cultural experiences, create memories that last a lifetime.
             </p>
             <div class="btn-container">
-                <a href="/tours" class="btn btn-primary">
+                <a href="{{ url_for('auth.login') }}" class="btn btn-primary">
                     <i class="fas fa-compass"></i> Explore Tours
                 </a>
             </div>
@@ -217,7 +209,7 @@
             </div>
 
             <div class="btn-container">
-                <a href="/login" class="btn btn-primary">
+                <a href="{{ url_for('auth.login') }}" class="btn btn-primary">
                     <i class="fas fa-compass"></i> Explore Wildlife Tours
                 </a>
             </div>
