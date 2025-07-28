@@ -9,6 +9,15 @@
     --upcoming-bg: var(--gray);
 }
 
+/* Dark mode section backgrounds */
+body.dark-mode {
+    --features-bg: var(--background-main);
+    --destinations-bg: var(--light-green);
+    --offers-bg: #2a2a2a;
+    --insurance-bg: var(--background-main);
+    --upcoming-bg: #2a2a2a;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -306,14 +315,14 @@ body::-webkit-scrollbar {
 .features-title {
     font-size: 3rem;
     margin-bottom: 20px;
-    color: var(--dark-green);
+    color: var(--text-main);
 }
 
 .features-subtitle {
     font-size: 1.8rem;
     margin-bottom: 60px;
     opacity: 0.8;
-    color: var(--dark-green);
+    color: var(--text-main);
 }
 
 .features-grid {
@@ -391,7 +400,7 @@ body::-webkit-scrollbar {
 .destinations-title {
     font-size: 3rem;
     margin-bottom: 60px;
-    color: var(--dark-green);
+    color: var(--primary-green);
     font-weight: 700;
 }
 
@@ -462,7 +471,7 @@ body::-webkit-scrollbar {
 .destination-description {
     font-size: 1.1rem;
     opacity: 0.9;
-    color: var(--);
+    color: var(--white);
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
     max-width: 80%;
     margin: 0 auto;
@@ -914,7 +923,7 @@ body::-webkit-scrollbar {
 .section-title {
     font-size: 3rem;
     margin-bottom: 20px;
-    color: var(--dark-green);
+    color: var(--primary-green);
     text-align: center;
 }
 
@@ -922,7 +931,7 @@ body::-webkit-scrollbar {
     font-size: 1.3rem;
     margin-bottom: 60px;
     opacity: 0.8;
-    color: var(--dark-green);
+    color: var(--text-main);
     text-align: center;
     max-width: 800px;
     margin-left: auto;

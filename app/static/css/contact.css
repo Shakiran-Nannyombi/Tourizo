@@ -15,7 +15,7 @@ html, body {
 
 /* Contact Page Container */
 .contact-page-container {
-    background-color: white;
+    background-color: var(--background-main);
     min-height: 100vh;
     width: 100%;
 }
@@ -669,7 +669,7 @@ html, body {
 
 /* FAQ PAGE STYLES */
 .faq-page {
-    background-color: white;
+    background-color: var(--background-main);
     min-height: 100vh;
     padding: 80px 0;
 }
@@ -677,6 +677,7 @@ html, body {
     max-width: 800px;
     margin: 0 auto;
     padding: 0 20px;
+    background-color: var(--background-main);
 }
 .faq-header {
     text-align: center;
@@ -685,16 +686,16 @@ html, body {
 .faq-title {
     font-size: 2.5rem;
     font-weight: bold;
-    color: #333;
+    color: var(--primary-green);
     margin-bottom: 20px;
 }
 .faq-subtitle {
-    color: #666;
+    color: var(--text-main);
     font-size: 1.1rem;
     line-height: 1.6;
 }
 .faq-search-section {
-    background: white;
+    background: var(--background-main);
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.08);
     padding: 30px 20px 20px 20px;
@@ -998,7 +999,7 @@ html, body {
 
 /* --- Inquiries Page Styles (moved from inquiries.html) --- */
 .inquiries-page {
-    background-color: white;
+    background-color: var(--background-main);
     min-height: 100vh;
     padding: 80px 0;
     margin-top: 2rem;
@@ -1018,12 +1019,12 @@ html, body {
 .inquiries-title {
     font-size: 2.5rem;
     font-weight: bold;
-    color: #333;
+    color: var(--text-main);
     margin-bottom: 20px;
 }
 
 .inquiries-subtitle {
-    color: #666;
+    color: var(--text-main);
     font-size: 1.1rem;
     line-height: 1.6;
 }
@@ -1153,14 +1154,14 @@ html, body {
     border-radius: 50px;
     padding: 15px 20px;
     cursor: pointer;
-    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 5px 15px rgba(67, 160, 71, 0.3);
     font-size: 18px;
     transition: all 0.3s ease;
 }
 
 .chat-toggle:hover {
     transform: scale(1.05);
-    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.4);
+    box-shadow: 0 8px 20px rgba(67, 160, 71, 0.4);
 }
 
 .chat-window {
@@ -1173,7 +1174,7 @@ html, body {
     background: var(--background-main);
     border: 1.5px solid var(--primary-green);
     border-radius: 18px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+    box-shadow: var(--shadow-main);
     overflow: hidden;
     flex-direction: column;
     padding: 0;
@@ -1208,23 +1209,25 @@ html, body {
     line-height: 1.5;
     margin-bottom: 2px;
     box-shadow: 0 2px 8px rgba(67,160,71,0.04);
+    color: var(--dark-green);
 }
 
 .chat-messages div strong {
     font-weight: 600;
     margin-right: 4px;
+    color: var(--dark-green);
 }
 
 .chat-messages div[style*='background: #e9f7fd'] {
     background: linear-gradient(90deg, #e9f7fd 80%, #d0f0e0 100%);
-    color: black !important;
+    color: var(--dark-green) !important;
     align-self: flex-end;
     border: 1px solid #b2e0d6;
 }
 
 .chat-messages div[style*='background: #f4f4f4'] {
     background: linear-gradient(90deg, #f4f4f4 80%, #e0e0e0 100%);
-    color: black !important;
+    color: var(--dark-green) !important;
     align-self: flex-start;
     border: 1px solid #e0e0e0;
 }
@@ -1240,7 +1243,7 @@ html, body {
 .chat-input-area {
     display: flex;
     padding: 10px;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid var(--gray);
     background-color: var(--background-main);
     gap: 6px;
 }
@@ -1254,10 +1257,16 @@ html, body {
     font-size: 1rem;
     outline: none;
     transition: border 0.2s;
+    color: var(--dark-green);
+    background: var(--white);
 }
 
 .chat-input:focus {
     border: 1.5px solid var(--accent-green);
+}
+
+.chat-input::placeholder {
+    color: var(--text-main);
 }
 
 .chat-send {

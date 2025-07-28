@@ -19,13 +19,13 @@
 .about-content h1 {
     font-size: 3rem;
     font-weight: 700;
-    color: #333;
+    color: var(--text-main);
     margin-bottom: 1rem;
 }
 
 .about-content p {
     font-size: 1.2rem;
-    color: #666;
+    color: var(--text-main);
     line-height: 1.6;
     margin-bottom: 3rem;
 }
@@ -68,13 +68,13 @@
 .stat-number {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #333;
+    color: var(--text-main);
     margin-bottom: 0.5rem;
 }
 
 .stat-label {
     font-size: 1rem;
-    color: #666;
+    color: var(--text-main);
     font-weight: 500;
 }
 
@@ -141,7 +141,7 @@
 /* Meet Our Team Section */
 .team-section {
     padding: 80px 0;
-    background: var(--white);
+    background: var(--background-main);
 }
 
 .team-container {
@@ -153,18 +153,19 @@
 .team-header {
     text-align: center;
     margin-bottom: 4rem;
+    color: var(--text-main);
 }
 
 .team-header h2 {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #333;
+    color: var(--primary-green);
     margin-bottom: 1rem;
 }
 
 .team-header p {
     font-size: 1.2rem;
-    color: #666;
+    color: var(--text-main);
     line-height: 1.6;
 }
 
@@ -194,7 +195,7 @@
 .team-avatar {
     width: 75px;
     height: 75px;
-    background: var(--light-green);
+    background: white;
     border: 3px solid var(--primary-green);
     border-radius: 50%;
     display: flex;
@@ -324,7 +325,7 @@
 /* Our Commitments Section */
 .commitments-section {
     padding: 80px 0;
-    background: var(--white);
+    background: var(--background-main);
 }
 
 .commitments-container {
@@ -341,13 +342,13 @@
 .commitments-header h2 {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #333;
+    color: var(--primary-green);
     margin-bottom: 1rem;
 }
 
 .commitments-header p {
     font-size: 1.2rem;
-    color: #666;
+    color: var(--text-main);
     line-height: 1.6;
 }
 
@@ -358,7 +359,7 @@
 }
 
 .commitment-card {
-    background: var(--white);
+    background: var(--gray);
     padding: 2.5rem 2rem;
     border-radius: 12px;
     text-align: center;
@@ -498,7 +499,7 @@
 /* Our Story Section */
 .story-section {
     padding: 80px 0;
-    background: var(--white);
+    background: var(--background-main);
 }
 
 .story-container {
@@ -514,13 +515,13 @@
 .story-content h2 {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #333;
+    color: var(--primary-green);
     margin-bottom: 2rem;
 }
 
 .story-content p {
     font-size: 1.1rem;
-    color: #666;
+    color: var(--text-main);
     line-height: 1.7;
     margin-bottom: 1.5rem;
 }
@@ -662,7 +663,7 @@
 /* Our Values Section */
 .values-section {
     padding: 80px 0;
-    background: white;
+    background: var(--background-main);
 }
 
 .values-container {
@@ -679,13 +680,13 @@
 .values-header h2 {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #333;
+    color: var(--primary-green);
     margin-bottom: 1rem;
 }
 
 .values-header p {
     font-size: 1.2rem;
-    color: #666;
+    color: var(--text-main);
     line-height: 1.6;
 }
 
@@ -827,14 +828,14 @@
     border-radius: 50px;
     padding: 15px 20px;
     cursor: pointer;
-    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 5px 15px rgba(67, 160, 71, 0.3);
     font-size: 18px;
     transition: all 0.3s ease;
 }
 
 .chat-toggle:hover {
     transform: scale(1.05);
-    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.4);
+    box-shadow: 0 8px 20px rgba(67, 160, 71, 0.4);
 }
 
 .chat-window {
@@ -847,7 +848,7 @@
     background: var(--background-main);
     border: 1.5px solid var(--primary-green);
     border-radius: 18px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+    box-shadow: var(--shadow-main);
     overflow: hidden;
     flex-direction: column;
     padding: 0;
@@ -882,23 +883,25 @@
     line-height: 1.5;
     margin-bottom: 2px;
     box-shadow: 0 2px 8px rgba(67,160,71,0.04);
+    color: var(--dark-green);
 }
 
 .chat-messages div strong {
     font-weight: 600;
     margin-right: 4px;
+    color: var(--dark-green);
 }
 
 .chat-messages div[style*='background: #e9f7fd'] {
     background: linear-gradient(90deg, #e9f7fd 80%, #d0f0e0 100%);
-    color: black !important;
+    color: var(--dark-green) !important;
     align-self: flex-end;
     border: 1px solid #b2e0d6;
 }
 
 .chat-messages div[style*='background: #f4f4f4'] {
     background: linear-gradient(90deg, #f4f4f4 80%, #e0e0e0 100%);
-    color: black !important;
+    color: var(--dark-green) !important;
     align-self: flex-start;
     border: 1px solid #e0e0e0;
 }
@@ -914,7 +917,7 @@
 .chat-input-area {
     display: flex;
     padding: 10px;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid var(--gray);
     background-color: var(--background-main);
     gap: 6px;
 }
@@ -928,10 +931,16 @@
     font-size: 1rem;
     outline: none;
     transition: border 0.2s;
+    color: var(--dark-green);
+    background: var(--white);
 }
 
 .chat-input:focus {
     border: 1.5px solid var(--accent-green);
+}
+
+.chat-input::placeholder {
+    color: var(--text-main);
 }
 
 .chat-send {

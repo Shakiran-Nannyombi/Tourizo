@@ -52,10 +52,10 @@
     </nav>
     
     <!-- Hero Section -->
-    <div class="hero-section" style="margin-top: 4rem;">
+    <div class="hero-section" style="margin-top: 4rem; background-color: var(--background-main);">
         <div class="hero-content">
             <div class="container">
-                <h1 class="hero-title">
+                <h1 class="hero-title" style="color: var(--primary-green);">
                     <i class="fas fa-compass"></i>
                     Adventure Awaits
                 </h1>
@@ -76,19 +76,19 @@
         <div class="container">
             <!-- Destinations Preview -->
             <div class="destinations-preview">
-                <div class="destination-card" style="background-image: url('https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=400&h=300&fit=crop');">
+                <div class="destination-card" style="background-image: url('{{ url_for('static', filename='images/destinations/serengeti.jpeg') }}');">
                     <span>Serengeti</span>
                 </div>
-                <div class="destination-card" style="background-image: url('https://images.unsplash.com/photo-1549366021-9f761d040ab2?w=400&h=300&fit=crop');">
+                <div class="destination-card" style="background-image: url('{{ url_for('static', filename='images/destinations/murchision.jpeg') }}');">
                     <span>Murchison</span>
                 </div>
-                <div class="destination-card" style="background-image: url('https://images.unsplash.com/photo-1516905365624-24e3ac0b6629?w=400&h=300&fit=crop');">
+                <div class="destination-card" style="background-image: url('{{ url_for('static', filename='images/destinations/queen.jpeg') }}');">
                     <span>Queen Elizabeth</span>
                 </div>
-                <div class="destination-card" style="background-image: url('https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=400&h=300&fit=crop');">
+                <div class="destination-card" style="background-image: url('{{ url_for('static', filename='images/destinations/bwindi.jpeg') }}');">
                     <span>Bwindi Forest</span>
                 </div>
-                <div class="destination-card" style="background-image: url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop');">
+                <div class="destination-card" style="background-image: url('{{ url_for('static', filename='images/destinations/lakeburo.jpeg') }}');">
                     <span>Lake Mburo</span>
                 </div>
             </div>
@@ -165,7 +165,7 @@
                     </div>
 
                     <div class="price-display">
-                        <p class="mb-0">Total Price: <span id="total-price">0.00</span> UGX</p>
+                        <p class="mb-0" style="color: black;">Total Price: <span id="total-price">0.00</span> UGX</p>
                         <small class="text-muted">Price includes all taxes and fees</small>
                     </div>
                 </div>
@@ -315,7 +315,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <button type="submit" class="btn btn-primary w-100 py-3" id="submitBtn">
+                        <button type="submit" class="btn btn-primary w-100 py-3" style="color: var(--dark-green);" id="submitBtn">
                             <span id="submitText">
                                 <i class="fas fa-calendar-check me-2"></i>
                                 Book Now & Pay Securely
@@ -352,21 +352,21 @@
                     <div class="d-flex flex-column align-items-center">
                         <i class="fas fa-shield-alt text-success mb-2" style="font-size: 2rem;"></i>
                         <h6 class="text-primary">Secure Payment</h6>
-                        <small class="text-muted">256-bit SSL encryption</small>
+                        <small class="text-muted" style="color: var(--text-main);">256-bit SSL encryption</small>
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="d-flex flex-column align-items-center">
                         <i class="fas fa-award text-warning mb-2" style="font-size: 2rem;"></i>
                         <h6 class="text-primary">Certified Guides</h6>
-                        <small class="text-muted">Professional & experienced</small>
+                        <small class="text-muted" style="color: var(--text-main);">Professional & experienced</small>
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="d-flex flex-column align-items-center">
                         <i class="fas fa-phone-alt text-info mb-2" style="font-size: 2rem;"></i>
                         <h6 class="text-primary">24/7 Support</h6>
-                        <small class="text-muted">We're always here to help</small>
+                        <small class="text-muted" style="color: var(--text-main);">We're always here to help</small>
                     </div>
                 </div>
             </div>

@@ -3,6 +3,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/user_page.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}">
 <style>
     /* Override main-content for select tour page to fill viewport */
     .main-content {
@@ -60,12 +61,12 @@
     .tour-name {
         font-size: 1.2rem;
         font-weight: 600;
-        color: var(--primary-green);
+        color: black;
         margin-bottom: 0.5rem;
     }
     
     .tour-description {
-        color: var(--text-muted);
+        color: var(--dark-green);
         font-size: 0.9rem;
         margin-bottom: 1rem;
         line-height: 1.4;
@@ -190,59 +191,6 @@
         </a>
     </div>
 </div>
-</div>
-
-<!-- Footer -->
-<div class="bottom-sections" style="margin-top: 1rem;">
-    <div class="footer-bottom">
-        <div class="footer-container">
-            <div class="footer-grid">
-                <!-- Tourizo Column -->
-                <div>
-                    <h3 class="footer-title">Tourizo</h3>
-                    <p style="color: #ccc; margin-bottom: 1rem;">Your gateway to unforgettable African safari adventures.</p>
-                    <div class="footer-social">
-                        <div class="footer-social-dot"></div>
-                        <div class="footer-social-dot"></div>
-                        <div class="footer-social-dot"></div>
-                    </div>
-                </div>
-                <!-- Quick Links Column -->
-                <div>
-                    <h4 class="footer-link-title">Quick Links</h4>
-                    <ul class="footer-links">
-                        <li><a href="{{ url_for('tours.list_tours') }}">Tours</a></li>
-                        <li><a href="{{ url_for('bookings.book') }}">Bookings</a></li>
-                        <li><a href="{{ url_for('about') }}">About Us</a></li>
-                        <li><a href="{{ url_for('contact.contact_form') }}">Contact</a></li>
-                    </ul>
-                </div>
-                <!-- Support Column -->
-                <div>
-                    <h4 class="footer-link-title">Support</h4>
-                                            <ul class="footer-support">
-                            <li><a href="{{ url_for('policies.booking_policy') }}">Booking Policy</a></li>
-                            <li><a href="{{ url_for('policies.cancellation') }}">Cancellation</a></li>
-                            <li><a href="{{ url_for('policies.terms_conditions') }}">Terms & Conditions</a></li>
-                            <li><a href="{{ url_for('policies.privacy_policy') }}">Privacy Policy</a></li>
-                        </ul>
-                </div>
-                <!-- Contact Info Column -->
-                <div>
-                    <h4 class="footer-link-title">Contact Info</h4>
-                    <div class="footer-contact-info">
-                        <p><i class="fas fa-envelope" style="margin-right: 0.5rem;"></i>info@tourizo.com</p>
-                        <p><i class="fas fa-phone" style="margin-right: 0.5rem;"></i>+1 (555) 123-4567</p>
-                        <p><i class="fas fa-map-marker-alt" style="margin-right: 0.5rem;"></i>123 Safari Street, Adventure City</p>
-                    </div>
-                </div>
-            </div>
-            <!-- Copyright -->
-            <div class="footer-copyright">
-                © 2024 Tourizo. All rights reserved.
-            </div>
-        </div>
-    </div>
 </div>
 
 <!-- Profile Dropdown JavaScript -->
