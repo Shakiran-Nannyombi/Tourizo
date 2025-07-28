@@ -122,17 +122,19 @@ html, body {
 }
 
 body {
-    background: white;
+    background: var(--background-main);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    color: var(--text-main);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Navbar Styles */
 .navbar-welcome {
     width: 100%;
-    background: rgba(235, 249, 233, 0.95);
+    background: rgba(200, 230, 201, 0.95);
     backdrop-filter: blur(30px);
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     position: fixed;
@@ -239,7 +241,7 @@ body {
     top: -8px;
     right: -10px;
     background: var(--primary-green);
-    color: #fff;
+    color: var(--white);
     font-size: 0.85rem;
     font-weight: 700;
     border-radius: 50%;
@@ -249,7 +251,7 @@ body {
     align-items: center;
     justify-content: center;
     box-shadow: 0 2px 6px rgba(67,160,71,0.15);
-    border: 2px solid #fff;
+    border: 2px solid var(--white);
     z-index: 2;
 }
 
@@ -299,7 +301,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: var(--white);
     font-weight: 600;
     font-size: 14px;
 }
@@ -416,7 +418,7 @@ body {
 .welcome-title {
     font-size: 2.8rem;
     font-weight: 700;
-    color: #222;
+    color: var(--text-main);
     margin-bottom: 1rem;
 }
 
@@ -425,7 +427,7 @@ body {
 }
 
 .welcome-subtitle {
-    color: #3f443d;
+    color: var(--text-main);
     font-size: 1.15rem;
     margin-bottom: 2rem;
     max-width: 600px;
@@ -559,13 +561,14 @@ body {
 .stat-title {
     font-size: 1.2rem;
     font-weight: 700;
-    color: #222;
+    color: var(--dark-green);
     margin-bottom: 8px;
 }
 
 .stat-desc {
     font-size: 0.95rem;
-    color: #666;
+    color: var(--dark-green);
+    opacity: 0.7;
 }
 
 /* Content Grid */
@@ -587,7 +590,7 @@ body {
 .section-title {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #222;
+    color: var(--dark-green);
     margin-bottom: 24px;
 }
 
@@ -596,7 +599,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 16px 0;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--gray);
 }
 
 .booking-item:last-child {
@@ -605,17 +608,18 @@ body {
 
 .booking-info h6 {
     font-weight: 600;
-    color: #222;
+    color: black;
     margin-bottom: 4px;
 }
 
 .booking-info small {
-    color: #666;
+    color: var(--dark-green);
+    opacity: 0.7;
 }
 
 .status-badge {
     background: var(--primary-green);
-    color: white;
+    color: var(--white);
     padding: 6px 16px;
     border-radius: 20px;
     font-size: 0.8rem;
@@ -633,13 +637,14 @@ body {
 .featured-tours-title {
     font-size: 1.8rem;
     font-weight: 700;
-    color: #222;
+    color: var(--text-main);
     margin-bottom: 8px;
     text-align: center;
 }
 
 .featured-tours-subtitle {
-    color: #666;
+    color: var(--text-main);
+    opacity: 0.7;
     text-align: center;
     margin-bottom: 32px;
 }
@@ -687,7 +692,7 @@ body {
     top: 12px;
     left: 12px;
     background: var(--secondary-green);
-    color: white;
+    color: var(--white);
     padding: 4px 12px;
     border-radius: 16px;
     font-size: 0.8rem;
@@ -699,7 +704,8 @@ body {
 }
 
 .tour-location {
-    color: #666;
+    color: black;
+    opacity: 0.7;
     font-size: 0.9rem;
     margin-bottom: 8px;
 }
@@ -707,12 +713,13 @@ body {
 .tour-title {
     font-size: 1.2rem;
     font-weight: 700;
-    color: #222;
+    color: var(--dark-green);
     margin-bottom: 8px;
 }
 
 .tour-rating {
-    color: #666;
+    color: black;
+    opacity: 0.7;
     font-size: 0.9rem;
     margin-bottom: 12px;
 }
@@ -727,7 +734,7 @@ body {
 .tour-btn {
     width: 100%;
     background: var(--primary-green);
-    color: white;
+    color: var(--white);
     border: none;
     padding: 12px;
     border-radius: 8px;
@@ -753,13 +760,13 @@ body {
 
 .alert-warning {
     background: rgba(255, 193, 7, 0.1);
-    color: #856404;
+    color: var(--text-main);
     border: 1px solid rgba(255, 193, 7, 0.2);
 }
 
 .alert-info {
     background: rgba(67, 160, 71, 0.1);
-    color: var(--dark-green);
+    color: var(--text-main);
     border: 1px solid rgba(67, 160, 71, 0.2);
 }
 
@@ -779,13 +786,13 @@ body {
     text-align: center;
 }
 .cta-section-title {
-    color: white;
+    color: var(--white);
     font-size: 2.5rem;
     font-weight: 700;
     margin-bottom: 1rem;
 }
 .cta-section-subtitle {
-    color: white;
+    color: var(--white);
     font-size: 1.1rem;
     margin-bottom: 2rem;
     max-width: 600px;
@@ -827,8 +834,8 @@ body {
 
 /* Footer Section */
 .footer-section {
-    background: #0a1304;
-    color: white;
+    background: var(--dark-green);
+    color: var(--white);
     width: 100vw;
     margin-left: calc(50% - 50vw);
     margin-top: 0;
@@ -852,7 +859,7 @@ body {
     margin-bottom: 1rem;
 }
 .footer-link-title {
-    color: white;
+    color: var(--white);
     font-size: 1.2rem;
     margin-bottom: 1rem;
 }
@@ -867,7 +874,8 @@ body {
 }
 .footer-links a,
 .footer-support a {
-    color: #ccc;
+    color: var(--white);
+    opacity: 0.7;
     text-decoration: none;
 }
 .footer-links a:hover,
@@ -875,7 +883,8 @@ body {
     color: var(--primary-green);
 }
 .footer-contact-info {
-    color: #ccc;
+    color: var(--white);
+    opacity: 0.7;
 }
 .footer-contact-info p {
     margin-bottom: 0.5rem;
@@ -893,8 +902,9 @@ body {
 .footer-copyright {
     text-align: center;
     padding-top: 2rem;
-    border-top: 1px solid #333;
-    color: #ccc;
+    border-top: 1px solid var(--text-main);
+    color: var(--white);
+    opacity: 0.7;
     font-size: 0.9rem;
 }
 
@@ -922,7 +932,7 @@ body {
 }
 .destination-card-overlay {
     padding: 1.2rem;
-    color: #fff;
+    color: var(--white);
     z-index: 2;
     background: linear-gradient(transparent, rgba(0,0,0,0.7));
     position: absolute;
@@ -1056,7 +1066,193 @@ body {
     margin: 0;
 }
 .footer-bottom {
-    background: #1a1a1a;
+    background: var(--dark-green);
     padding: 0;
     margin: 0;
+}
+
+/* Live Chat (Universal AI Chatbot) */
+.live-chat {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.chat-toggle {
+    background: var(--primary-green);
+    color: var(--white);
+    border: none;
+    border-radius: 50px;
+    padding: 15px 20px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.chat-toggle:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.4);
+}
+
+.chat-window {
+    display: none;
+    position: absolute;
+    bottom: 60px;
+    right: 0;
+    width: 340px;
+    max-height: 500px;
+    background: var(--background-main);
+    border: 1.5px solid var(--primary-green);
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+    overflow: hidden;
+    flex-direction: column;
+    padding: 0;
+    transition: box-shadow 0.2s;
+}
+
+.chat-header {
+    background: linear-gradient(90deg, var(--primary-green), var(--accent-green));
+    color: var(--white);
+    padding: 15px 18px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--accent-green);
+}
+
+.chat-messages {
+    padding: 12px 10px 12px 10px;
+    overflow-y: auto;
+    flex-grow: 1;
+    background: var(--light-green);
+    max-height: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.chat-messages div {
+    max-width: 85%;
+    word-break: break-word;
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 2px;
+    box-shadow: 0 2px 8px rgba(67,160,71,0.04);
+}
+
+.chat-messages div strong {
+    font-weight: 600;
+    margin-right: 4px;
+}
+
+.chat-messages div[style*='background: #e9f7fd'] {
+    background: linear-gradient(90deg, #e9f7fd 80%, #d0f0e0 100%);
+    color: black !important;
+    align-self: flex-end;
+    border: 1px solid #b2e0d6;
+}
+
+.chat-messages div[style*='background: #f4f4f4'] {
+    background: linear-gradient(90deg, #f4f4f4 80%, #e0e0e0 100%);
+    color: black !important;
+    align-self: flex-start;
+    border: 1px solid #e0e0e0;
+}
+
+.chat-messages div span[style*='color:red'] {
+    border-left: 4px solid #e74c3c;
+    padding-left: 8px;
+    background: #fff0f0;
+    color: #e74c3c !important;
+    font-weight: 500;
+}
+
+.chat-input-area {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    background-color: var(--background-main);
+    gap: 6px;
+}
+
+.chat-input {
+    flex-grow: 1;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1.5px solid var(--primary-green);
+    margin-right: 5px;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.2s;
+}
+
+.chat-input:focus {
+    border: 1.5px solid var(--accent-green);
+}
+
+.chat-send {
+    padding: 8px 14px;
+    background: linear-gradient(90deg, var(--primary-green), var(--accent-green));
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: background 0.2s;
+}
+
+.chat-send:hover {
+    background: linear-gradient(90deg, var(--accent-green), var(--primary-green));
+}
+
+/* Dark Mode Toggle */
+.dark-mode-toggle-bottom {
+    position: fixed;
+    left: 20px;
+    bottom: 20px; /* Same level as chat button */
+    z-index: 1200;
+    background: var(--background-main);
+    color: var(--primary-green);
+    border: 2px solid var(--primary-green);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(67,160,71,0.07);
+    transition: background 0.2s, color 0.2s, border 0.2s;
+}
+
+.dark-mode-toggle-bottom:hover {
+    background: var(--primary-green);
+    color: var(--white);
+    border: 2px solid var(--primary-green);
+    transform: scale(1.05);
+}
+
+/* Mobile Responsive for Chat and Dark Mode Toggle */
+@media (max-width: 900px) {
+    .dark-mode-toggle-bottom {
+        left: 16px;
+        bottom: 16px; /* Same level as chat button */
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
+    .live-chat {
+        right: 16px;
+        bottom: 16px;
+    }
+    .chat-window {
+        width: 95vw;
+        right: 0;
+        left: 0;
+        margin: 0 auto;
+    }
 }

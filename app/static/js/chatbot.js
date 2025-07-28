@@ -57,6 +57,7 @@ function appendMessage(sender, text) {
     div.style.padding = '6px 10px';
     div.style.borderRadius = '8px';
     div.style.background = sender === 'You' ? '#e9f7fd' : '#f4f4f4';
+    div.style.color = 'black';
     div.style.alignSelf = sender === 'You' ? 'flex-end' : 'flex-start';
     messages.appendChild(div);
     messages.scrollTop = messages.scrollHeight;
