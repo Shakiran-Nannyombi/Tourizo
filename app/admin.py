@@ -12,6 +12,9 @@ from functools import wraps
 from flask import make_response
 import datetime
 from app.models.Booking import Booking 
+from app.models import ChatbotSettings, db
+from flask import abort
+from flask_login import login_required, current_user
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -254,3 +257,23 @@ def approve_review(review_id):
 def admin_reviews():
     reviews = Review.query.order_by(Review.id.desc()).all()
     return render_template('admin/manage_reviews.html', reviews=reviews)
+
+@admin_bp.route('/admin/chatbot-settings', methods=['GET', 'POST'])
+@login_required
+def chatbot_settings():
+    if not getattr(current_user, 'is_admin', False):
+        abort(403)
+    settings = ChatbotSettings.get_settings()
+    if request.method == 'POST':
+        api_key = request.form['groq_api_key']
+        model = request.form['groq_model']
+        if settings:
+            settings.groq_api_key = api_key
+            settings.groq_model = model
+        else:
+            settings = ChatbotSettings(groq_api_key=api_key, groq_model=model)
+            db.session.add(settings)
+        db.session.commit()
+        flash('Chatbot settings updated!', 'success')
+        return redirect(url_for('admin.chatbot_settings'))
+    return render_template('admin/chatbot_settings.html', settings=settings)

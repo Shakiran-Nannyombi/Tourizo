@@ -9,6 +9,7 @@ from app.admin import admin_bp
 from app.reviews import reviews_bp
 from app.contact import contact_bp  # Contact blueprint
 from app.policies import policies_bp  # Policies blueprint
+from app.api.chatbot import chatbot_bp
 
 # Extension imports
 from app.extensions import db, login_manager, mail, moment
@@ -34,6 +35,7 @@ def create_app():
     app.register_blueprint(reviews_bp)
     app.register_blueprint(contact_bp)
     app.register_blueprint(policies_bp)
+    app.register_blueprint(chatbot_bp)
 
     # Home route - welcome page
     @app.route('/')

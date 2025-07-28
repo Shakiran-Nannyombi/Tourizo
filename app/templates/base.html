@@ -101,6 +101,11 @@
                             <i class="fas fa-user-shield me-2"></i> Admin Dashboard
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin.chatbot_settings') }}">
+                            <i class="fas fa-robot me-2"></i> Chatbot Settings
+                        </a>
+                    </li>
                     {% endif %}
                 </ul>
             </nav>
@@ -176,6 +181,24 @@
     </script>
     
     {% block extra_js %}{% endblock %}
+    <div class="live-chat">
+        <button class="chat-toggle" onclick="toggleChat()">
+            <i class="fas fa-comments"></i>
+        </button>
+        <div class="chat-window" id="chatWindow" style="display:none;">
+            <div class="chat-header">
+                <i class="fas fa-headset"></i> Tourizo AI Assistant
+            </div>
+            <div class="chat-messages" id="chatMessages"></div>
+            <div class="chat-input-area">
+                <input type="text" class="chat-input" placeholder="Ask me anything..." id="chatInput">
+                <button class="chat-send" onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
 </body>
 
 </html>

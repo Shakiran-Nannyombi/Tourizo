@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Chatbot Settings{% endblock %}
+{% block content %}
+<div class="container mt-5" style="max-width: 600px;">
+    <h2>Chatbot API Settings</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <label for="groq_api_key" class="form-label">Groq API Key</label>
+            <input type="text" class="form-control" id="groq_api_key" name="groq_api_key" value="{{ settings.groq_api_key if settings else '' }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="groq_model" class="form-label">Groq Model</label>
+            <input type="text" class="form-control" id="groq_model" name="groq_model" value="{{ settings.groq_model if settings else '' }}" required>
+            <div class="form-text">Example: llama-3-8b-instant</div>
+        </div>
+        <button type="submit" class="btn btn-primary">Save Settings</button>
+    </form>
+</div>
+{% endblock %} 

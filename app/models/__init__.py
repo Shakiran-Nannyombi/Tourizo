@@ -1,6 +1,7 @@
 # app/__init__.py
 from flask import Flask
 from app.extensions import db  # ✅ Use shared db instance
+from .ChatbotSettings import ChatbotSettings
 
 def create_app():
     app = Flask(__name__)
