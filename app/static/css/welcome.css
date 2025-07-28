@@ -1,17 +1,12 @@
+@import url('colors.css');
+
 :root {
-    --primary-green: #43a047;
-    --secondary-green: #388e3c;
-    --accent-green: #a5d6a7;
-    --light-green: #c8e6c9;
-    --dark-green: #1b5e20;
-    --yellow: #ffd700;
-    --white: #fff;
-    --gray: #e2e8f0;
-    --text-main: #222;
-    --background-main: #fff;
-    --overlay-dark: rgba(34, 34, 34, 0.65);
-    --overlay-light: rgba(255,255,255,0.02);
-    --shadow-main: 0 10px 20px rgba(0,0,0,0.2);
+    /* Section backgrounds for welcome page only */
+    --features-bg: var(--white);
+    --destinations-bg: var(--light-green);
+    --offers-bg: var(--gray);
+    --insurance-bg: var(--white);
+    --upcoming-bg: var(--gray);
 }
 
 * {
@@ -34,28 +29,6 @@ body {
 body::-webkit-scrollbar {
     display: none;
     /* Chrome, Safari, Opera */
-}
-
-/* Dark Mode Support */
-body.dark-mode {
-    background-color: var(--dark-green);
-    color: var(--white);
-}
-
-body.dark-mode h1,
-body.dark-mode h2,
-body.dark-mode h3,
-body.dark-mode p,
-body.dark-mode a {
-    color: var(--white);
-}
-
-body.dark-mode .card,
-body.dark-mode .chat-window,
-body.dark-mode .translate-widget select {
-    background-color: var(--dark-green);
-    border-color: var(--gray);
-    color: var(--white);
 }
 
 /* Video Background */
@@ -171,6 +144,7 @@ body.dark-mode .translate-widget select {
 .hero-description,
 .welcome-heading {
     text-shadow: 0 4px 24px rgba(0, 0, 0, 0.7), 0 1px 2px rgba(0, 0, 0, 0.5);
+    color: var(--white);
 }
 
 .hero-title {
@@ -320,7 +294,7 @@ body.dark-mode .translate-widget select {
     padding: 100px 20px;
     position: relative;
     z-index: 2;
-    background: var(--white);
+    background: var(--features-bg);
 }
 
 .features-container {
@@ -384,20 +358,20 @@ body.dark-mode .translate-widget select {
 .feature-icon {
     font-size: 3rem;
     margin-bottom: 20px;
-    color: var(--white);
+    color: var(--text-main);
 }
 
 .feature-title {
     font-size: 1.8rem;
     margin-bottom: 15px;
-    color: var(--white);
+    color: var(--text-main);
 }
 
 .feature-description {
     font-size: 1.3rem;
     opacity: 0.8;
     line-height: 1.6;
-    color: var(--white);
+    color: var(--text-main);
 }
 
 /* Destinations Preview */
@@ -405,7 +379,7 @@ body.dark-mode .translate-widget select {
     padding: 100px 20px;
     position: relative;
     z-index: 2;
-    background: var(--light-green);
+    background: var(--destinations-bg);
 }
 
 .destinations-container {
@@ -488,7 +462,7 @@ body.dark-mode .translate-widget select {
 .destination-description {
     font-size: 1.1rem;
     opacity: 0.9;
-    color: var(--gray);
+    color: var(--);
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
     max-width: 80%;
     margin: 0 auto;
@@ -755,23 +729,27 @@ body.dark-mode .translate-widget select {
 
 /* Dark Mode Toggle */
 .dark-mode-toggle {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    z-index: 1000;
-    padding: 12px;
-    background: var(--primary-green);
-    color: var(--white);
-    border: none;
+    margin-left: 16px;
+    background: var(--white);
+    color: var(--primary-green);
+    border: 2px solid var(--primary-green);
     border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
     cursor: pointer;
-    font-size: 16px;
+    transition: background 0.2s, color 0.2s, border 0.2s;
+    box-shadow: none;
+    position: static;
 }
 
 .dark-mode-toggle-bottom {
     position: fixed;
-    right: 32px;
-    bottom: 100px; /* Adjust so it's above the chat icon */
+    right: 20px;
+    bottom: 80px; /* 20px (chat) + 48px (chat button height) + 12px gap */
     z-index: 1200;
     background: var(--white);
     color: var(--primary-green);
@@ -896,7 +874,7 @@ body.dark-mode .translate-widget select {
 /* Offers Section */
 .offers-section {
     padding: 100px 20px;
-    background: var(--gray);
+    background: var(--offers-bg);
     position: relative;
     z-index: 2;
 }
@@ -992,7 +970,7 @@ body.dark-mode .translate-widget select {
 /* Insurance Guide Section */
 .insurance-guide-section {
     padding: 100px 20px;
-    background: var(--white);
+    background: var(--insurance-bg);
     position: relative;
     z-index: 2;
 }
@@ -1041,7 +1019,7 @@ body.dark-mode .translate-widget select {
 /* Upcoming Packages Section */
 .upcoming-packages-section {
     padding: 100px 20px;
-    background: var(--gray);
+    background: var(--upcoming-bg);
     position: relative;
     z-index: 2;
 }
@@ -1211,7 +1189,7 @@ body.dark-mode .translate-widget select {
   }
   .dark-mode-toggle-bottom {
     right: 16px;
-    bottom: 80px;
+    bottom: 72px; /* 16px (chat) + 40px (chat button height) + 16px gap */
     width: 40px;
     height: 40px;
     font-size: 1.1rem;
@@ -1234,6 +1212,12 @@ body.dark-mode .translate-widget select {
     margin: 0 auto 8px auto;
     display: flex;
     justify-content: center;
+  }
+  .dark-mode-toggle {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+    margin-left: 8px;
   }
 }
 

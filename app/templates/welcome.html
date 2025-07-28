@@ -13,10 +13,13 @@
 <body>
     <nav class="navbar-welcome">
         <div class="navbar-left">
-            <!-- Removed dark mode toggle from here -->
+            <!-- Left side empty or add logo if needed -->
         </div>
         <div class="navbar-center">
             <div class="translate-widget" id="google_translate_element"></div>
+            <button class="dark-mode-toggle" onclick="toggleDarkMode()">
+                <i class="fas fa-moon" id="darkModeIcon"></i>
+            </button>
         </div>
         <div class="navbar-right">
             <a href="{{ url_for('auth.register') }}" class="btn btn-primary hero-signup-btn">
@@ -29,9 +32,6 @@
     </nav>
 
     <!-- Place dark mode toggle above live chat -->
-    <button class="dark-mode-toggle-bottom" onclick="toggleDarkMode()">
-        <i class="fas fa-moon" id="darkModeIcon"></i>
-    </button>
 
 {# video background #}
     <div class="video-background">
