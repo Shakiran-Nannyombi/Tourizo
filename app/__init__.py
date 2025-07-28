@@ -45,6 +45,11 @@ def create_app():
     def about():
         return render_template('about.html')
 
+    # Video gallery route
+    @app.route('/video-gallery')
+    def video_gallery():
+        return render_template('video_gallery.html')
+
     # Context processors
     @app.context_processor
     def inject_categories():

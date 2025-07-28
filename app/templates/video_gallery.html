@@ -1,0 +1,316 @@
+{% extends 'base.html' %}
+{% block title %}Video Gallery - Tourizo{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/user_page.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mobile-responsive.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/video_gallery.css') }}">
+{% endblock %}
+{% block content %}
+<div class="video-gallery-wrapper">
+  <a href="{{ url_for('auth.user_dashboard') }}" class="back-to-dashboard-link">
+    <i class="fas fa-arrow-left"></i> Back to Dashboard
+  </a>
+  <!-- Navbar (copied from user_dashboard.html) -->
+  <nav class="navbar-welcome">
+    <div class="navbar-container">
+      <div class="navbar-logo">
+        <i class="fas fa-leaf logo-icon"></i>
+        <span class="logo-text">Tourizo</span>
+      </div>
+      <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </button>
+      <ul class="navbar-links">
+        <li><a href="{{ url_for('auth.user_dashboard') }}" class="{% if request.endpoint == 'auth.user_dashboard' %}active{% endif %}">Home</a></li>
+        <li><a href="{{ url_for('tours.list_tours') }}" class="{% if request.endpoint == 'tours.list_tours' %}active{% endif %}">Tours</a></li>
+        <li><a href="{{ url_for('bookings.book') }}" class="{% if request.endpoint == 'bookings.my_bookings' %}active{% endif %}">Bookings</a></li>
+        <li><a href="{{ url_for('reviews.my_reviews') }}" class="{% if request.endpoint == 'reviews.my_reviews' %}active{% endif %}">Reviews</a></li>
+        <li><a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %}">About</a></li>
+        <li><a href="{{ url_for('contact.contact_form') }}" class="{% if request.endpoint == 'contact.contact_form' %}active{% endif %}">Contact</a></li>
+      </ul>
+      <div class="navbar-actions">
+        <button class="wishlist-btn" id="navbar-wishlist-btn" title="Wishlist" onclick="window.location.href='/tours/wishlist'">
+          <i class="far fa-heart"></i>
+          <span class="wishlist-badge" id="wishlist-badge">0</span>
+        </button>
+        <div class="user-profile-dropdown">
+          <div class="user-profile" onclick="toggleProfileDropdown()">
+            <div class="user-avatar">{{ current_user.username[0]|upper }}</div>
+            <div class="user-name">{{ current_user.username }}</div>
+            <i class="fas fa-chevron-down dropdown-arrow"></i>
+          </div>
+          <div class="profile-dropdown-menu" id="profileDropdown">
+            <a href="{{ url_for('auth.profile') }}" class="dropdown-item">
+              <i class="fas fa-user"></i> Profile
+            </a>
+            <a href="{{ url_for('auth.settings') }}" class="dropdown-item">
+              <i class="fas fa-cog"></i> Settings
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="{{ url_for('auth.logout') }}" class="dropdown-item">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="video-gallery-container">
+    <div class="video-main">
+      <div class="video-title" id="mainVideoTitle">Welcome to Tourizo - Your African Adventure Begins</div>
+      <video id="mainVideo" class="video-player" controls>
+        <source src="{{ url_for('static', filename='videos/welcome.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <div class="video-duration" id="mainVideoDuration">4:30</div>
+      <div class="video-desc">
+        <span class="video-tag" id="mainVideoTag">Introduction</span>
+        <p id="mainVideoDesc">Discover the magic of Africa with our expert guides and unforgettable experiences. Experience the beauty, culture, and adventure that awaits you on your journey with Tourizo.</p>
+      </div>
+    </div>
+    <aside class="video-sidebar">
+      <div class="video-sidebar-header">
+        <div>
+          <div class="video-sidebar-title">Video Playlist</div>
+        </div>
+        <button class="video-sidebar-close" onclick="window.location.href='{{ url_for('auth.user_dashboard') }}'" title="Back to Dashboard">&times;</button>
+      </div>
+      <div class="video-list" id="videoList">
+        <!-- Video items will be rendered here by JS -->
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer (copied from user_dashboard.html) -->
+  <div class="bottom-sections">
+    <div class="footer-bottom">
+      <div class="footer-container">
+        <div class="footer-grid">
+          <!-- Tourizo Column -->
+          <div>
+            <h3 class="footer-title">Tourizo</h3>
+            <p style="color: #ccc; margin-bottom: 1rem;">Your gateway to unforgettable African safari adventures.</p>
+            <div class="footer-social">
+              <div class="footer-social-dot"></div>
+              <div class="footer-social-dot"></div>
+              <div class="footer-social-dot"></div>
+            </div>
+          </div>
+          <!-- Quick Links Column -->
+          <div>
+            <h4 class="footer-link-title">Quick Links</h4>
+            <ul class="footer-links">
+              <li><a href="{{ url_for('tours.list_tours') }}">Tours</a></li>
+              <li><a href="{{ url_for('bookings.book') }}">Bookings</a></li>
+              <li><a href="{{ url_for('about') }}">About Us</a></li>
+              <li><a href="{{ url_for('contact.contact_form') }}">Contact</a></li>
+            </ul>
+          </div>
+          <!-- Support Column -->
+          <div>
+            <h4 class="footer-link-title">Support</h4>
+            <ul class="footer-support">
+              <li><a href="{{ url_for('policies.booking_policy') }}">Booking Policy</a></li>
+              <li><a href="{{ url_for('policies.cancellation') }}">Cancellation</a></li>
+              <li><a href="{{ url_for('policies.terms_conditions') }}">Terms & Conditions</a></li>
+              <li><a href="{{ url_for('policies.privacy_policy') }}">Privacy Policy</a></li>
+            </ul>
+          </div>
+          <!-- Contact Info Column -->
+          <div>
+            <h4 class="footer-link-title">Contact Info</h4>
+            <div class="footer-contact-info">
+              <p><i class="fas fa-envelope" style="margin-right: 0.5rem;"></i>info@tourizo.com</p>
+              <p><i class="fas fa-phone" style="margin-right: 0.5rem;"></i>+1 (555) 123-4567</p>
+              <p><i class="fas fa-map-marker-alt" style="margin-right: 0.5rem;"></i>123 Safari Street, Adventure City</p>
+            </div>
+          </div>
+        </div>
+        <!-- Copyright -->
+        <div class="footer-copyright">
+          © 2024 Tourizo. All rights reserved.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ <!-- Custom JavaScript -->
+ <script src="{{ url_for('static', filename='js/user_dashboard_navbar.js') }}"></script>
+  <!-- Mobile Menu JavaScript -->
+  <script src="{{ url_for('static', filename='js/mobile-menu.js') }}"></script>
+<script>
+const videos = [
+  {
+    title: 'Welcome to Tourizo',
+    src: "{{ url_for('static', filename='videos/welcome.mp4') }}",
+    duration: '4:30',
+    tag: 'Introduction',
+    tagClass: 'intro',
+    desc: 'Discover what makes Tourizo the premier choice for African safari adventures. Learn about our commitment to sustainable tourism and unforgettable experiences.',
+    thumb: "{{ url_for('static', filename='images/welcome/view.jpeg') }}",
+    country: '',
+    rating: 4.9,
+    guests: 12,
+  },
+  {
+    title: 'Gorilla Trekking Adventure',
+    src: "{{ url_for('static', filename='videos/Gorilla.mp4') }}",
+    duration: '3:45',
+    tag: 'Wildlife',
+    tagClass: 'wildlife',
+    desc: 'Experience the incredible thrill of gorilla trekking in the misty mountains. Get up close with these magnificent creatures in their natural habitat.',
+    thumb: "{{ url_for('static', filename='images/tours/gorilla.jpg') }}",
+    country: 'Uganda/Rwanda',
+    rating: 4.9,
+    guests: 8,
+  },
+  {
+    title: 'Serengeti Safari Experience',
+    src: "{{ url_for('static', filename='videos/masaisara.mp4') }}",
+    duration: '5:15',
+    tag: 'Safari',
+    tagClass: 'safari',
+    desc: 'A thrilling safari through the vast Serengeti plains, witnessing the great migration and encountering Africa\'s most iconic wildlife.',
+    thumb: "{{ url_for('static', filename='images/tours/segerenti.jpeg') }}",
+    country: 'Tanzania',
+    rating: 4.9,
+    guests: 12,
+  },
+  {
+    title: 'Victoria Falls Adventure',
+    src: "{{ url_for('static', filename='videos/victoria falls.mp4') }}",
+    duration: '3:20',
+    tag: 'Waterfall',
+    tagClass: 'waterfall',
+    desc: 'Experience the breathtaking Victoria Falls, one of the world\'s most spectacular natural wonders. Feel the power of nature up close.',
+    thumb: "{{ url_for('static', filename='images/tours/victoriafalls.jpeg') }}",
+    country: 'Zambia/Zimbabwe',
+    rating: 4.8,
+    guests: 8,
+  },
+  {
+    title: 'Mount Kilimanjaro Trek',
+    src: "{{ url_for('static', filename='videos/Mount Kilimanjaro with a majestic acacia tree in the foreground, golden hour lighting, tall dry grass swaying gently, a sense of vastness and tranquility, with subtle atmospheric haze, cinematic quality.mp4') }}",
+    duration: '4:45',
+    tag: 'Mountain',
+    tagClass: 'mountain',
+    desc: 'Embark on an epic journey to the summit of Mount Kilimanjaro, Africa\'s highest peak. Experience the challenge and beauty of high-altitude trekking.',
+    thumb: "{{ url_for('static', filename='images/tours/kilimanjaro.jpeg') }}",
+    country: 'Tanzania',
+    rating: 4.9,
+    guests: 6,
+  },
+  {
+    title: 'Sahara Desert Expedition',
+    src: "{{ url_for('static', filename='videos/sahara.mp4') }}",
+    duration: '3:55',
+    tag: 'Desert',
+    tagClass: 'desert',
+    desc: 'Journey into the vast Sahara Desert, experiencing the magic of endless sand dunes, camel treks, and starlit nights under the desert sky.',
+    thumb: "{{ url_for('static', filename='images/tours/sahara.jpeg') }}",
+    country: 'Morocco',
+    rating: 4.7,
+    guests: 10,
+  },
+  {
+    title: 'Zanzibar Island Paradise',
+    src: "{{ url_for('static', filename='videos/zanzibar.mp4') }}",
+    duration: '4:10',
+    tag: 'Island',
+    tagClass: 'island',
+    desc: 'Discover the tropical paradise of Zanzibar with its pristine beaches, historic Stone Town, and vibrant culture. Perfect blend of adventure and relaxation.',
+    thumb: "{{ url_for('static', filename='images/tours/zanzibar.jpeg') }}",
+    country: 'Tanzania',
+    rating: 4.8,
+    guests: 15,
+  },
+  {
+    title: 'Western Uganda Adventure',
+    src: "{{ url_for('static', filename='videos/westernUganda.mp4') }}",
+    duration: '4:25',
+    tag: 'Adventure',
+    tagClass: 'adventure',
+    desc: 'Explore the diverse landscapes of Western Uganda, from the Rwenzori Mountains to the lush forests and vibrant communities.',
+    thumb: "{{ url_for('static', filename='images/tours/westernUganda.jpg') }}",
+    country: 'Uganda',
+    rating: 4.6,
+    guests: 9,
+  },
+  {
+    title: 'Namibia Desert Safari',
+    src: "{{ url_for('static', filename='videos/Namibia.mp4') }}",
+    duration: '3:35',
+    tag: 'Desert',
+    tagClass: 'desert',
+    desc: 'Experience the dramatic landscapes of Namibia, from the towering sand dunes of Sossusvlei to the wildlife-rich Etosha National Park.',
+    thumb: "{{ url_for('static', filename='images/destinations/southafrica.jpeg') }}",
+    country: 'Namibia',
+    rating: 4.7,
+    guests: 11,
+  },
+];
+
+function renderVideoList() {
+  const list = document.getElementById('videoList');
+  list.innerHTML = '';
+  videos.forEach((video, idx) => {
+    const item = document.createElement('div');
+    item.className = 'video-list-item' + (idx === 0 ? ' active' : '');
+    item.setAttribute('tabindex', '0');
+    item.setAttribute('role', 'button');
+    item.setAttribute('aria-label', video.title);
+    item.onclick = () => selectVideo(idx);
+    item.onkeydown = (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        selectVideo(idx);
+      }
+    };
+    item.innerHTML = `
+      <div class="video-thumb" style="background-image:url('${video.thumb}'); background-size:cover;">
+        <i class="fas fa-play"></i>
+        <span class="video-thumb-duration">${video.duration}</span>
+      </div>
+      <div class="video-list-content">
+        <div class="video-list-title">${video.title}</div>
+        <div class="video-list-meta">
+          <span class="video-list-tag ${video.tagClass}">${video.tag}</span>
+          ${video.country ? `<span style='color:var(--text-muted);font-size:0.92rem;'><i class='fas fa-map-marker-alt'></i> ${video.country}</span>` : ''}
+        </div>
+        <div style="display:flex;align-items:center;gap:0.5rem;margin-top:0.1rem;">
+          <span class="video-list-rating"><i class="fas fa-star"></i> ${video.rating}</span>
+          <span class="video-list-guests">${video.guests} guests</span>
+        </div>
+      </div>
+    `;
+    list.appendChild(item);
+  });
+}
+
+function selectVideo(idx) {
+  const video = videos[idx];
+  const mainVideo = document.getElementById('mainVideo');
+  mainVideo.pause();
+  mainVideo.querySelector('source').src = video.src;
+  mainVideo.load();
+  document.getElementById('mainVideoTitle').textContent = video.title;
+  document.getElementById('mainVideoDuration').textContent = video.duration;
+  document.getElementById('mainVideoTag').textContent = video.tag;
+  document.getElementById('mainVideoDesc').textContent = video.desc;
+  // Highlight selected
+  document.querySelectorAll('.video-list-item').forEach((el, i) => {
+    el.classList.toggle('active', i === idx);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderVideoList();
+  // Focus the first video for accessibility
+  const firstItem = document.querySelector('.video-list-item');
+  if (firstItem) firstItem.focus();
+});
+</script>
+{% endblock %} 
