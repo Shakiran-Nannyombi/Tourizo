@@ -1,14 +1,6 @@
+@import url('colors.css');
+
 /* Bookings Page Styles (moved from book.html) */
-root {
-    --primary-green: #43a047;
-    --secondary-green: #388e3c;
-    --accent-green: hwb(122 65% 16%);
-    --light-green: #c8e6c9;
-    --dark-green: #1b5e20;
-    --yellow: #ffd700;
-    --white: #fff;
-    --gray: #e2e8f0;
-}
 
 
 * {

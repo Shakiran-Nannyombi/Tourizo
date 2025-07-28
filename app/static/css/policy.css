@@ -1,15 +1,6 @@
+@import url('colors.css');
+
 /* Policy Pages CSS */
-:root {
-    --primary-green: #43a047;
-    --secondary-green: #388e3c;
-    --accent-green: #a5d6a7;
-    --light-green: #c8e6c9;
-    --dark-green: #1b5e20;
-    --yellow: #ffd700;
-    --white: #fff;
-    --gray: #e2e8f0;
-    --orange: #ff9800;
-}
 
 .policy-content {
     background: var(--white);

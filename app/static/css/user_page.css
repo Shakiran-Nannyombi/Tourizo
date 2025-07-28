@@ -1,12 +1,6 @@
+@import url('colors.css');
+
 :root {
-    --primary-green: #43a047;
-    --secondary-green: #388e3c;
-    --accent-green: hwb(122 65% 16%);
-    --light-green: #c8e6c9;
-    --dark-green: #1b5e20;
-    --yellow: #ffd700;
-    --white: #fff;
-    --gray: #e2e8f0;
     --animation-duration: 0.3s;
     --animation-timing: cubic-bezier(0.4, 0, 0.2, 1);
 }

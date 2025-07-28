@@ -1,21 +1,6 @@
+@import url('colors.css');
+
 /* Settings Page Styles */
-:root {
-    --primary-green: #43a047;
-    --secondary-green: #388e3c;
-    --accent-green: #a5d6a7;
-    --light-green: #c8e6c9;
-    --dark-green: #1b5e20;
-    --yellow: #ffd700;
-    --white: #fff;
-    --gray: #e2e8f0;
-    --light-gray: #f8f9fa;
-    --border-color: #e9ecef;
-    --text-dark: #333;
-    --text-muted: #6c757d;
-    --danger: #dc3545;
-    --warning: #ffc107;
-    --info: #17a2b8;
-}
 
 body {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);

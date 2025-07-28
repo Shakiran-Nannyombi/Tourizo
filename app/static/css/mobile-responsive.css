@@ -3,25 +3,10 @@
    Comprehensive mobile responsiveness for all Tourizo pages
    ============================================== */
 
+@import url('colors.css');
+
 /* CSS Variables for consistent theming */
 :root {
-    --primary-green: #43a047;
-    --secondary-green: #388e3c;
-    --accent-green: #a5d6a7;
-    --light-green: #c8e6c9;
-    --dark-green: #1b5e20;
-    --yellow: #ffd700;
-    --white: #fff;
-    --gray: #e2e8f0;
-    --light-gray: #f8f9fa;
-    --border-color: #e9ecef;
-    --text-dark: #333;
-    --text-muted: #6c757d;
-    --danger: #dc3545;
-    --success: #28a745;
-    --warning: #ffc107;
-    --info: #17a2b8;
-    
     /* Animation variables */
     --transition-fast: 0.2s ease;
     --transition-normal: 0.3s ease;
