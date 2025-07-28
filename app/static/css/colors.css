@@ -7,7 +7,7 @@
   --yellow: #ffd700;
   --white: #fff;
   --gray: #e2e8f0;
-  --text-main: #e9ebe8;
+  --text-main: #080b06;
   --background-main: #fff;
   --overlay-dark: rgba(34, 34, 34, 0.65);
   --overlay-light: rgba(255,255,255,0.02);
@@ -23,6 +23,6 @@ body.dark-mode {
   --yellow: #ffd700;
   --white: #e9ebe8;
   --gray: #e2e8f0;
-  --text-main: #080b06;
+  --text-main: #e9ebe8;
   --background-main: #080b06;
 } 
