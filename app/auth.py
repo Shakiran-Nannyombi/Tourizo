@@ -12,6 +12,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app.models.User import User
 from app.extensions import db, mail
 from flask_mail import Message
+from app.email_service import send_otp_email, test_email_configuration
 from functools import wraps
 from datetime import datetime, timedelta
 import re
@@ -80,22 +81,6 @@ def generate_unique_username(first_name, last_name):
     return username
 
 
-def send_otp_email(email, otp):
-    """Send OTP via email"""
-    try:
-        msg = Message('Password Reset OTP', recipients=[email])
-        msg.body = f"""
-        Your password reset OTP is: {otp}
-        
-        This code will expire in 15 minutes.
-        
-        If you didn't request this password reset, please ignore this email.
-        """
-        mail.send(msg)
-        return True
-    except Exception as e:
-        print(f"❌ Failed to send email to {email}: {e}")
-        return False
 
 
 # Authentication Routes
@@ -120,7 +105,7 @@ def login():
         password = request.form.get('password', '')
         remember = bool(request.form.get('remember'))
         
-        print("🔍 LOGIN ATTEMPT DEBUG:")
+        print("LOGIN ATTEMPT DEBUG:")
         print(f"   Email: '{email}'")
         print(f"   Password length: {len(password) if password else 0}")
         print(f"   Remember me: {remember}")
@@ -128,12 +113,12 @@ def login():
         
         # Basic validation
         if not email or not password:
-            print("❌ Email or password is empty")
+            print(" Email or password is empty")
             flash('Please enter both email and password.', 'danger')
             return render_template('auth/login.html')
         
         if not is_valid_email(email):
-            print(f"❌ Invalid email format: {email}")
+            print(f" Invalid email format: {email}")
             flash('Please enter a valid email address.', 'danger')
             return render_template('auth/login.html')
         
@@ -141,11 +126,11 @@ def login():
         user = User.query.filter(User.email.ilike(email)).first()
         
         if user:
-            print(f"✅ User found: {user.username} ({user.email})")
+            print(f"User found: {user.username} ({user.email})")
             
             try:
                 if user.check_password(password):
-                    print("✅ Password is correct - logging in user")
+                    print(" Password is correct - logging in user")
                     
                     # Update hash format if needed (for legacy compatibility)
                     try:
@@ -555,7 +540,7 @@ def forgot_password():
                 else:
                     # Fallback: show OTP in debug mode (remove in production)
                     print(f"🔑 OTP for {email}: {otp}")
-                    flash(f'Password reset code sent. (Debug: {otp})', 'info')
+                    flash('Password reset token sent. Please check your email. If you don\'t see it, check your spam folder.', 'info')
                 
                 return redirect(url_for('auth.reset_password', email=email))
                 
@@ -590,7 +575,7 @@ def reset_password():
                     flash('A new reset code has been sent to your email.', 'success')
                 else:
                     print(f"🔑 New OTP for {email}: {otp}")
-                    flash(f'New reset code sent. (Debug: {otp})', 'info')
+                    flash('New reset code sent. Please check your email. If you don\'t see it, check your spam folder.', 'info')
                 
                 return render_template('auth/reset_password.html', email=email)
                 
@@ -723,3 +708,66 @@ def clear_user_otp(user_id):
     except Exception as e:
         db.session.rollback()
         return f"Error clearing OTP: {e}"
+
+@auth_bp.route('/debug/test-email')
+def test_email():
+    """Test email configuration - REMOVE IN PRODUCTION"""
+    try:
+        config_ok, config_status = test_email_configuration()
+        
+        if not config_ok:
+            return f"""
+            <h2>Email Configuration Test - FAILED</h2>
+            <p>Missing configurations: {[k for k, v in config_status.items() if not v and k != 'MAIL_PASSWORD_SET']}</p>
+            <h3>Current Configuration:</h3>
+            <ul>
+                <li>MAIL_SERVER: {config_status['MAIL_SERVER']}</li>
+                <li>MAIL_PORT: {config_status['MAIL_PORT']}</li>
+                <li>MAIL_USE_TLS: {config_status['MAIL_USE_TLS']}</li>
+                <li>MAIL_USERNAME: {config_status['MAIL_USERNAME']}</li>
+                <li>MAIL_PASSWORD_SET: {config_status['MAIL_PASSWORD_SET']}</li>
+                <li>MAIL_DEFAULT_SENDER: {config_status['MAIL_DEFAULT_SENDER']}</li>
+            </ul>
+            <p>Please check your .env file and ensure all email settings are configured.</p>
+            """
+        
+        # Try to send a test email
+        test_email_address = "test@example.com"
+        test_otp = "123456"
+        
+        if send_otp_email(test_email_address, test_otp):
+            return f"""
+            <h2>Email Configuration Test - SUCCESS</h2>
+            <p>Test email sent successfully to {test_email_address}</p>
+            <h3>Configuration:</h3>
+            <ul>
+                <li>MAIL_SERVER: {config_status['MAIL_SERVER']}</li>
+                <li>MAIL_PORT: {config_status['MAIL_PORT']}</li>
+                <li>MAIL_USE_TLS: {config_status['MAIL_USE_TLS']}</li>
+                <li>MAIL_USERNAME: {config_status['MAIL_USERNAME']}</li>
+                <li>MAIL_PASSWORD_SET: {config_status['MAIL_PASSWORD_SET']}</li>
+                <li>MAIL_DEFAULT_SENDER: {config_status['MAIL_DEFAULT_SENDER']}</li>
+            </ul>
+            """
+        else:
+            return f"""
+            <h2>Email Configuration Test - FAILED</h2>
+            <p>Configuration looks correct but email sending failed.</p>
+            <h3>Configuration:</h3>
+            <ul>
+                <li>MAIL_SERVER: {config_status['MAIL_SERVER']}</li>
+                <li>MAIL_PORT: {config_status['MAIL_PORT']}</li>
+                <li>MAIL_USE_TLS: {config_status['MAIL_USE_TLS']}</li>
+                <li>MAIL_USERNAME: {config_status['MAIL_USERNAME']}</li>
+                <li>MAIL_PASSWORD_SET: {config_status['MAIL_PASSWORD_SET']}</li>
+                <li>MAIL_DEFAULT_SENDER: {config_status['MAIL_DEFAULT_SENDER']}</li>
+            </ul>
+            <p>Check your email credentials and network connection.</p>
+            """
+            
+    except Exception as e:
+        return f"""
+        <h2>Email Configuration Test - ERROR</h2>
+        <p>Error: {str(e)}</p>
+        <p>Please check your configuration and try again.</p>
+        """
