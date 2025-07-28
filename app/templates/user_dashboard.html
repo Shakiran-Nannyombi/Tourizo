@@ -40,6 +40,7 @@
                     </ul>
 
                     <div class="navbar-actions">
+                        <div class="translate-widget" id="google_translate_element"></div>
                         <button class="wishlist-btn" id="navbar-wishlist-btn" title="Wishlist" onclick="window.location.href='/tours/wishlist'">
                             <i class="far fa-heart"></i>
                             <span class="wishlist-badge" id="wishlist-badge">0</span>
@@ -383,7 +384,17 @@
             const icon = document.getElementById('darkModeIcon');
             icon.className = document.body.classList.contains('dark-mode') ? 'fas fa-sun' : 'fas fa-moon';
         }
+        
+        // Google Translate initialization
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,es,fr,de,it,sw',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
     </script>
+    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 
 </html>

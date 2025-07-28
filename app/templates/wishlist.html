@@ -168,6 +168,7 @@
             <li><a href="{{ url_for('contact.contact_form') }}" class="{% if request.endpoint == 'contact.contact_form' %}active{% endif %}">Contact</a></li>
         </ul>
         <div class="navbar-actions">
+                <div class="translate-widget" id="google_translate_element"></div>
             <button class="wishlist-btn" id="navbar-wishlist-btn" title="Wishlist" onclick="window.location.href='/tours/wishlist'">
                 <i class="far fa-heart"></i>
                 <span class="wishlist-badge" id="wishlist-badge">0</span>
@@ -180,14 +181,14 @@
                 </div>
                 <div class="profile-dropdown-menu" id="profileDropdown">
                     <a href="{{ url_for('auth.profile') }}" class="dropdown-item">
-                        <i class="fas fa-user"></i> Profile
+                        <i class="fas fa-user"></i> <span data-translate="nav_profile">Profile</span>
                     </a>
                     <a href="{{ url_for('auth.settings') }}" class="dropdown-item">
-                        <i class="fas fa-cog"></i> Settings
+                        <i class="fas fa-cog"></i> <span data-translate="nav_settings">Settings</span>
                     </a>
                     <div class="dropdown-divider"></div>
                     <a href="{{ url_for('auth.logout') }}" class="dropdown-item">
-                        <i class="fas fa-sign-out-alt"></i> Logout
+                        <i class="fas fa-sign-out-alt"></i> <span data-translate="nav_logout">Logout</span>
                     </a>
                 </div>
             </div>

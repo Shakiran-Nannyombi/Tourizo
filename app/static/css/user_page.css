@@ -222,6 +222,108 @@ body {
     gap: 18px;
 }
 
+/* Translate Widget Styles */
+.translate-widget {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.translate-widget .goog-te-gadget {
+    font-size: 0.9rem;
+    color: var(--text-main);
+}
+
+.translate-widget .goog-te-gadget .goog-te-combo {
+    padding: 6px 12px;
+    border: 1px solid var(--primary-green);
+    border-radius: 20px;
+    background: var(--white);
+    color: var(--text-main);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.translate-widget .goog-te-gadget .goog-te-combo:hover {
+    background: var(--light-green);
+    border-color: var(--accent-green);
+}
+
+.translate-widget .goog-te-gadget .goog-te-combo:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(67, 160, 71, 0.2);
+}
+
+/* Dark mode styles for translate widget */
+body.dark-mode .translate-widget .goog-te-gadget .goog-te-combo {
+    background: var(--background-main);
+    color: var(--text-main);
+    border-color: var(--accent-green);
+}
+
+body.dark-mode .translate-widget .goog-te-gadget .goog-te-combo:hover {
+    background: var(--dark-green);
+    border-color: var(--primary-green);
+}
+
+/* Hide Google Translate top bar */
+.goog-te-banner-frame {
+    display: none !important;
+}
+
+.goog-te-menu-value {
+    color: var(--text-main) !important;
+}
+
+.goog-te-menu-value span {
+    color: var(--text-main) !important;
+}
+
+.goog-te-menu-value span:first-child {
+    color: var(--text-main) !important;
+}
+
+/* Hide the "Show original" button and other Google Translate UI elements */
+.goog-te-banner-frame,
+.goog-te-banner-frame * {
+    display: none !important;
+}
+
+/* Ensure the translate widget stays in navbar */
+.translate-widget {
+    position: relative;
+    z-index: 1001;
+}
+
+/* Style the dropdown to match your theme */
+.goog-te-gadget .goog-te-combo {
+    background: var(--white) !important;
+    color: var(--text-main) !important;
+    border: 1px solid var(--primary-green) !important;
+    border-radius: 20px !important;
+    padding: 6px 12px !important;
+    font-size: 0.85rem !important;
+    font-family: inherit !important;
+}
+
+.goog-te-gadget .goog-te-combo:hover {
+    background: var(--light-green) !important;
+    border-color: var(--accent-green) !important;
+}
+
+/* Dark mode for dropdown */
+body.dark-mode .goog-te-gadget .goog-te-combo {
+    background: var(--background-main) !important;
+    color: var(--text-main) !important;
+    border-color: var(--accent-green) !important;
+}
+
+body.dark-mode .goog-te-gadget .goog-te-combo:hover {
+    background: var(--dark-green) !important;
+    border-color: var(--primary-green) !important;
+}
+
 .wishlist-btn {
     background: none;
     border: none;
@@ -967,6 +1069,16 @@ body {
         gap: 12px;
     }
     
+    /* Translate widget responsive styles */
+    .translate-widget {
+        margin-right: 8px;
+    }
+    
+    .translate-widget .goog-te-gadget .goog-te-combo {
+        padding: 5px 10px;
+        font-size: 0.8rem;
+    }
+    
     .wishlist-btn {
         font-size: 1.3rem;
     }
@@ -1010,6 +1122,16 @@ body {
     
     .navbar-actions {
         gap: 10px;
+    }
+    
+    /* Translate widget responsive styles for mobile */
+    .translate-widget {
+        margin-right: 6px;
+    }
+    
+    .translate-widget .goog-te-gadget .goog-te-combo {
+        padding: 4px 8px;
+        font-size: 0.75rem;
     }
     
     .wishlist-btn {

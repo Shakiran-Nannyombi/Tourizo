@@ -850,6 +850,57 @@ body::-webkit-scrollbar {
     background: var(--primary-green);
 }
 
+/* Hide Google Translate top bar */
+.goog-te-banner-frame {
+    display: none !important;
+}
+
+.goog-te-menu-value {
+    color: var(--white) !important;
+}
+
+.goog-te-menu-value span {
+    color: var(--white) !important;
+}
+
+.goog-te-menu-value span:first-child {
+    color: var(--white) !important;
+}
+
+/* Hide the "Show original" button and other Google Translate UI elements */
+.goog-te-banner-frame,
+.goog-te-banner-frame * {
+    display: none !important;
+}
+
+/* Style the dropdown to match your theme */
+.goog-te-gadget .goog-te-combo {
+    background: var(--white) !important;
+    color: var(--text-main) !important;
+    border: 1px solid var(--primary-green) !important;
+    border-radius: 20px !important;
+    padding: 6px 12px !important;
+    font-size: 0.85rem !important;
+    font-family: inherit !important;
+}
+
+.goog-te-gadget .goog-te-combo:hover {
+    background: var(--light-green) !important;
+    border-color: var(--accent-green) !important;
+}
+
+/* Dark mode for dropdown */
+body.dark-mode .goog-te-gadget .goog-te-combo {
+    background: var(--background-main) !important;
+    color: var(--text-main) !important;
+    border-color: var(--accent-green) !important;
+}
+
+body.dark-mode .goog-te-gadget .goog-te-combo:hover {
+    background: var(--dark-green) !important;
+    border-color: var(--primary-green) !important;
+}
+
 /* Interactive Map */
 .interactive-map {
     position: fixed;

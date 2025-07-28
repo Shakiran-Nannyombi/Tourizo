@@ -33,6 +33,7 @@
                 </ul>
 
                 <div class="navbar-actions">
+                <div class="translate-widget" id="google_translate_element"></div>
                     <button class="wishlist-btn" id="navbar-wishlist-btn" title="Wishlist" onclick="window.location.href='/tours/wishlist'">
                         <i class="far fa-heart"></i>
                         <span class="wishlist-badge" id="wishlist-badge">0</span>
@@ -45,14 +46,14 @@
                         </div>
                         <div class="profile-dropdown-menu" id="profileDropdown">
                             <a href="{{ url_for('auth.profile') }}" class="dropdown-item">
-                                <i class="fas fa-user"></i> Profile
+                                <i class="fas fa-user"></i> <span data-translate="nav_profile">Profile</span>
                             </a>
                             <a href="{{ url_for('auth.settings') }}" class="dropdown-item">
-                                <i class="fas fa-cog"></i> Settings
+                                <i class="fas fa-cog"></i> <span data-translate="nav_settings">Settings</span>
                             </a>
                             <div class="dropdown-divider"></div>
                             <a href="{{ url_for('auth.logout') }}" class="dropdown-item">
-                                <i class="fas fa-sign-out-alt"></i> Logout
+                                <i class="fas fa-sign-out-alt"></i> <span data-translate="nav_logout">Logout</span>
                             </a>
                         </div>
                     </div>
@@ -62,10 +63,10 @@
 
         <!-- Main Content -->
         <div class="main-content">
-            <h1 class="policy-title" style="color: var(--dark-green);">Cancellation Policy</h1>
+            <h1 class="policy-title" style="color: var(--text-main);">Cancellation Policy</h1>
             <p class="policy-subtitle">Understanding our cancellation terms and refund procedures</p>
             
-            <div class="last-updated-section">
+            <div class="last-updated-section" style="color: var(--text-main);">
                 <i class="fas fa-clock"></i>
                 <span>Last Updated: January 15, 2024</span>
             </div>
