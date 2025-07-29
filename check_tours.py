@@ -25,36 +25,36 @@ def check_tours():
         tours = Tour.query.all()
         
         if not tours:
-            print("❌ No tours found in database!")
+            print(" No tours found in database!")
             return
         
-        print(f"📊 Found {len(tours)} tours in database")
+        print(f"Found {len(tours)} tours in database")
         print()
         
         for tour in tours:
-            print(f"🎯 Tour ID: {tour.id}")
+            print(f"Tour ID: {tour.id}")
             print(f"   Title: {tour.title}")
             print(f"   Destination: {tour.destination}")
-            print(f"   Active: {'✅ Yes' if tour.is_active else '❌ No'}")
+            print(f"   Active: {'Yes' if tour.is_active else 'No'}")
             print(f"   Image field: {tour.image or 'None'}")
             
             if tour.image:
                 # Check if image file exists
                 image_path = Path(f"app/static/images/tours/{tour.image}")
                 if image_path.exists():
-                    print(f"   Image file: ✅ EXISTS ({image_path})")
+                    print(f"   Image file: EXISTS ({image_path})")
                 else:
-                    print(f"   Image file: ❌ MISSING ({image_path})")
+                    print(f"   Image file: MISSING ({image_path})")
                     
                     # Check if file exists with different extension
                     base_name = image_path.stem
                     for ext in ['.jpg', '.jpeg', '.png', '.gif', '.webp']:
                         alt_path = Path(f"app/static/images/tours/{base_name}{ext}")
                         if alt_path.exists():
-                            print(f"   ⚠️  Found similar file: {alt_path}")
+                            print(f"    Found similar file: {alt_path}")
                             break
             else:
-                print(f"   Image file: ⚠️  NO IMAGE SET")
+                print(f"   Image file: NO IMAGE SET")
             
             print(f"   Created: {tour.created_at}")
             print("-" * 80)
@@ -64,7 +64,7 @@ def reseed_database():
     app = create_app()
     
     with app.app_context():
-        print("🌱 Reseeding database...")
+        print("Reseeding database...")
         print("=" * 80)
         
         # Clear existing tours and related data
@@ -73,22 +73,22 @@ def reseed_database():
         from app.models.TourDate import TourDate
         from app.models.Tour import TourItineraryDay
         
-        print("🗑️  Clearing related data...")
+        print("Clearing related data...")
         Booking.query.delete()
         Review.query.delete()
         TourDate.query.delete()
         TourItineraryDay.query.delete()
         Tour.query.delete()
         db.session.commit()
-        print("✅ Cleared all tour-related data")
+        print("Cleared all tour-related data")
         
         # Import and run the seeder
         try:
             from seed_tours import main as seed_main
             seed_main()
-            print("✅ Database reseeded successfully!")
+            print("Database reseeded successfully!")
         except Exception as e:
-            print(f"❌ Error reseeding database: {e}")
+            print(f"Error reseeding database: {e}")
             return False
         
         return True
@@ -98,7 +98,7 @@ def update_existing_tours():
     app = create_app()
     
     with app.app_context():
-        print("🔄 Updating existing tours with proper images...")
+        print("Updating existing tours with proper images...")
         print("=" * 80)
         
         tours = Tour.query.all()
@@ -125,21 +125,21 @@ def update_existing_tours():
             if tour.title in image_mapping:
                 tour.image = image_mapping[tour.title]
                 updated_count += 1
-                print(f"✅ Updated '{tour.title}' with image: {tour.image}")
+                print(f"Updated '{tour.title}' with image: {tour.image}")
             else:
-                print(f"⚠️  No image mapping found for: {tour.title}")
+                print(f"No image mapping found for: {tour.title}")
         
         if updated_count > 0:
             db.session.commit()
-            print(f"\n✅ Updated {updated_count} tours with proper images!")
+            print(f"\nUpdated {updated_count} tours with proper images!")
         else:
-            print("\n❌ No tours were updated.")
+            print("\nNo tours were updated.")
         
         return updated_count > 0
 
 def main():
     """Main function"""
-    print("🚀 Tour Database Checker")
+    print(" Tour Database Checker")
     print("=" * 80)
     
     while True:
@@ -156,22 +156,22 @@ def main():
             check_tours()
         elif choice == '2':
             if reseed_database():
-                print("\n✅ Reseeding completed!")
+                print("\nReseeding completed!")
             else:
-                print("\n❌ Reseeding failed!")
+                print("\nReseeding failed!")
         elif choice == '3':
             if update_existing_tours():
-                print("\n✅ Tour updates completed!")
+                print("\nTour updates completed!")
             else:
-                print("\n❌ Tour updates failed!")
+                print("\nTour updates failed!")
         elif choice == '4':
-            print("\n🔍 Checking tours after changes...")
+            print("\nChecking tours after changes...")
             check_tours()
         elif choice == '5':
-            print("👋 Goodbye!")
+            print("Goodbye!")
             break
         else:
-            print("❌ Invalid choice. Please enter 1-5.")
+            print("Invalid choice. Please enter 1-5.")
 
 if __name__ == '__main__':
     main() 

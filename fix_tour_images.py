@@ -19,16 +19,16 @@ def fix_tour_images():
     app = create_app()
     
     with app.app_context():
-        print("🔧 Fixing tour images...")
+        print("Fixing tour images...")
         print("=" * 60)
         
         tours = Tour.query.all()
         
         if not tours:
-            print("❌ No tours found in database!")
+            print(" No tours found in database!")
             return
         
-        print(f"📊 Found {len(tours)} tours in database")
+        print(f"Found {len(tours)} tours in database")
         print()
         
         # Map tour titles to image filenames
@@ -41,32 +41,32 @@ def fix_tour_images():
         
         updated_count = 0
         for tour in tours:
-            print(f"🎯 Tour: {tour.title}")
+            print(f"Tour: {tour.title}")
             print(f"   Current image: {tour.image or 'None'}")
             
             if tour.title in image_mapping:
                 new_image = image_mapping[tour.title]
                 tour.image = new_image
                 updated_count += 1
-                print(f"   ✅ Updated to: {new_image}")
+                print(f"    Updated to: {new_image}")
                 
                 # Check if file exists
                 image_path = Path(f"app/static/images/tours/{new_image}")
                 if image_path.exists():
-                    print(f"   ✅ File exists: {image_path}")
+                    print(f"    File exists: {image_path}")
                 else:
-                    print(f"   ❌ File missing: {image_path}")
+                    print(f"    File missing: {image_path}")
             else:
-                print(f"   ⚠️  No mapping found for this tour")
+                print(f"    No mapping found for this tour")
             
             print("-" * 60)
         
         if updated_count > 0:
             db.session.commit()
-            print(f"\n✅ Successfully updated {updated_count} tours!")
-            print("🔄 Please refresh your tours page to see the changes.")
+            print(f"\nSuccessfully updated {updated_count} tours!")
+            print("Please refresh your tours page to see the changes.")
         else:
-            print("\n❌ No tours were updated.")
+            print("\nNo tours were updated.")
 
 if __name__ == '__main__':
     fix_tour_images() 

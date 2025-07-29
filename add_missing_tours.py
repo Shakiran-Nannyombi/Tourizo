@@ -35,9 +35,9 @@ def get_or_create_categories():
             category = Category(**cat_data)
             db.session.add(category)
             db.session.flush()  # Get the ID
-            print(f"✅ Created category: {cat_data['name']}")
+            print(f"Created category: {cat_data['name']}")
         else:
-            print(f"📋 Found existing category: {cat_data['name']}")
+            print(f"Found existing category: {cat_data['name']}")
         categories[cat_data['name']] = category
     
     db.session.commit()
@@ -175,10 +175,10 @@ def add_missing_tours(categories):
         if not existing_tour:
             tour = Tour(**tour_data)
             db.session.add(tour)
-            print(f"✅ Added tour: {tour_data['title']}")
+            print(f"Added tour: {tour_data['title']}")
             added_count += 1
         else:
-            print(f"📋 Tour already exists: {tour_data['title']}")
+            print(f" Tour already exists: {tour_data['title']}")
     
     db.session.commit()
     return added_count
@@ -188,25 +188,25 @@ def main():
     app = create_app()
     
     with app.app_context():
-        print("🚀 Adding missing tours from seeder...")
+        print("Adding missing tours from seeder...")
         print("=" * 60)
         
         # Get or create categories
-        print("\n📂 Setting up categories...")
+        print("\nSetting up categories...")
         categories = get_or_create_categories()
         
         # Add missing tours
-        print("\n🎯 Adding missing tours...")
+        print("\nAdding missing tours...")
         added_count = add_missing_tours(categories)
         
         # Show final status
         total_tours = Tour.query.count()
-        print(f"\n🎉 Completed!")
-        print(f"✅ Added {added_count} new tours")
-        print(f"📊 Total tours in database: {total_tours}")
+        print(f"\nCompleted!")
+        print(f"Added {added_count} new tours")
+        print(f"Total tours in database: {total_tours}")
         
         if added_count > 0:
-            print("\n🔄 Please refresh your tours page to see the new tours!")
+            print("\nPlease refresh your tours page to see the new tours!")
 
 if __name__ == '__main__':
     main() 

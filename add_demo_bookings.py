@@ -134,7 +134,7 @@ def add_demo_bookings():
         
         # Create bookings for each user
         for user in users:
-            print(f"📝 Creating bookings for user: {user.username}")
+            print(f" Creating bookings for user: {user.username}")
             
             # Create 2-3 bookings per user
             for i in range(min(3, len(booking_templates))):
@@ -177,16 +177,16 @@ def add_demo_bookings():
                 try:
                     db.session.add(booking)
                     bookings_created += 1
-                    print(f"   ✅ Created booking {booking.reference} for {tour.title}")
+                    print(f" Created booking {booking.reference} for {tour.title}")
                 except Exception as e:
-                    print(f"   ❌ Error creating booking: {e}")
+                    print(f"Error creating booking: {e}")
                     db.session.rollback()
         
         # Commit all changes
         try:
             db.session.commit()
-            print(f"\n🎉 Successfully created {bookings_created} demo bookings!")
-            print(f"📊 Booking status breakdown:")
+            print(f"\n Successfully created {bookings_created} demo bookings!")
+            print(f"Booking status breakdown:")
             
             # Show statistics
             total_bookings = Booking.query.count()
@@ -200,14 +200,14 @@ def add_demo_bookings():
             print(f"   Cancelled: {cancelled_bookings}")
             
         except Exception as e:
-            print(f"❌ Error committing bookings: {e}")
+            print(f"Error committing bookings: {e}")
             db.session.rollback()
 
 def main():
     """Main function to run the script."""
-    print("🚀 Starting demo bookings creation...")
+    print("Starting demo bookings creation...")
     add_demo_bookings()
-    print("✨ Demo bookings script completed!")
+    print("Demo bookings script completed!")
 
 if __name__ == '__main__':
     main() 
