@@ -1,9 +1,44 @@
 # Tourizo: Tour and Travels Web App
 
 ## Project Overview
-Tourizo is a web application for managing tour packages, bookings, reviews, and admin analytics. Built with Flask, it is structured for collaborative development with clear separation of concerns using Blueprints and models.
+
+Tourizo is a full-featured web application for managing tour packages, bookings, reviews, and admin analytics. Built with Flask, it features a modular architecture using Blueprints, SQLAlchemy models, and a modern, responsive UI. The platform supports both travelers and administrators, with robust authentication, payment simulation, chatbot integration, and analytics.
+
+---
+
+## Screenshots
+
+### Welcome Page
+
+![Welcome Page](screenshots/welcome.png)
+
+### Admin Dashboard
+
+![Admin Dashboard](screenshots/admin.png)
+
+### User Dashboard
+
+![User Dashboard](screenshots/userpage.png)
+
+---
+
+## Features
+
+- **User Authentication & Profiles**: Registration, login/logout, profile management, password reset, and user settings.
+- **Tour Management**: CRUD for tours, categories, destinations, search/filter, wishlist, and detailed tour pages.
+- **Booking System**: Book tours, select payment methods (Mobile Money, Card, Bank Transfer), booking history, and secure payment simulation.
+- **Reviews**: Users can review tours they’ve booked, with a guided review flow and admin moderation.
+- **Admin Dashboard**: Manage users, tours, bookings, reviews, and inquiries. View analytics and reports (bookings, revenue, destinations).
+- **Chatbot Integration**: Admins can configure and test a Groq-powered AI chatbot for user support and FAQs.
+- **Contact & Inquiries**: Contact form, inquiry management, and email notifications.
+- **Policies & Legal**: Booking, cancellation, privacy, and terms pages.
+- **Responsive UI**: Mobile-friendly, modern design with custom CSS and Bootstrap.
+- **Error Handling**: Custom 401, 403, 404, and 500 error pages.
+
+---
 
 ## Project Structure
+
 ```
 Tourizo/
 │
@@ -20,129 +55,112 @@ Tourizo/
 │   ├── filters.py
 │   ├── forms.py
 │   ├── models/
-│   │   ├── __init__.py
-│   │   ├── Booking.py
-│   │   ├── Category.py
-│   │   ├── Destination.py
-│   │   ├── Inquiry.py
-│   │   ├── Review.py
-│   │   ├── Tour.py
-│   │   ├── TourDate.py
-│   │   ├── TourPackage.py
-│   │   └── User.py
 │   ├── pesapal_utils.py
+│   ├── policies.py
 │   ├── reviews.py
 │   ├── static/
-│   │   ├── css/
-│   │   ├── images/
-│   │   │   └── tours/
-│   │   ├── js/
 │   ├── templates/
-│   │   ├── admin/
-│   │   │   ├── add_tour.html
-│   │   │   ├── dashboard.html
-│   │   │   ├── edit_tour.html
-│   │   │   └── manage_tours.html
-│   │   ├── base.html
-│   │   ├── bookings/
-│   │   │   ├── book.html
-│   │   │   ├── cancel_booking.html
-│   │   │   ├── edit_booking.html
-│   │   │   └── my_bookings.html
-│   │   ├── errors/
-│   │   │   ├── 401.html
-│   │   │   ├── 403.html
-│   │   │   ├── 404.html
-│   │   │   └── 500.html
-│   │   ├── login.html
-│   │   ├── partials/
-│   │   │   └── tour_card.html
-│   │   ├── register.html
-│   │   ├── reviews/
-│   │   │   └── add_review.html
-│   │   ├── tour_detail.html
-│   │   ├── tours.html
-│   │   ├── user_dashboard.html
-│   │   └── welcome.html
 │   ├── tours.py
 │   └── utils.py
 │
 ├── migrations/
-│   ├── alembic.ini
-│   ├── env.py
-│   ├── README
-│   ├── script.py.mako
-│   └── versions/
-│       ├── 0a45b1eab94f_add_booking_date_and_booking_time_to_.py
-│       ├── 144b19ab5fde_merge_migration_branches.py
-│       ├── 14636034cefc_add_destination_column_to_tour.py
-│       ├── 1b4fa2c39468_add_order_tracking_id_to_booking.py
-│       ├── 33e4476f651f_updated_booking_model.py
-│       ├── 4c0e23c19a5c_add_cancellation_tracking_fields.py
-│       ├── 531ed7a66213_add_short_description_to_tour.py
-│       ├── 6603467eefea_add_payment_fields.py
-│       ├── 67305048430e_add_payment_fields_to_booking.py
-│       ├── 6b62d392a450_add_destination_id_to_tour.py
-│       ├── 77ce3642259e_create_tour_model.py
-│       ├── 798c2116a4d4_add_payment_fields_to_booking.py
-│       ├── 83b0250f1a0f_add_bookings_table.py
-│       ├── e04a9e556ef0_create_packages_table.py
-│       ├── f92f5d48952a_add_reviews_relationship.py
-│
 ├── requirements.txt
 ├── run.py
 └── README.md
 ```
 
+---
+
 ## Setup Instructions
+
 1. **Clone the repository:**
+
    ```bash
    git clone <repo-url>
    cd Tourizo
    ```
-2. **Create a virtual environment (recommended):**
+
+2. **Create a virtual environment:**
+
    ```bash
    python3 -m venv venv
    source venv/bin/activate
    ```
+
 3. **Install dependencies:**
+
    ```bash
    pip install -r requirements.txt
    ```
+
 4. **Run the app:**
+
    ```bash
    python run.py
    ```
-   The app will be available at `http://127.0.0.1:5000/`.
 
-## Team Breakdown & Responsibilities
+   The app will be available at [http://127.0.0.1:5000/](http://127.0.0.1:5000/).
 
-### 👤 Member 1: User Authentication & Profile Management
-- **Files:** `auth.py`, `models/User.py`, templates/auth/
-- **Features:** Registration, login/logout, profile updates, password hashing, input validation, role-based access, session handling
+---
 
-### 👤 Member 2: Tour Packages Management
-- **Files:** `tours.py`, `models/TourPackage.py`, templates/tours/
-- **Features:** CRUD for tours, search/filter, admin interface, forms
+## Key Blueprints
 
-### 👤 Member 3: Booking System & Payments
-- **Files:** `bookings.py`, `models/Booking.py`, templates/bookings/
-- **Features:** Booking creation, confirmation, payment simulation, email notifications, booking history
+- `auth_bp`: Authentication and user management
+- `tours_bp`: Tour listing, details, and search
+- `bookings_bp`: Booking flow and payment
+- `admin_bp`: Admin dashboard and analytics
+- `reviews_bp`: Reviews and ratings
+- `contact_bp`: Contact and inquiries
+- `policies_bp`: Policy and legal pages
+- `chatbot_bp`: API for AI chatbot
 
-### 👤 Member 4: Admin Dashboard, Reports, Inquiries
-- **Files:** `admin.py`, `models/Inquiry.py`, templates/admin/
-- **Features:** Contact form, admin dashboard, analytics (Chart.js), logging, blueprints structure
+---
 
-### 👤 Member 5: Reviews, Frontend UI/UX, Deployment
-- **Files:** `reviews.py`, `models/Review.py`, templates/reviews/
-- **Features:** Reviews/ratings, responsive UI, deployment setup, HTML/CSS/JS consistency
+## API Endpoints
 
-## Notes
+- `/api/chat`: POST endpoint for chatbot queries (admin-configurable, Groq-powered)
+- `/admin/*`: Admin dashboard and management
+- `/tours/*`: Tour browsing and details
+- `/bookings/*`: Booking and payment
+- `/reviews/*`: Review flow
+
+---
+
+## Notable User Flows
+
+- **Book a Tour**: Browse tours → Book → Choose payment → Confirmation
+- **Write a Review**: Go to “Write a Review” → Select tour → Submit review
+- **Admin Management**: Dashboard → Manage users/tours/bookings/reviews → View analytics
+- **Chatbot**: Admin configures/test chatbot in dashboard; users interact via live chat
+
+---
+
+## Configuration & Customization
+
 - All models use SQLAlchemy (see `app/models/`).
 - Blueprints are registered in `app/__init__.py`.
 - Use `base.html` for template inheritance.
-- Update `config.py` for production settings (e.g., secret key, database URI).
+- Update `config.py` for production settings (secret key, database URI, email, etc).
 - For email, configure Flask-Mail in `config.py` and `email_service.py`.
+- Chatbot settings are managed in the admin dashboard.
 
 ---
+
+## Contributors
+
+- **User Authentication & Profiles**: `auth.py`, `models/User.py`, templates/auth/
+- **Tour Management**: `tours.py`, `models/Tour.py`, templates/tours/
+- **Booking & Payments**: `bookings.py`, `models/Booking.py`, templates/bookings/
+- **Admin Dashboard**: `admin.py`, templates/admin/
+- **Reviews & UI/UX**: `reviews.py`, templates/reviews/
+- **Chatbot & API**: `api/chatbot.py`, templates/admin/chatbot_settings.html
+
+---
+
+## License
+
+MIT License
+
+---
+
 Happy coding! 🚀
