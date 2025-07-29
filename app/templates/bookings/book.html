@@ -72,6 +72,17 @@
             </div>
         </div>
     </div>
+    <!-- Breadcrumb-style Navbar for Bookings/Reviews -->
+    <div class="container" style="margin-top: 1.5rem;">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-nav justify-content-center" style="background: #f8f9fa; border-radius: 8px;">
+                <li class="breadcrumb-item"><a href="{{ url_for('auth.user_dashboard') }}"><i class="fas fa-home"></i> Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('bookings.book') }}"><i class="fas fa-calendar-check"></i> Bookings</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('bookings.my_bookings') }}"><i class="fas fa-list"></i> View My Bookings</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('reviews.add_review_select') }}"><i class="fas fa-pen"></i> Write a Review</a></li>
+            </ol>
+        </nav>
+    </div>
 
     <div class="main-container">
         <div class="container">
@@ -94,6 +105,13 @@
                 </div>
             </div>
 
+            <!-- View My Bookings Button (moved to top) -->
+            <div class="text-end mb-3">
+                <a href="{{ url_for('bookings.my_bookings') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-list me-2"></i>
+                    View My Bookings
+                </a>
+            </div>
             <form id="bookingForm" method="POST" action="{{ url_for('bookings.book') }}" class="mb-4">
                 {{ form.hidden_tag() }}
 
@@ -339,13 +357,6 @@
                     </div>
                 </div>
             </form>
-
-            <div class="text-center mb-4">
-                <a href="{{ url_for('bookings.my_bookings') }}" class="btn btn-outline-secondary">
-                    <i class="fas fa-list me-2"></i>
-                    View My Bookings
-                </a>
-            </div>
 
             <!-- Trust Badges -->
             <div class="row text-center mb-4">

@@ -27,13 +27,13 @@
                     <li><a href="{{ url_for('contact.contact_form') }}" class="{% if request.endpoint == 'contact.contact_form' %}active{% endif %}">Contact</a></li>
                 </ul>
 
-                                    <div class="navbar-actions">
+                <div class="navbar-actions">
                         <div class="translate-widget" id="google_translate_element"></div>
-                        <button class="wishlist-btn" id="navbar-wishlist-btn" title="Wishlist" onclick="window.location.href='/tours/wishlist'">
-                            <i class="far fa-heart"></i>
-                            <span class="wishlist-badge" id="wishlist-badge">0</span>
-                        </button>
-                        <div class="user-profile-dropdown">
+                    <button class="wishlist-btn" id="navbar-wishlist-btn" title="Wishlist" onclick="window.location.href='/tours/wishlist'">
+                        <i class="far fa-heart"></i>
+                        <span class="wishlist-badge" id="wishlist-badge">0</span>
+                    </button>
+                    <div class="user-profile-dropdown">
                         <div class="user-profile" onclick="toggleProfileDropdown()">
                             <div class="user-avatar">{{ current_user.username[0]|upper }}</div>
                             <div class="user-name">{{ current_user.username }}</div>
