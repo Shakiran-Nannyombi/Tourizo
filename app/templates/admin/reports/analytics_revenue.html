@@ -1,6 +1,6 @@
 {% extends "admin/base.html" %}
 
-{% block title %}Revenue Report{% endblock %}
+{% block title %}Revenue Analytics{% endblock %}
 
 {% block content %}
 <div class="container-fluid mt-4">
@@ -11,8 +11,8 @@
             <div class="content-header mb-4">
                 <div>
                     <h2 class="page-title">
-                        <i class="fas fa-dollar-sign me-3" style="color: var(--primary-green);"></i>
-                        Revenue Report
+                        <i class="fas fa-chart-line me-3" style="color: var(--primary-green);"></i>
+                        Revenue Analytics
                     </h2>
                     <div class="breadcrumb">
                         <i class="fas fa-home"></i>
@@ -20,6 +20,8 @@
                         <span>Admin</span>
                         <span>/</span>
                         <span>Reports</span>
+                        <span>/</span>
+                        <span>Analytics</span>
                         <span>/</span>
                         <span>Revenue</span>
                     </div>
@@ -35,7 +37,9 @@
                             <option value="12" {{ 'selected' if months_filter == 12 }}>Last 12 Months</option>
                         </select>
                     </div>
-                    <span class="badge bg-success fs-6">{{ revenue_by_month|length }} Months</span>
+                    <a href="{{ url_for('admin.revenue_report', months=months_filter) }}" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Report
+                    </a>
                 </div>
             </div>
 
@@ -43,40 +47,40 @@
             <div class="stats-grid mb-4">
                 <div class="stat-card">
                     <div class="stat-header">
-                        <div class="stat-title">Total Months</div>
-                        <div class="stat-icon" style="background: linear-gradient(135deg, #667eea, #764ba2);">
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
-                    </div>
-                    <div class="stat-value">{{ revenue_by_month|length }}</div>
-                    <div class="stat-change">
-                        <i class="fas fa-chart-line"></i> Data periods
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-header">
                         <div class="stat-title">Total Revenue</div>
-                        <div class="stat-icon" style="background: linear-gradient(135deg, #28a745, #20c997);">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #667eea, #764ba2);">
                             <i class="fas fa-dollar-sign"></i>
                         </div>
                     </div>
-                    <div class="stat-value">${{ "%.0f"|format(revenue_by_month|map(attribute='total_revenue')|sum) }}</div>
+                    <div class="stat-value">${{ "%.0f"|format(chart_data.total_revenue) }}</div>
                     <div class="stat-change">
-                        <i class="fas fa-arrow-up"></i> All time
+                        <i class="fas fa-chart-line"></i> All time
                     </div>
                 </div>
 
                 <div class="stat-card">
                     <div class="stat-header">
                         <div class="stat-title">Average/Month</div>
-                        <div class="stat-icon" style="background: linear-gradient(135deg, #ffc107, #fd7e14);">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #28a745, #20c997);">
                             <i class="fas fa-chart-bar"></i>
                         </div>
                     </div>
-                    <div class="stat-value">${{ "%.0f"|format((revenue_by_month|map(attribute='total_revenue')|sum / revenue_by_month|length) if revenue_by_month|length > 0 else 0) }}</div>
+                    <div class="stat-value">${{ "%.0f"|format(chart_data.avg_revenue) }}</div>
                     <div class="stat-change">
                         <i class="fas fa-calculator"></i> Monthly avg
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Data Periods</div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #ffc107, #fd7e14);">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">{{ revenue_by_month|length }}</div>
+                    <div class="stat-change">
+                        <i class="fas fa-clock"></i> Months tracked
                     </div>
                 </div>
 
@@ -94,12 +98,42 @@
                 </div>
             </div>
 
-            <!-- Enhanced Report Table -->
-            <div class="card">
+            <!-- Chart Section -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-chart-area me-2" style="color: var(--primary-green);"></i>
+                                Monthly Revenue Trends
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="revenueChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-chart-pie me-2" style="color: var(--primary-green);"></i>
+                                Revenue Distribution
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="revenuePieChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Data Table -->
+            <div class="card mt-4">
                 <div class="card-header">
                     <h5 class="card-title mb-0">
                         <i class="fas fa-table me-2" style="color: var(--primary-green);"></i>
-                        Monthly Revenue Data
+                        Detailed Monthly Data
                     </h5>
                 </div>
                 <div class="card-body p-0">
@@ -107,21 +141,21 @@
                         <table class="table table-hover mb-0">
                             <thead class="table-light">
                                 <tr>
-                                    <th class="text-center">Year</th>
-                                    <th class="text-center">Month</th>
-                                    <th class="text-center">Revenue (USD)</th>
+                                    <th class="text-center">Period</th>
+                                    <th class="text-center">Revenue</th>
+                                    <th class="text-center">Percentage</th>
                                     <th class="text-center">Trend</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for row in revenue_by_month %}
                                 <tr>
-                                    <td class="text-center fw-semibold">{{ row.year }}</td>
-                                    <td class="text-center">
-                                        <span class="badge bg-info">{{ row.month }}</span>
-                                    </td>
+                                    <td class="text-center fw-semibold">{{ row.month }}/{{ row.year }}</td>
                                     <td class="text-center">
                                         <span class="badge bg-success fs-6">${{ "%.2f"|format(row.total_revenue) }}</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="text-muted">{{ "%.1f"|format((row.total_revenue / chart_data.total_revenue * 100) if chart_data.total_revenue > 0 else 0) }}%</span>
                                     </td>
                                     <td class="text-center">
                                         {% if loop.index > 1 %}
@@ -138,16 +172,6 @@
                                         {% endif %}
                                     </td>
                                 </tr>
-                                {% else %}
-                                <tr>
-                                    <td colspan="4" class="text-center py-5">
-                                        <div class="empty-state">
-                                            <i class="fas fa-dollar-sign fa-3x text-muted mb-3"></i>
-                                            <h5 class="text-muted">No Revenue Data Available</h5>
-                                            <p class="text-muted">Revenue data will appear here once you have bookings with payments.</p>
-                                        </div>
-                                    </td>
-                                </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
@@ -155,29 +179,105 @@
                 </div>
             </div>
 
-            <!-- Action Buttons -->
-            {% if revenue_by_month %}
-            <div class="mt-4 text-center">
-                <a href="{{ url_for('admin.export_revenue', months=months_filter) }}" class="btn btn-primary me-2">
-                    <i class="fas fa-download me-2"></i>Export Report
-                </a>
-                <a href="{{ url_for('admin.analytics_revenue', months=months_filter) }}" class="btn btn-outline-primary">
-                    <i class="fas fa-chart-line me-2"></i>View Analytics
-                </a>
-            </div>
-            {% endif %}
-
             <!-- Report Footer -->
             <div class="mt-4 text-center text-muted">
                 <small>
                     <i class="fas fa-clock me-1"></i>
-                    Report generated on {{ now.strftime('%B %d, %Y at %I:%M %p') }} — Powered by Tourizo
+                    Analytics generated on {{ now.strftime('%B %d, %Y at %I:%M %p') }}
                 </small>
             </div>
 
         </div>
     </div>
 </div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Line Chart
+const ctx = document.getElementById('revenueChart').getContext('2d');
+const revenueChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: {{ chart_data.labels | tojson }},
+        datasets: [{
+            label: 'Monthly Revenue ($)',
+            data: {{ chart_data.data | tojson }},
+            borderColor: '#28a745',
+            backgroundColor: 'rgba(40, 167, 69, 0.1)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top'
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: {
+                    color: 'rgba(0,0,0,0.1)'
+                },
+                ticks: {
+                    callback: function(value) {
+                        return '$' + value.toLocaleString();
+                    }
+                }
+            },
+            x: {
+                grid: {
+                    color: 'rgba(0,0,0,0.1)'
+                }
+            }
+        }
+    }
+});
+
+// Pie Chart
+const pieCtx = document.getElementById('revenuePieChart').getContext('2d');
+const revenuePieChart = new Chart(pieCtx, {
+    type: 'doughnut',
+    data: {
+        labels: {{ chart_data.labels | tojson }},
+        datasets: [{
+            data: {{ chart_data.data | tojson }},
+            backgroundColor: [
+                '#28a745', '#17a2b8', '#ffc107', '#dc3545', '#6f42c1',
+                '#fd7e14', '#20c997', '#e83e8c', '#6c757d', '#343a40'
+            ],
+            borderWidth: 2,
+            borderColor: '#fff'
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    padding: 20,
+                    usePointStyle: true
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return context.label + ': $' + context.parsed.toLocaleString();
+                    }
+                }
+            }
+        }
+    }
+});
+</script>
 
 <!-- Date Range Filter JavaScript -->
 <script>
@@ -188,4 +288,4 @@ document.getElementById('monthsFilter').addEventListener('change', function() {
     window.location.href = currentUrl.toString();
 });
 </script>
-{% endblock %}
+{% endblock %} 

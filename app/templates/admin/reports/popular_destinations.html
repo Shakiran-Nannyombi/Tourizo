@@ -1,160 +1,263 @@
-{% extends 'base.html' %}
+{% extends "admin/base.html" %}
 
 {% block title %}Popular Destinations{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<div class="bg-primary text-white py-5">
-    <div class="container text-center">
-        <h1 class="display-4 mb-3">🌍 Popular Destinations</h1>
-        <p class="lead">Discover the most booked travel experiences</p>
-    </div>
-</div>
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
 
-<div class="container py-5">
-    {% if popular_destinations %}
-        
-        <!-- Quick Stats -->
-        <div class="row mb-5">
-            <div class="col-md-4">
-                <div class="card text-center border-0 shadow-sm">
-                    <div class="card-body">
-                        <h3 class="text-primary">{{ popular_destinations|length }}</h3>
-                        <p class="mb-0">Destinations</p>
+            <!-- Enhanced Header -->
+            <div class="content-header mb-4">
+                <div>
+                    <h2 class="page-title">
+                        <i class="fas fa-globe-americas me-3" style="color: var(--primary-green);"></i>
+                        Popular Destinations
+                    </h2>
+                    <div class="breadcrumb">
+                        <i class="fas fa-home"></i>
+                        <span>/</span>
+                        <span>Admin</span>
+                        <span>/</span>
+                        <span>Reports</span>
+                        <span>/</span>
+                        <span>Destinations</span>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card text-center border-0 shadow-sm">
-                    <div class="card-body">
-                        <h3 class="text-success">{{ popular_destinations[0].booking_count if popular_destinations else 0 }}</h3>
-                        <p class="mb-0">Top Bookings</p>
+                <div class="header-actions d-flex align-items-center gap-3">
+                    <!-- Date Range Filter -->
+                    <div class="d-flex align-items-center">
+                        <label for="monthsFilter" class="form-label mb-0 me-2 text-muted">Date Range:</label>
+                        <select id="monthsFilter" class="form-select form-select-sm" style="width: auto;">
+                            <option value="1" {{ 'selected' if months_filter == 1 }}>Last 1 Month</option>
+                            <option value="3" {{ 'selected' if months_filter == 3 }}>Last 3 Months</option>
+                            <option value="6" {{ 'selected' if months_filter == 6 }}>Last 6 Months</option>
+                            <option value="12" {{ 'selected' if months_filter == 12 }}>Last 12 Months</option>
+                        </select>
                     </div>
+                    <span class="badge bg-primary fs-6">{{ popular_destinations|length }} Destinations</span>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card text-center border-0 shadow-sm">
-                    <div class="card-body">
-                        <h3 class="text-warning">⭐</h3>
-                        <p class="mb-0">Most Popular</p>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Destinations Cards -->
-        <div class="row">
-            {% for dest in popular_destinations %}
-            <div class="col-lg-6 mb-4">
-                <div class="card h-100 shadow-sm border-0">
-                    <div class="card-header bg-gradient text-white" style="background: linear-gradient(45deg, #007bff, #6610f2);">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">📍 {{ dest.destination }}</h5>
-                            <span class="badge bg-light text-dark">#{{ loop.index }}</span>
+            {% if popular_destinations %}
+            
+            <!-- Enhanced Statistics Cards -->
+            <div class="stats-grid mb-4">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Total Destinations</div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                            <i class="fas fa-globe-americas"></i>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <h6 class="card-title">{{ dest.title }}</h6>
-                        
-                        <!-- Progress Bar -->
-                        <div class="mb-3">
-                            <small class="text-muted">Popularity</small>
-                            <div class="progress mt-1" style="height: 10px;">
-                                <div class="progress-bar bg-success" 
-                                     style="width: {{ (dest.booking_count * 100 / popular_destinations[0].booking_count)|round }}%">
+                    <div class="stat-value">{{ popular_destinations|length }}</div>
+                    <div class="stat-change">
+                        <i class="fas fa-chart-line"></i> Active destinations
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Top Bookings</div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #28a745, #20c997);">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">{{ popular_destinations[0].booking_count if popular_destinations else 0 }}</div>
+                    <div class="stat-change">
+                        <i class="fas fa-fire"></i> Most popular
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Total Bookings</div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #ffc107, #fd7e14);">
+                            <i class="fas fa-ticket-alt"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">{{ popular_destinations|map(attribute='booking_count')|sum }}</div>
+                    <div class="stat-change">
+                        <i class="fas fa-chart-bar"></i> All destinations
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Top Destination</div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #17a2b8, #6f42c1);">
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">{{ popular_destinations[0].destination[:10] + '...' if popular_destinations and popular_destinations[0].destination|length > 10 else (popular_destinations[0].destination if popular_destinations else 'N/A') }}</div>
+                    <div class="stat-change">
+                        <i class="fas fa-crown"></i> #1 ranked
+                    </div>
+                </div>
+            </div>
+
+            <!-- Destinations Cards -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-map-marked-alt me-2" style="color: var(--primary-green);"></i>
+                        Destination Rankings
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for dest in popular_destinations %}
+                        <div class="col-lg-6 mb-4">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-header bg-gradient text-white" style="background: linear-gradient(45deg, var(--primary-green), #20c997);">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0 text-truncate">
+                                            <i class="fas fa-map-marker-alt me-2"></i>
+                                            {{ dest.destination }}
+                                        </h6>
+                                        <span class="badge bg-light text-dark">#{{ loop.index }}</span>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <h6 class="card-title text-truncate">{{ dest.title }}</h6>
+                                    
+                                    <!-- Progress Bar -->
+                                    <div class="mb-3">
+                                        <small class="text-muted">Popularity</small>
+                                        <div class="progress mt-1" style="height: 8px;">
+                                            <div class="progress-bar bg-success" 
+                                                 style="width: {{ (dest.booking_count * 100 / popular_destinations[0].booking_count)|round }}%">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Booking Count -->
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <span class="badge bg-primary">
+                                            <i class="fas fa-users me-1"></i>
+                                            {{ dest.booking_count }} bookings
+                                        </span>
+                                        <small class="text-muted">{{ (dest.booking_count * 100 / popular_destinations[0].booking_count)|round }}% of top</small>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Table View -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-table me-2" style="color: var(--primary-green);"></i>
+                        Detailed Rankings
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="text-center">Rank</th>
+                                    <th>Destination</th>
+                                    <th>Tour</th>
+                                    <th class="text-center">Bookings</th>
+                                    <th class="text-center">Popularity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for dest in popular_destinations %}
+                                <tr>
+                                    <td class="text-center">
+                                        <span class="badge bg-{{ 'warning' if loop.index == 1 else 'info' if loop.index == 2 else 'secondary' }}">
+                                            #{{ loop.index }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-map-marker-alt text-muted me-2"></i>
+                                            <span class="fw-semibold">{{ dest.destination }}</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="text-truncate d-inline-block" style="max-width: 200px;">{{ dest.title }}</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge bg-primary fs-6">{{ dest.booking_count }}</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="progress me-2" style="width: 80px; height: 6px;">
+                                                <div class="progress-bar bg-success" 
+                                                     style="width: {{ (dest.booking_count * 100 / popular_destinations[0].booking_count)|round }}%">
+                                                </div>
+                                            </div>
+                                            <small class="text-muted">{{ (dest.booking_count * 100 / popular_destinations[0].booking_count)|round }}%</small>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mt-4 text-center">
+                <a href="{{ url_for('admin.export_destinations', months=months_filter) }}" class="btn btn-primary me-2">
+                    <i class="fas fa-download me-2"></i>Export Report
+                </a>
+                <a href="{{ url_for('admin.analytics_destinations', months=months_filter) }}" class="btn btn-outline-primary">
+                    <i class="fas fa-chart-line me-2"></i>View Analytics
+                </a>
+            </div>
+
+            {% else %}
+            
+            <!-- No Data State -->
+            <div class="card">
+                <div class="card-body text-center py-5">
+                    <div class="empty-state">
+                        <i class="fas fa-globe-americas fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No Destination Data Available</h5>
+                        <p class="text-muted">Popular destinations will appear here once you have bookings.</p>
                         
-                        <!-- Booking Count -->
-                        <div class="d-flex align-items-center">
-                            <span class="badge bg-primary me-2">👥 {{ dest.booking_count }} bookings</span>
-                            <small class="text-muted">{{ (dest.booking_count * 100 / popular_destinations[0].booking_count)|round }}% of top destination</small>
+                        <div class="alert alert-info mt-4" style="max-width: 500px; margin: 0 auto;">
+                            <h6><strong>To see data:</strong></h6>
+                            <ul class="list-unstyled mb-0">
+                                <li><i class="fas fa-check text-success me-2"></i>Add destination info to your tours</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Wait for customers to book tours</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Data will appear automatically</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
-            {% endfor %}
-        </div>
 
-        <!-- Table View (Alternative) -->
-        <div class="mt-5">
-            <h4 class="mb-4">📊 Detailed Rankings</h4>
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Rank</th>
-                            <th>Destination</th>
-                            <th>Tour</th>
-                            <th>Bookings</th>
-                            <th>Popularity</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for dest in popular_destinations %}
-                        <tr>
-                            <td><strong>{{ loop.index }}</strong></td>
-                            <td>📍 {{ dest.destination }}</td>
-                            <td>{{ dest.title }}</td>
-                            <td>
-                                <span class="badge bg-primary">{{ dest.booking_count }}</span>
-                            </td>
-                            <td>
-                                <div class="progress" style="width: 100px; height: 20px;">
-                                    <div class="progress-bar" 
-                                         style="width: {{ (dest.booking_count * 100 / popular_destinations[0].booking_count)|round }}%">
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+            {% endif %}
 
-    {% else %}
-        <!-- No Data State -->
-        <div class="text-center py-5">
-            <div class="mb-4">
-                <h1 style="font-size: 5rem;">🗺️</h1>
+            <!-- Report Footer -->
+            <div class="mt-4 text-center text-muted">
+                <small>
+                    <i class="fas fa-clock me-1"></i>
+                    Report generated on {{ now.strftime('%B %d, %Y at %I:%M %p') }}
+                </small>
             </div>
-            <h3 class="text-muted">No Data Available Yet</h3>
-            <p class="text-muted">Popular destinations will appear here once you have bookings.</p>
-            
-            <div class="alert alert-info mt-4">
-                <h6><strong>To see data:</strong></h6>
-                <ul class="list-unstyled">
-                    <li>✅ Add destination info to your tours</li>
-                    <li>✅ Wait for customers to book tours</li>
-                    <li>✅ Data will appear automatically</li>
-                </ul>
-            </div>
+
         </div>
-    {% endif %}
+    </div>
 </div>
 
-<style>
-.card {
-    transition: transform 0.2s ease;
-}
-
-.card:hover {
-    transform: translateY(-2px);
-}
-
-.progress {
-    border-radius: 10px;
-}
-
-.progress-bar {
-    border-radius: 10px;
-}
-
-.badge {
-    font-size: 0.9em;
-}
-</style>
-
+<!-- Date Range Filter JavaScript -->
+<script>
+document.getElementById('monthsFilter').addEventListener('change', function() {
+    const months = this.value;
+    const currentUrl = new URL(window.location);
+    currentUrl.searchParams.set('months', months);
+    window.location.href = currentUrl.toString();
+});
+</script>
 {% endblock %}

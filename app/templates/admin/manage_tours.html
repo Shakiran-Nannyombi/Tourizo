@@ -1,154 +1,240 @@
-{% extends "base.html" %}
+{% extends "admin/base.html" %}
 
-{% block title %}Manage Tours - Admin{% endblock %}
+{% block title %}Manage Tours{% endblock %}
 
 {% block content %}
 <div class="container-fluid mt-4">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-12">
 
-            <!-- Header -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2>Tour Management</h2>
+            <!-- Enhanced Header -->
+            <div class="content-header mb-4">
+                <div>
+                    <h2 class="page-title">
+                        <i class="fas fa-map-marked-alt me-3" style="color: var(--primary-green);"></i>
+                        Tour Management
+                    </h2>
+                    <div class="breadcrumb">
+                        <i class="fas fa-home"></i>
+                        <span>/</span>
+                        <span>Admin</span>
+                        <span>/</span>
+                        <span>Tours</span>
+                    </div>
+                </div>
                 <a href="{{ url_for('admin.add_tour') }}" class="btn btn-primary">
-
-                    <i class="fas fa-plus"></i> Add New Tour
+                    <i class="fas fa-plus me-2"></i> Add New Tour
                 </a>
             </div>
 
-            <!-- Statistics Cards -->
-            <div class="row mb-4">
-                <div class="col-md-3">
-                    <div class="card text-white bg-primary">
-                        <div class="card-body">
-                            <h5 class="card-title">Total Tours</h5>
-                            <h3>{{ tours.items|length }}</h3>
+            <!-- Enhanced Statistics Cards -->
+            <div class="stats-grid mb-4">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Total Tours</div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                            <i class="fas fa-map-marked-alt"></i>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card text-white bg-success">
-                        <div class="card-body">
-                            <h5 class="card-title">Active Tours</h5>
-                            <h3>{{ tours|selectattr('is_active')|list|length }}</h3>
-                        </div>
+                    <div class="stat-value">{{ tours.items|length }}</div>
+                    <div class="stat-change">
+                        <i class="fas fa-chart-line"></i> All tours
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card text-white bg-warning">
-                        <div class="card-body">
-                            <h5 class="card-title">Inactive Tours</h5>
-                            <h3>{{ tours|rejectattr('is_active')|list|length }}</h3>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Active Tours</div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #28a745, #20c997);">
+                            <i class="fas fa-check-circle"></i>
                         </div>
                     </div>
+                    <div class="stat-value">{{ tours|selectattr('is_active')|list|length }}</div>
+                    <div class="stat-change">
+                        <i class="fas fa-arrow-up"></i> Currently active
+                    </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card text-white bg-info">
-                        <div class="card-body">
-                            <h5 class="card-title">Categories</h5>
-                            <h3>{{ tours|map(attribute='category')|unique|list|length }}</h3>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Inactive Tours</div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #ffc107, #fd7e14);">
+                            <i class="fas fa-pause-circle"></i>
                         </div>
+                    </div>
+                    <div class="stat-value">{{ tours|rejectattr('is_active')|list|length }}</div>
+                    <div class="stat-change">
+                        <i class="fas fa-arrow-down"></i> Paused tours
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Categories</div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #17a2b8, #6f42c1);">
+                            <i class="fas fa-tags"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">{{ tours|map(attribute='category')|unique|list|length }}</div>
+                    <div class="stat-change">
+                        <i class="fas fa-layer-group"></i> Tour categories
                     </div>
                 </div>
             </div>
 
-            <!-- Filters -->
+            <!-- Enhanced Filters Section -->
             <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0" style="font-size: 2rem;">
+                        <i class="fas fa-filter me-2" style="color: var(--primary-green); font-size: 2.5rem;"></i>
+                        Filter & Search Tours
+                    </h5>
+                </div>
                 <div class="card-body">
-                    <form method="GET" class="row">
-                        <div class="col-md-3">
-                            <select name="category" class="form-control" onchange="this.form.submit()">
+                    <form method="GET" class="row g-3">
+                        <div class="col-lg-3 col-md-6">
+                            <label class="form-label">Category</label>
+                            <select name="category" class="form-select" onchange="this.form.submit()">
                                 <option value="">All Categories</option>
                                 {% for category in tours|map(attribute='category')|unique %}
-                                <option value="{{ category.name }}" {% if request.args.get('category')==category.name %}selected{%
-                                    endif %}>
+                                <option value="{{ category.name }}" {% if request.args.get('category')==category.name %}selected{% endif %}>
                                     {{ category.name }}
                                 </option>
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="col-md-3">
-                            <select name="status" class="form-control" onchange="this.form.submit()">
+                        <div class="col-lg-3 col-md-6">
+                            <label class="form-label">Status</label>
+                            <select name="status" class="form-select" onchange="this.form.submit()">
                                 <option value="">All Status</option>
                                 <option value="active" {% if request.args.get('status')=='active' %}selected{% endif %}>
-                                    Active</option>
-                                <option value="inactive" {% if request.args.get('status')=='inactive' %}selected{% endif
-                                    %}>Inactive</option>
+                                    Active
+                                </option>
+                                <option value="inactive" {% if request.args.get('status')=='inactive' %}selected{% endif %}>
+                                    Inactive
+                                </option>
                             </select>
                         </div>
-                        <div class="col-md-4">
-                            <input type="text" name="search" class="form-control" placeholder="Search tours..."
-                                value="{{ request.args.get('search', '') }}">
+                        <div class="col-lg-4 col-md-6">
+                            <label class="form-label">Search Tours</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-search"></i>
+                                </span>
+                                <input type="text" name="search" class="form-control" placeholder="Search by name, destination..."
+                                    value="{{ request.args.get('search', '') }}">
+                            </div>
                         </div>
-                        <div class="col-md-2">
-                            <button type="submit" class="btn btn-outline-primary">
-                                <i class="fas fa-search"></i> Search
+                        <div class="col-lg-2 col-md-6">
+                            <label class="form-label">&nbsp;</label>
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-search me-2"></i> Search
                             </button>
                         </div>
                     </form>
                 </div>
             </div>
 
-            <!-- Tours Table -->
+            <!-- Enhanced Tours Table -->
             <div class="card">
-                <div class="card-body">
+                <div class="card-header">
+                    <h5 class="card-title mb-0" style="font-size: 2rem;">
+                        <i class="fas fa-list me-2" style="color: var(--primary-green); font-size: 2rem;"></i>
+                        Tour List
+                    </h5>
+                </div>
+                <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-striped align-middle">
-                            <thead>
+                        <table class="table table-hover mb-0 tours-table">
+                            <thead class="table-light">
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Image</th>
-                                    <th>Name</th>
-                                    <th>Destination</th>
-                                    <th>Duration</th>
-                                    <th>Price</th>
-                                    <th>Category</th>
-                                    <th>Status</th>
-                                    <th>Bookings</th>
-                                    <th>Actions</th>
+                                    <th class="tour-id">ID</th>
+                                    <th class="tour-image">Image</th>
+                                    <th class="tour-name">Name</th>
+                                    <th class="tour-destination">Destination</th>
+                                    <th class="tour-duration">Duration</th>
+                                    <th class="tour-price">Price</th>
+                                    <th class="tour-category">Category</th>
+                                    <th class="tour-status">Status</th>
+                                    <th class="tour-bookings">Bookings</th>
+                                    <th class="tour-actions">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for tour in tours %}
                                 <tr>
-                                    <td>{{ tour.id }}</td>
-                                    <td>
+                                    <td class="tour-id">
+                                        <span class="badge bg-secondary">#{{ tour.id }}</span>
+                                    </td>
+                                    <td class="tour-image">
                                         {% if tour.featured_image %}
-                                        <img src="{{ url_for('static', filename=tour.featured_image) }}" alt="{{ tour.title }}" class="img-thumbnail"
-                                            style="width: 50px; height: 50px; object-fit: cover;">
+                                        <img src="{{ url_for('static', filename=tour.featured_image) }}" 
+                                             alt="{{ tour.title }}" 
+                                             class="rounded"
+                                             style="width: 50px; height: 50px; object-fit: cover; border: 2px solid #e9ecef;">
                                         {% else %}
-                                        <div class="bg-light text-center text-muted"
-                                            style="width: 50px; height: 50px; line-height: 50px;">
-                                            <i class="fas fa-image"></i>
+                                        <div class="bg-light rounded d-flex align-items-center justify-content-center"
+                                             style="width: 50px; height: 50px; border: 2px solid #e9ecef;">
+                                            <i class="fas fa-image text-muted"></i>
                                         </div>
                                         {% endif %}
                                     </td>
-                                    <td><a href="{{ url_for('tours.tour_detail', tour_id=tour.id) }}"
-                                            class="text-decoration-none">{{ tour.title }}</a></td>
-                                    <td>{{ tour.destination }}</td>
-                                    <td>{{ tour.duration }} days</td>
-                                    <td>${{ "%.2f"|format(tour.price) }}</td>
-                                    <td><span class="badge badge-secondary">{{ tour.category.name }}</span></td>
-                                    <td>
-                                        <span class="badge badge-{{ 'success' if tour.is_active else 'secondary' }}">
+                                    <td class="tour-name">
+                                        <a href="{{ url_for('tours.tour_detail', tour_id=tour.id) }}"
+                                           class="text-decoration-none fw-semibold text-primary tour-link">
+                                            {{ tour.title }}
+                                        </a>
+                                    </td>
+                                    <td class="tour-destination">
+                                        <i class="fas fa-map-marker-alt text-muted me-1"></i>
+                                        <span class="destination-text">{{ tour.destination }}</span>
+                                    </td>
+                                    <td class="tour-duration">
+                                        <span class="badge bg-info">
+                                            <i class="fas fa-clock me-1"></i>
+                                            {{ tour.duration }} days
+                                        </span>
+                                    </td>
+                                    <td class="tour-price">
+                                        <span class="fw-bold text-success">${{ "%.2f"|format(tour.price) }}</span>
+                                    </td>
+                                    <td class="tour-category">
+                                        <span class="badge bg-secondary">{{ tour.category.name }}</span>
+                                    </td>
+                                    <td class="tour-status">
+                                        <span class="badge bg-{{ 'success' if tour.is_active else 'secondary' }}">
+                                            <i class="fas fa-{{ 'check-circle' if tour.is_active else 'pause-circle' }} me-1"></i>
                                             {{ 'Active' if tour.is_active else 'Inactive' }}
                                         </span>
                                     </td>
-                                    <td>{{ tour.total_bookings }}/{{ tour.max_participants }}</td>
-                                    <td>
-                                        <div class="btn-group">
+                                    <td class="tour-bookings">
+                                        <div class="d-flex align-items-center">
+                                            <span class="fw-semibold">{{ tour.total_bookings }}</span>
+                                            <span class="text-muted mx-1">/</span>
+                                            <span class="text-muted">{{ tour.max_participants }}</span>
+                                            <div class="progress ms-2" style="width: 60px; height: 6px;">
+                                                <div class="progress-bar bg-{{ 'success' if tour.total_bookings < tour.max_participants else 'warning' }}" 
+                                                     style="width: {{ (tour.total_bookings / tour.max_participants * 100)|round }}%"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="tour-actions">
+                                        <div class="btn-group" role="group">
                                             <a href="{{ url_for('admin.edit_tour', tour_id=tour.id) }}"
-                                                class="btn btn-sm btn-outline-primary" title="Edit">
+                                               class="btn btn-sm btn-outline-primary" 
+                                               title="Edit Tour">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <button
-                                                class="btn btn-sm btn-outline-{{ 'warning' if tour.is_active else 'success' }}"
-                                                data-tour-id="{{ tour.id }}" onclick="handleToggleStatus(this)"
-                                                title="{{ 'Deactivate' if tour.is_active else 'Activate' }}">
+                                            <button class="btn btn-sm btn-outline-{{ 'warning' if tour.is_active else 'success' }}"
+                                                    data-tour-id="{{ tour.id }}" 
+                                                    onclick="handleToggleStatus(this)"
+                                                    title="{{ 'Deactivate' if tour.is_active else 'Activate' }} Tour">
                                                 <i class="fas fa-{{ 'pause' if tour.is_active else 'play' }}"></i>
                                             </button>
-                                            <button class="btn btn-sm btn-outline-danger" data-tour-id="{{ tour.id }}"
-                                                onclick="handleDeleteClick(this)" title="Delete">
+                                            <button class="btn btn-sm btn-outline-danger" 
+                                                    data-tour-id="{{ tour.id }}"
+                                                    onclick="handleDeleteClick(this)" 
+                                                    title="Delete Tour">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </div>
@@ -165,23 +251,44 @@
     </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
+<!-- Enhanced Delete Confirmation Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
-    aria-hidden="true">
+    aria-hidden="true" style="margin-top: 50px;">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
+        <div class="modal-content delete-modal">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                <div class="modal-title-wrapper">
+                    <div class="warning-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                </div>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times"></i>
                 </button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete this tour? This action cannot be undone.
+                <div class="delete-icon-wrapper">
+                    <div class="delete-icon">
+                        <i class="fas fa-trash-alt"></i>
+                    </div>
+                </div>
+                <div class="delete-message">
+                    <h6 class="delete-title">Delete Tour</h6>
+                    <p class="delete-description">
+                        Are you sure you want to delete this tour? This action cannot be undone and will permanently remove the tour from the system.
+                    </p>
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+                <button type="button" class="btn btn-secondary cancel-btn" data-dismiss="modal">
+                    <i class="fas fa-times"></i>
+                    <span>Cancel</span>
+                </button>
+                <button type="button" class="btn btn-danger delete-btn" id="confirmDelete">
+                    <i class="fas fa-trash"></i>
+                    <span>Delete Tour</span>
+                </button>
             </div>
         </div>
     </div>
@@ -194,6 +301,13 @@
 
     function handleToggleStatus(button) {
         const tourId = button.getAttribute('data-tour-id');
+        const icon = button.querySelector('i');
+        const originalIcon = icon.className;
+        
+        // Show loading state
+        icon.className = 'fas fa-spinner fa-spin';
+        button.disabled = true;
+        
         fetch(`/admin/tours/${tourId}/toggle-status`, {
             method: 'POST',
             headers: {
@@ -201,14 +315,22 @@
                 'X-CSRFToken': '{{ csrf_token() }}'
             }
         })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    location.reload();
-                } else {
-                    alert(data.message || "Failed to update tour status.");
-                }
-            });
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.message || "Failed to update tour status.");
+                icon.className = originalIcon;
+                button.disabled = false;
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert("An error occurred while updating tour status.");
+            icon.className = originalIcon;
+            button.disabled = false;
+        });
     }
 
     function handleDeleteClick(button) {
@@ -219,6 +341,14 @@
     document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('confirmDelete').addEventListener('click', function () {
             if (!currentTourId) return;
+            
+            const button = this;
+            const originalText = button.innerHTML;
+            
+            // Show loading state
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Deleting...';
+            button.disabled = true;
+            
             fetch(`/admin/tours/${currentTourId}/delete`, {
                 method: 'POST',
                 headers: {
@@ -226,22 +356,26 @@
                     'X-CSRFToken': '{{ csrf_token() }}'
                 }
             })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        location.reload();
-                    } else {
-                        alert(data.message || "Error deleting tour.");
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                    alert("An error occurred.");
-                })
-                .finally(() => {
-                    $('#deleteModal').modal('hide');
-                    currentTourId = null;
-                });
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert(data.message || "Error deleting tour.");
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("An error occurred while deleting the tour.");
+                button.innerHTML = originalText;
+                button.disabled = false;
+            })
+            .finally(() => {
+                $('#deleteModal').modal('hide');
+                currentTourId = null;
+            });
         });
     });
 </script>

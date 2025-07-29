@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Dashboard{% endblock %} - Tourizo</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile-responsive.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+        {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search tours, users, bookings...">
+                    <div class="search-results" id="searchResults"></div>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="notification-icon" onclick="toggleNotifications()">
+                    <i class="fas fa-bell"></i>
+                    <div class="notification-badge"></div>
+                    <div class="notification-dropdown" id="notificationDropdown">
+                        <div class="notification-header">
+                            <h4>Notifications</h4>
+                            <button onclick="markAllAsRead()" class="mark-all-read">Mark all as read</button>
+                        </div>
+                        <div class="notification-list">
+                            <div class="notification-item unread">
+                                <i class="fas fa-user-plus"></i>
+                                <div class="notification-content">
+                                    <p>New user registration: John Doe</p>
+                                    <span class="notification-time">2 minutes ago</span>
+                                </div>
+                            </div>
+                            <div class="notification-item unread">
+                                <i class="fas fa-calendar-check"></i>
+                                <div class="notification-content">
+                                    <p>New booking received for Safari Tour</p>
+                                    <span class="notification-time">5 minutes ago</span>
+                                </div>
+                            </div>
+                            <div class="notification-item">
+                                <i class="fas fa-star"></i>
+                                <div class="notification-content">
+                                    <p>New review posted for Mountain Trek</p>
+                                    <span class="notification-time">1 hour ago</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="user-profile" onclick="toggleUserMenu()">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="user-info">
+                            <div class="user-avatar-small">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="user-details">
+                                <p class="user-name">{{ current_user.username if current_user else 'Admin User' }}</p>
+                                <p class="user-email">{{ current_user.email if current_user else 'admin@tourizo.com' }}</p>
+                            </div>
+                        </div>
+                        <div class="user-menu-items">
+                            <a href="{{ url_for('admin.dashboard') }}" class="menu-item">
+                                <i class="fas fa-home"></i>
+                                <span>Dashboard</span>
+                            </a>
+                            <a href="#" class="menu-item" onclick="openSettings()">
+                                <i class="fas fa-cog"></i>
+                                <span>Settings</span>
+                            </a>
+                            <a href="#" class="menu-item" onclick="openProfile()">
+                                <i class="fas fa-user-edit"></i>
+                                <span>Edit Profile</span>
+                            </a>
+                            <div class="menu-divider"></div>
+                            <a href="{{ url_for('auth.logout') }}" class="menu-item logout-item">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Enhanced Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <!-- Sidebar Header with Logo -->
+            <div class="sidebar-header">
+                <div class="sidebar-logo" id="sidebarLogo" style="cursor: pointer;">
+                    <i class="fas fa-leaf logo-icon"></i>
+                    <span class="logo-text">Tourizo</span>
+                </div>
+                <button class="sidebar-toggle-btn" id="sidebarToggleBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="nav-menu">
+                <div class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'admin.dashboard' %}active{% endif %}" href="{{ url_for('admin.dashboard') }}">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'admin.manage_tours' %}active{% endif %}" href="{{ url_for('admin.manage_tours') }}">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <span>Manage Tours</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'admin.add_tour' %}active{% endif %}" href="{{ url_for('admin.add_tour') }}">
+                        <i class="fas fa-plus"></i>
+                        <span>Add New Tour</span>
+                    </a>
+                </div>
+
+                <!-- Manage Inquiries link -->
+                <div class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'admin.inquiries' %}active{% endif %}" href="{{ url_for('admin.inquiries') }}">
+                        <i class="fas fa-envelope"></i>
+                        <span>Manage Inquiries</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'admin.admin_reviews' %}active{% endif %}" href="{{ url_for('admin.admin_reviews') }}">
+                        <i class="fas fa-star"></i>
+                        <span>Manage Reviews</span>
+                    </a>
+                </div>
+
+                <!-- Reports Section -->
+                <div class="nav-item">
+                    <span class="nav-link reports-parent">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Reports</span>
+                    </span>
+                    <div class="sub-nav">
+                        <div class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'admin.booking_report' %}active{% endif %}" href="{{ url_for('admin.booking_report') }}">
+                                <i class="fas fa-calendar-check"></i>
+                                <span>Booking Reports</span>
+                            </a>
+                        </div>
+                        <div class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'admin.revenue_report' %}active{% endif %}" href="{{ url_for('admin.revenue_report') }}">
+                                <i class="fas fa-dollar-sign"></i>
+                                <span>Revenue Reports</span>
+                            </a>
+                        </div>
+                        <div class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'admin.popular_destinations' %}active{% endif %}" href="{{ url_for('admin.popular_destinations') }}">
+                                <i class="fas fa-fire"></i>
+                                <span>Popular Destinations</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'admin.manage_users' %}active{% endif %}" href="{{ url_for('admin.manage_users') }}">
+                        <i class="fas fa-users"></i>
+                        <span>Manage Users</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'admin.chatbot_settings' %}active{% endif %}" href="{{ url_for('admin.chatbot_settings') }}">
+                        <i class="fas fa-robot"></i>
+                        <span>Chatbot Settings</span>
+                    </a>
+                </div>
+
+            </div>
+            
+            <!-- User Profile Section -->
+            <div class="sidebar-user-profile">
+                <div class="user-profile-avatar">
+                    <div class="avatar-gradient">{{ current_user.username[0]|upper if current_user else 'A' }}</div>
+                </div>
+                <div class="user-profile-info">
+                    <div class="user-name">{{ current_user.username if current_user else 'Admin User' }}</div>
+                    <div class="user-email">{{ current_user.email if current_user else 'admin@tourizo.com' }}</div>
+                </div>
+                <div class="user-profile-actions">
+                    <a href="{{ url_for('auth.logout') }}" class="logout-btn" title="Logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    {% block extra_js %}{% endblock %}
+    
+    <script>
+        // Simple sidebar toggle function
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.querySelector('.main-content');
+            const header = document.querySelector('.header');
+            const logoIcon = document.querySelector('.logo-icon');
+            const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+            
+            // Toggle the minimized class
+            sidebar.classList.toggle('minimized');
+            mainContent.classList.toggle('expanded');
+            header.classList.toggle('expanded');
+            
+            // Update the icon and button
+            if (sidebar.classList.contains('minimized')) {
+                logoIcon.className = 'fas fa-bars logo-icon';
+                sidebarToggleBtn.style.display = 'none';
+                localStorage.setItem('sidebarMinimized', 'true');
+            } else {
+                logoIcon.className = 'fas fa-leaf logo-icon';
+                sidebarToggleBtn.style.display = 'block';
+                localStorage.setItem('sidebarMinimized', 'false');
+            }
+        }
+
+        // Search functionality
+        function initializeSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const searchResults = document.getElementById('searchResults');
+            
+            searchInput.addEventListener('input', function() {
+                const query = this.value.trim();
+                if (query.length > 0) {
+                    // Simulate search results
+                    const results = [
+                        { type: 'tour', title: 'Safari Tour', url: '/admin/manage_tours' },
+                        { type: 'user', title: 'John Doe', url: '/admin/manage_users' },
+                        { type: 'booking', title: 'Booking #1234', url: '/admin/bookings' }
+                    ].filter(item => 
+                        item.title.toLowerCase().includes(query.toLowerCase())
+                    );
+                    
+                    displaySearchResults(results);
+                } else {
+                    searchResults.style.display = 'none';
+                }
+            });
+
+            // Close search results when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                    searchResults.style.display = 'none';
+                }
+            });
+        }
+
+        function displaySearchResults(results) {
+            const searchResults = document.getElementById('searchResults');
+            if (results.length > 0) {
+                searchResults.innerHTML = results.map(result => `
+                    <div class="search-result-item" onclick="window.location.href='${result.url}'">
+                        <i class="fas fa-${result.type === 'tour' ? 'map-marked-alt' : result.type === 'user' ? 'user' : 'calendar-check'}"></i>
+                        <span>${result.title}</span>
+                    </div>
+                `).join('');
+                searchResults.style.display = 'block';
+            } else {
+                searchResults.innerHTML = '<div class="search-result-item no-results">No results found</div>';
+                searchResults.style.display = 'block';
+            }
+        }
+
+        // Notification functionality
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notificationDropdown');
+            const userDropdown = document.getElementById('userDropdown');
+            
+            // Close user dropdown if open
+            userDropdown.classList.remove('active');
+            
+            dropdown.classList.toggle('active');
+        }
+
+        function markAllAsRead() {
+            const unreadItems = document.querySelectorAll('.notification-item.unread');
+            unreadItems.forEach(item => {
+                item.classList.remove('unread');
+            });
+            
+            const badge = document.querySelector('.notification-badge');
+            badge.style.display = 'none';
+        }
+
+        // User menu functionality
+        function toggleUserMenu() {
+            const dropdown = document.getElementById('userDropdown');
+            const notificationDropdown = document.getElementById('notificationDropdown');
+            
+            // Close notification dropdown if open
+            notificationDropdown.classList.remove('active');
+            
+            dropdown.classList.toggle('active');
+        }
+
+        function openSettings() {
+            // Redirect to settings page or open settings modal
+            alert('Settings page will be implemented');
+        }
+
+        function openProfile() {
+            // Redirect to profile page or open profile modal
+            alert('Profile page will be implemented');
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(e) {
+            const notificationIcon = document.querySelector('.notification-icon');
+            const userProfile = document.querySelector('.user-profile');
+            
+            if (!notificationIcon.contains(e.target)) {
+                document.getElementById('notificationDropdown').classList.remove('active');
+            }
+            
+            if (!userProfile.contains(e.target)) {
+                document.getElementById('userDropdown').classList.remove('active');
+            }
+        });
+        
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up click events
+            document.getElementById('sidebarLogo').addEventListener('click', toggleSidebar);
+            document.getElementById('sidebarToggleBtn').addEventListener('click', toggleSidebar);
+            
+            // Initialize search
+            initializeSearch();
+            
+            // Restore sidebar state
+            if (localStorage.getItem('sidebarMinimized') === 'true') {
+                toggleSidebar();
+            }
+        });
+    </script>
+</body>
+
+</html> 

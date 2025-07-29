@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends "admin/base.html" %}
 {% block title %}User Details{% endblock %}
 
 {% block content %}
@@ -9,9 +9,15 @@
     <li class="list-group-item"><strong>Username:</strong> {{ user.username }}</li>
     <li class="list-group-item"><strong>Email:</strong> {{ user.email }}</li>
     <li class="list-group-item"><strong>Admin:</strong> {{ 'Yes' if user.is_admin else 'No' }}</li>
-    <li class="list-group-item"><strong>Created At:</strong> {{ user.created_at.strftime('%Y-%m-%d %H:%M') }}</li>
+    <li class="list-group-item"><strong>Created At:</strong>
+  {% if user.date_created %}
+    {{ user.date_created.strftime('%Y-%m-%d %H:%M') }}
+  {% else %}
+    N/A
+  {% endif %}
+</li>
 </ul>
 
 <a href="{{ url_for('admin.admin_edit_user', user_id=user.id) }}" class="btn btn-warning mt-3">Edit User</a>
-<a href="{{ url_for('admin.admin_users') }}" class="btn btn-secondary mt-3">Back to User List</a>
+<a href="{{ url_for('admin.manage_users') }}" class="btn btn-secondary mt-3">Back to User List</a>
 {% endblock %}

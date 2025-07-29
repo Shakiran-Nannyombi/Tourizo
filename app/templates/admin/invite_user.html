@@ -1,0 +1,123 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Invite New User{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header d-flex align-items-center">
+                    <a href="{{ url_for('admin.manage_users') }}" class="btn btn-link me-3"><i class="fas fa-arrow-left"></i> Back</a>
+                    <h3 class="mb-0"><i class="fas fa-user-plus me-2" style="color: var(--primary-green);"></i>Invite New User</h3>
+                </div>
+                <div class="card-body">
+                    <form id="inviteUserForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="firstName" class="form-label">First Name *</label>
+                                    <input type="text" class="form-control" id="firstName" name="firstName" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="lastName" class="form-label">Last Name *</label>
+                                    <input type="text" class="form-control" id="lastName" name="lastName" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email Address *</label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                    <div class="form-text">User will receive invitation email at this address</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Phone Number</label>
+                                    <input type="tel" class="form-control" id="phone" name="phone">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="role" class="form-label">Role *</label>
+                                    <select class="form-select" id="role" name="role" required>
+                                        <option value="">Select Role</option>
+                                        <option value="user">Traveler</option>
+                                        <option value="admin">Administrator</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="username" class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="username" name="username">
+                                    <div class="form-text">Leave blank to auto-generate from email</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Personal Message (Optional)</label>
+                            <textarea class="form-control" id="message" name="message" rows="3" placeholder="Add a personal message to the invitation email..."></textarea>
+                        </div>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Note:</strong> The user will receive an email invitation with a link to complete their registration and set their password.
+                        </div>
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane me-2"></i>Send Invitation
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('inviteUserForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const requiredFields = ['firstName', 'lastName', 'email', 'role'];
+    let isValid = true;
+    requiredFields.forEach(field => {
+        const input = document.getElementById(field);
+        if (!input.value.trim()) {
+            input.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            input.classList.remove('is-invalid');
+        }
+    });
+    if (!isValid) {
+        alert('Please fill in all required fields.');
+        return;
+    }
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending...';
+    submitBtn.disabled = true;
+    setTimeout(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+        alert('Invitation sent successfully! The user will receive an email to complete their registration.');
+        form.reset();
+    }, 2000);
+});
+document.getElementById('email').addEventListener('blur', function() {
+    const email = this.value;
+    const usernameField = document.getElementById('username');
+    if (email && !usernameField.value) {
+        const username = email.split('@')[0];
+        usernameField.value = username;
+    }
+});
+</script>
+{% endblock %} 

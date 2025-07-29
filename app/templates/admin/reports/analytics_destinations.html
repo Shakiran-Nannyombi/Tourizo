@@ -1,0 +1,379 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Destination Analytics{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+
+            <!-- Enhanced Header -->
+            <div class="content-header mb-4">
+                <div>
+                    <h2 class="page-title">
+                        <i class="fas fa-chart-line me-3" style="color: var(--primary-green);"></i>
+                        Destination Analytics
+                    </h2>
+                    <div class="breadcrumb">
+                        <i class="fas fa-home"></i>
+                        <span>/</span>
+                        <span>Admin</span>
+                        <span>/</span>
+                        <span>Reports</span>
+                        <span>/</span>
+                        <span>Analytics</span>
+                        <span>/</span>
+                        <span>Destinations</span>
+                    </div>
+                </div>
+                <div class="header-actions d-flex align-items-center gap-3">
+                    <!-- Date Range Filter -->
+                    <div class="d-flex align-items-center">
+                        <label for="monthsFilter" class="form-label mb-0 me-2 text-muted">Date Range:</label>
+                        <select id="monthsFilter" class="form-select form-select-sm" style="width: auto;">
+                            <option value="1" {{ 'selected' if months_filter == 1 }}>Last 1 Month</option>
+                            <option value="3" {{ 'selected' if months_filter == 3 }}>Last 3 Months</option>
+                            <option value="6" {{ 'selected' if months_filter == 6 }}>Last 6 Months</option>
+                            <option value="12" {{ 'selected' if months_filter == 12 }}>Last 12 Months</option>
+                        </select>
+                    </div>
+                    <a href="{{ url_for('admin.popular_destinations', months=months_filter) }}" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Report
+                    </a>
+                </div>
+            </div>
+
+            <!-- Enhanced Statistics Cards -->
+            <div class="stats-grid mb-4">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Total Destinations</div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                            <i class="fas fa-globe-americas"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">{{ popular_destinations|length }}</div>
+                    <div class="stat-change">
+                        <i class="fas fa-chart-line"></i> Active destinations
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Total Bookings</div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #28a745, #20c997);">
+                            <i class="fas fa-ticket-alt"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">{{ chart_data.total_bookings }}</div>
+                    <div class="stat-change">
+                        <i class="fas fa-chart-bar"></i> All destinations
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Top Destination</div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #ffc107, #fd7e14);">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">{{ chart_data.top_destination[:15] + '...' if chart_data.top_destination|length > 15 else chart_data.top_destination }}</div>
+                    <div class="stat-change">
+                        <i class="fas fa-crown"></i> Most popular
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Avg Bookings</div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #17a2b8, #6f42c1);">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">{{ "%.1f"|format(chart_data.total_bookings / popular_destinations|length) if popular_destinations|length > 0 else 0 }}</div>
+                    <div class="stat-change">
+                        <i class="fas fa-chart-pie"></i> Per destination
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart Section -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-chart-bar me-2" style="color: var(--primary-green);"></i>
+                                Destination Popularity
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="destinationsChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-chart-pie me-2" style="color: var(--primary-green);"></i>
+                                Booking Distribution
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="destinationsPieChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Data Table -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-table me-2" style="color: var(--primary-green);"></i>
+                        Detailed Destination Rankings
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="text-center">Rank</th>
+                                    <th>Destination</th>
+                                    <th>Tour Title</th>
+                                    <th class="text-center">Bookings</th>
+                                    <th class="text-center">Popularity %</th>
+                                    <th class="text-center">Trend</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for dest in popular_destinations %}
+                                <tr>
+                                    <td class="text-center">
+                                        <span class="badge bg-{{ 'warning' if loop.index == 1 else 'info' if loop.index == 2 else 'secondary' }}">
+                                            #{{ loop.index }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-map-marker-alt text-muted me-2"></i>
+                                            <span class="fw-semibold">{{ dest.destination }}</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="text-truncate d-inline-block" style="max-width: 200px;">{{ dest.title }}</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge bg-primary fs-6">{{ dest.booking_count }}</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="text-muted">{{ "%.1f"|format((dest.booking_count / chart_data.total_bookings * 100) if chart_data.total_bookings > 0 else 0) }}%</span>
+                                    </td>
+                                    <td class="text-center">
+                                        {% if loop.index == 1 %}
+                                            <i class="fas fa-crown text-warning"></i>
+                                        {% elif loop.index == 2 %}
+                                            <i class="fas fa-medal text-info"></i>
+                                        {% elif loop.index == 3 %}
+                                            <i class="fas fa-award text-secondary"></i>
+                                        {% else %}
+                                            <i class="fas fa-star text-muted"></i>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Insights Section -->
+            <div class="row mt-4">
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-lightbulb me-2" style="color: var(--primary-green);"></i>
+                                Key Insights
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <strong>Top Performer:</strong> {{ popular_destinations[0].destination if popular_destinations else 'N/A' }}
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-chart-line text-primary me-2"></i>
+                                    <strong>Total Bookings:</strong> {{ chart_data.total_bookings }} across all destinations
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-percentage text-info me-2"></i>
+                                    <strong>Market Share:</strong> Top destination has {{ "%.1f"|format((popular_destinations[0].booking_count / chart_data.total_bookings * 100) if popular_destinations and chart_data.total_bookings > 0 else 0) }}% of bookings
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-balance-scale text-warning me-2"></i>
+                                    <strong>Distribution:</strong> {{ popular_destinations|length }} destinations competing for bookings
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-chart-area me-2" style="color: var(--primary-green);"></i>
+                                Performance Metrics
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="text-center">
+                                        <h4 class="text-primary">{{ "%.1f"|format(chart_data.total_bookings / popular_destinations|length) if popular_destinations|length > 0 else 0 }}</h4>
+                                        <small class="text-muted">Avg Bookings/Destination</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="text-center">
+                                        <h4 class="text-success">{{ popular_destinations[0].booking_count if popular_destinations else 0 }}</h4>
+                                        <small class="text-muted">Peak Bookings</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="text-center">
+                                        <h4 class="text-info">{{ popular_destinations|length }}</h4>
+                                        <small class="text-muted">Active Destinations</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="text-center">
+                                        <h4 class="text-warning">{{ "%.1f"|format((popular_destinations[0].booking_count / chart_data.total_bookings * 100) if popular_destinations and chart_data.total_bookings > 0 else 0) }}%</h4>
+                                        <small class="text-muted">Top Destination Share</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Report Footer -->
+            <div class="mt-4 text-center text-muted">
+                <small>
+                    <i class="fas fa-clock me-1"></i>
+                    Analytics generated on {{ now.strftime('%B %d, %Y at %I:%M %p') }}
+                </small>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Bar Chart
+const ctx = document.getElementById('destinationsChart').getContext('2d');
+const destinationsChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: {{ chart_data.labels | tojson }},
+        datasets: [{
+            label: 'Booking Count',
+            data: {{ chart_data.data | tojson }},
+            backgroundColor: [
+                '#ffc107', '#17a2b8', '#28a745', '#dc3545', '#6f42c1',
+                '#fd7e14', '#20c997', '#e83e8c', '#6c757d', '#343a40'
+            ],
+            borderColor: '#fff',
+            borderWidth: 2,
+            borderRadius: 5
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: {
+                    color: 'rgba(0,0,0,0.1)'
+                }
+            },
+            x: {
+                grid: {
+                    display: false
+                }
+            }
+        }
+    }
+});
+
+// Pie Chart
+const pieCtx = document.getElementById('destinationsPieChart').getContext('2d');
+const destinationsPieChart = new Chart(pieCtx, {
+    type: 'doughnut',
+    data: {
+        labels: {{ chart_data.labels | tojson }},
+        datasets: [{
+            data: {{ chart_data.data | tojson }},
+            backgroundColor: [
+                '#ffc107', '#17a2b8', '#28a745', '#dc3545', '#6f42c1',
+                '#fd7e14', '#20c997', '#e83e8c', '#6c757d', '#343a40'
+            ],
+            borderWidth: 2,
+            borderColor: '#fff'
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    padding: 20,
+                    usePointStyle: true,
+                    font: {
+                        size: 11
+                    }
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                        const percentage = ((context.parsed / total) * 100).toFixed(1);
+                        return context.label + ': ' + context.parsed + ' (' + percentage + '%)';
+                    }
+                }
+            }
+        }
+    }
+});
+</script>
+
+<!-- Date Range Filter JavaScript -->
+<script>
+document.getElementById('monthsFilter').addEventListener('change', function() {
+    const months = this.value;
+    const currentUrl = new URL(window.location);
+    currentUrl.searchParams.set('months', months);
+    window.location.href = currentUrl.toString();
+});
+</script>
+{% endblock %} 

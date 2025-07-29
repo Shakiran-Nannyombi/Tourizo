@@ -1,430 +1,428 @@
-{% extends "base.html" %}
+{% extends "admin/base.html" %}
+
 {% block title %}Manage Reviews{% endblock %}
 
 {% block content %}
-<style>
-    :root {
-        --primary-color: #2c5530;
-        --secondary-color: #4a7c59;
-        --accent-color: #ff6b35;
-        --text-dark: #2d3436;
-        --text-light: #636e72;
-    }
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
 
-    body {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
-        position: relative;
-        overflow-x: hidden;
-    }
-
-    /* Animated background particles */
-    body::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image:
-            radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
-        animation: float 20s ease-in-out infinite;
-        z-index: -1;
-    }
-
-    @keyframes float {
-
-        0%,
-        100% {
-            transform: translateY(0px);
-        }
-
-        50% {
-            transform: translateY(-20px);
-        }
-    }
-
-    /* Hero Carousel */
-    .carousel {
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        position: relative;
-    }
-
-    .carousel-item {
-        height: 500px;
-        position: relative;
-    }
-
-    .carousel-item img {
-        height: 500px;
-        object-fit: cover;
-        border-radius: 20px;
-        filter: brightness(0.8);
-        transition: all 0.5s ease;
-    }
-
-    .carousel-item:hover img {
-        filter: brightness(1);
-        transform: scale(1.02);
-    }
-
-    .carousel-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(45deg, rgba(44, 85, 48, 0.7), rgba(255, 107, 53, 0.5));
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        color: white;
-        text-align: center;
-        border-radius: 20px;
-    }
-
-    .carousel-overlay h1 {
-        font-size: 3.5rem;
-        font-weight: 700;
-        margin-bottom: 1rem;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        animation: slideInUp 1s ease-out;
-    }
-
-    .carousel-overlay p {
-        font-size: 1.3rem;
-        margin-bottom: 2rem;
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-        animation: slideInUp 1s ease-out 0.2s both;
-    }
-
-    @keyframes slideInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    /* Main Container */
-    .container {
-        position: relative;
-        z-index: 1;
-    }
-
-    /* Section Title */
-    .section-title {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border-radius: 15px;
-        padding: 2rem;
-        margin: 2rem 0;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        position: relative;
-    }
-
-    .section-title h2 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: var(--primary-color);
-        margin-bottom: 0.5rem;
-    }
-
-    .section-title::after {
-        content: '';
-        position: absolute;
-        bottom: 1rem;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80px;
-        height: 4px;
-        background: linear-gradient(to right, var(--accent-color), var(--secondary-color));
-        border-radius: 2px;
-    }
-
-    /* Table Container */
-    .table-responsive {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        padding: 2rem;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        margin: 2rem 0;
-    }
-
-    /* Table Styling */
-    .table {
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        margin-bottom: 0;
-    }
-
-    .table-success th {
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
-        color: white !important;
-        font-weight: 600;
-        border: none;
-        padding: 1.2rem 1rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        font-size: 0.9rem;
-    }
-
-    .table tbody tr {
-        transition: all 0.3s ease;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        background: white;
-    }
-
-    .table tbody tr:hover {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05)) !important;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .table td {
-        padding: 1.2rem 1rem;
-        vertical-align: middle;
-        border: none;
-    }
-
-    /* Rating Stars */
-    .text-warning {
-        color: #ffc107 !important;
-        font-size: 1.2rem;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Badges */
-    .badge {
-        padding: 0.5rem 1rem;
-        font-size: 0.8rem;
-        border-radius: 50px;
-        font-weight: 500;
-    }
-
-    .bg-success {
-        background: linear-gradient(135deg, #28a745, #20c997) !important;
-        color: white;
-    }
-
-    .bg-secondary {
-        background: linear-gradient(135deg, #6c757d, #adb5bd) !important;
-        color: white;
-    }
-
-    .bg-danger {
-        background: linear-gradient(135deg, #dc3545, #e74c3c) !important;
-        color: white;
-    }
-
-    /* Empty State Alert */
-    .alert-info {
-        background: rgba(255, 255, 255, 0.95) !important;
-        backdrop-filter: blur(10px);
-        border-radius: 15px;
-        padding: 3rem 2rem;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        border: none;
-        text-align: center;
-        color: var(--text-light);
-        font-size: 1.2rem;
-        margin: 2rem 0;
-    }
-
-    .alert-info::before {
-        content: '✈️';
-        display: block;
-        font-size: 3rem;
-        margin-bottom: 1rem;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .carousel-overlay h1 {
-            font-size: 2.5rem;
-        }
-
-        .carousel-overlay p {
-            font-size: 1.1rem;
-        }
-
-        .carousel-item,
-        .carousel-item img {
-            height: 350px;
-        }
-
-        .table-responsive {
-            padding: 1rem;
-            font-size: 0.9rem;
-        }
-
-        .section-title {
-            padding: 1.5rem;
-        }
-
-        .section-title h2 {
-            font-size: 2rem;
-        }
-    }
-
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.1);
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        border-radius: 4px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
-    }
-
-    /* Additional Travel Theme Icons */
-    .fa-plane::before {
-        content: "✈️";
-    }
-
-    .fa-mountain::before {
-        content: "🏔️";
-    }
-
-    .fa-star::before {
-        content: "⭐";
-    }
-</style>
-
-<div class="container my-5">
-    <!-- 📸 Carousel with Travel Images -->
-    <div id="reviewCarousel" class="carousel slide mb-5 shadow-sm" data-bs-ride="carousel" data-bs-interval="4000">
-        <div class="carousel-inner rounded">
-            <div class="carousel-item active">
-                <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80"
-                    class="d-block w-100" alt="Mountain Adventure">
-                <div class="carousel-overlay">
-                    <h1>🌟 Customer Reviews</h1>
-                    <p>Discover authentic experiences from our adventurous travelers</p>
+            <!-- Enhanced Header -->
+            <div class="content-header mb-4">
+                <div>
+                    <h2 class="page-title">
+                        <i class="fas fa-star me-3" style="color: var(--primary-green);"></i>
+                        Manage Reviews
+                    </h2>
+                    <div class="breadcrumb">
+                        <i class="fas fa-home"></i>
+                        <span>/</span>
+                        <span>Admin</span>
+                        <span>/</span>
+                        <span>Reviews</span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <span class="badge bg-primary fs-6">{{ reviews|length }} Total Reviews</span>
                 </div>
             </div>
-            <div class="carousel-item">
-                <img src="https://images.unsplash.com/photo-1571401835393-8c5f35328320?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80"
-                    class="d-block w-100" alt="Safari Tour">
-                <div class="carousel-overlay">
-                    <h1>🦁 Safari Adventures</h1>
-                    <p>Read real stories from our African safari expeditions</p>
+
+            <!-- Enhanced Statistics Cards -->
+            <div class="stats-grid mb-4">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Total Reviews</div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">{{ reviews|length }}</div>
+                    <div class="stat-change">
+                        <i class="fas fa-chart-line"></i> All reviews
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Average Rating</div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #28a745, #20c997);">
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">{{ "%.1f"|format((reviews|map(attribute='rating')|sum / reviews|length) if reviews|length > 0 else 0) }}</div>
+                    <div class="stat-change">
+                        <i class="fas fa-star"></i> Out of 5
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Approved Reviews</div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #ffc107, #fd7e14);">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">{{ reviews|selectattr('is_approved')|list|length }}</div>
+                    <div class="stat-change">
+                        <i class="fas fa-thumbs-up"></i> Approved
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Pending Reviews</div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #17a2b8, #6f42c1);">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">{{ reviews|rejectattr('is_approved')|list|length }}</div>
+                    <div class="stat-change">
+                        <i class="fas fa-hourglass-half"></i> Pending
+            </div>
                 </div>
             </div>
-            <div class="carousel-item">
-                <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80"
-                    class="d-block w-100" alt="Ocean Vacation">
-                <div class="carousel-overlay">
-                    <h1>🌊 Ocean Escapes</h1>
-                    <p>Testimonials from unforgettable coastal adventures</p>
+
+            <!-- Enhanced Filters Section -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0" style="font-size: 2rem;">
+                        <i class="fas fa-filter me-2" style="color: var(--primary-green); font-size: 2.5rem;"></i>
+                        Filter & Search Reviews
+                    </h5>
                 </div>
-            </div>
-            <div class="carousel-item">
-                <img src="https://images.unsplash.com/photo-1464822759844-d150baec93d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80"
-                    class="d-block w-100" alt="Mountain Landscape">
-                <div class="carousel-overlay">
-                    <h1>⛰️ Mountain Treks</h1>
-                    <p>Stories from challenging and rewarding expeditions</p>
-                </div>
+                <div class="card-body">
+                    <form method="GET" class="row g-3">
+                        <div class="col-lg-4 col-md-6">
+                            <label class="form-label">Search</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-search"></i>
+                                </span>
+                                <input type="text" name="search" class="form-control" placeholder="Search by reviewer name, email, or comment..."
+                                    value="{{ request.args.get('search', '') }}">
             </div>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#reviewCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon"></span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#reviewCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon"></span>
+                        <div class="col-lg-3 col-md-6">
+                            <label class="form-label">Rating</label>
+                            <select name="rating" class="form-select" onchange="this.form.submit()">
+                                <option value="">All Ratings</option>
+                                <option value="5" {% if request.args.get('rating')=='5' %}selected{% endif %}>5 Stars</option>
+                                <option value="4" {% if request.args.get('rating')=='4' %}selected{% endif %}>4 Stars</option>
+                                <option value="3" {% if request.args.get('rating')=='3' %}selected{% endif %}>3 Stars</option>
+                                <option value="2" {% if request.args.get('rating')=='2' %}selected{% endif %}>2 Stars</option>
+                                <option value="1" {% if request.args.get('rating')=='1' %}selected{% endif %}>1 Star</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <label class="form-label">Status</label>
+                            <select name="status" class="form-select" onchange="this.form.submit()">
+                                <option value="">All Status</option>
+                                <option value="approved" {% if request.args.get('status')=='approved' %}selected{% endif %}>Approved</option>
+                                <option value="pending" {% if request.args.get('status')=='pending' %}selected{% endif %}>Pending</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-2 col-md-6">
+                            <label class="form-label">&nbsp;</label>
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-search me-2"></i> Search
         </button>
     </div>
-
-    <!-- 🌟 Page Title -->
-    <div class="section-title">
-        <h2 class="fw-bold text-success">🎯 Tour Reviews & Ratings</h2>
-        <p class="lead text-muted mb-0">Real feedback from real travelers who chose our adventures</p>
+                    </form>
+                </div>
     </div>
 
-    {% if reviews %}
-    <!-- 📋 Reviews Table -->
-    <div class="table-responsive shadow-sm rounded">
-        <table class="table table-bordered table-hover align-middle">
-            <thead class="table-success">
-                <tr class="text-center">
-                    <th>👤 Reviewer</th>
-                    <th>📧 Email</th>
-                    <th>🗺️ Tour</th>
-                    <th>⭐ Rating</th>
-                    <th>💬 Comment</th>
-                    <th>📅 Date</th>
-                    <th>✅ Verified</th>
-                    <th>👍 Approved</th>
+            <!-- Enhanced Reviews Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0" style="font-size: 2rem;">
+                        <i class="fas fa-list me-2" style="color: var(--primary-green); font-size: 2rem;"></i>
+                        Review List
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0 reviews-table">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="review-id">ID</th>
+                                    <th class="review-reviewer">Reviewer</th>
+                                    <th class="review-tour">Tour</th>
+                                    <th class="review-rating">Rating</th>
+                                    <th class="review-comment">Comment</th>
+                                    <th class="review-date">Date</th>
+                                    <th class="review-status">Status</th>
+                                    <th class="review-actions">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for review in reviews %}
                 <tr>
-                    <td><strong>{{ review.reviewer_name }}</strong></td>
-                    <td>{{ review.reviewer_email }}</td>
-                    <td><span class="text-primary fw-bold">{{ review.tour.title if review.tour else 'N/A' }}</span></td>
-                    <td class="text-center text-warning fw-bold">{{ review.rating }} ⭐</td>
-                    <td>{{ review.comment }}</td>
-                    <td>{{ review.created_at.strftime('%Y-%m-%d') if review.created_at else 'N/A' }}</td>
-                    <td class="text-center">
-                        {% if review.is_verified %}
-                        <span class="badge bg-success">✅ Yes</span>
+                                    <td class="review-id">
+                                        <span class="badge bg-secondary">#{{ review.id }}</span>
+                                    </td>
+                                    <td class="review-reviewer">
+                                        <div class="d-flex align-items-start">
+                                            <div class="avatar-placeholder me-2 mt-1">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <div class="fw-semibold text-primary">{{ review.reviewer_name }}</div>
+                                                <small class="text-muted">{{ review.reviewer_email }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="review-tour">
+                                        <div class="d-flex align-items-start">
+                                            <i class="fas fa-map-marked-alt text-muted me-1 mt-1"></i>
+                                            <span class="tour-name">{{ review.tour.title if review.tour else 'N/A' }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="review-rating">
+                                        <div class="rating-display">
+                                            <div class="stars">
+                                                {% for i in range(5) %}
+                                                    {% if i < review.rating %}
+                                                        <i class="fas fa-star text-warning"></i>
                         {% else %}
-                        <span class="badge bg-secondary">❌ No</span>
+                                                        <i class="far fa-star text-muted"></i>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                            <span class="rating-text">{{ review.rating }}/5</span>
+                                        </div>
+                                    </td>
+                                    <td class="review-comment">
+                                        <div class="comment-preview">
+                                            <span class="comment-text">{{ review.comment }}</span>
+                                            {% if review.comment|length > 120 %}
+                                            <button class="btn btn-sm btn-link p-0 ms-1" 
+                                                    data-bs-toggle="tooltip" 
+                                                    data-bs-placement="top" 
+                                                    title="{{ review.comment }}">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
                         {% endif %}
+                                        </div>
+                                    </td>
+                                    <td class="review-date">
+                                        <div class="d-flex flex-column">
+                                            <span class="fw-semibold">{{ review.created_at.strftime('%b %d, %Y') if review.created_at else 'N/A' }}</span>
+                                            <small class="text-muted">{{ review.created_at.strftime('%I:%M %p') if review.created_at else '' }}</small>
+                                        </div>
+                                    </td>
+                                    <td class="review-status">
+                                        <div class="d-flex flex-column gap-1">
+                                            <span class="badge bg-{{ 'success' if review.is_verified else 'secondary' }}">
+                                                <i class="fas fa-{{ 'check' if review.is_verified else 'times' }} me-1"></i>
+                                                {{ 'Verified' if review.is_verified else 'Not Verified' }}
+                                            </span>
+                                            <span class="badge bg-{{ 'success' if review.is_approved else 'warning' }}">
+                                                <i class="fas fa-{{ 'check' if review.is_approved else 'clock' }} me-1"></i>
+                                                {{ 'Approved' if review.is_approved else 'Pending' }}
+                                            </span>
+                                        </div>
                     </td>
-                    <td class="text-center">
-                        {% if review.is_approved %}
-                        <span class="badge bg-success">👍 Yes</span>
+                                    <td class="review-actions">
+                                        <div class="btn-group" role="group">
+                                            <button class="btn btn-sm btn-outline-primary" 
+                                                    data-review-id="{{ review.id }}"
+                                                    onclick="viewReview(this)" 
+                                                    title="View Review">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            {% if not review.is_approved %}
+                                            <button class="btn btn-sm btn-outline-success" 
+                                                    data-review-id="{{ review.id }}"
+                                                    onclick="approveReview(this)" 
+                                                    title="Approve Review">
+                                                <i class="fas fa-check"></i>
+                                            </button>
                         {% else %}
-                        <span class="badge bg-danger">👎 No</span>
+                                            <button class="btn btn-sm btn-outline-warning" 
+                                                    data-review-id="{{ review.id }}"
+                                                    onclick="unapproveReview(this)" 
+                                                    title="Unapprove Review">
+                                                <i class="fas fa-times"></i>
+                                            </button>
                         {% endif %}
+                                            <button class="btn btn-sm btn-outline-danger" 
+                                                    data-review-id="{{ review.id }}"
+                                                    onclick="handleDeleteReview(this)" 
+                                                    title="Delete Review">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="8" class="text-center py-5">
+                                        <div class="empty-state">
+                                            <i class="fas fa-star fa-3x text-muted mb-3"></i>
+                                            <h5 class="text-muted">No Reviews Found</h5>
+                                            <p class="text-muted">There are no reviews to display at the moment.</p>
+                                        </div>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-    {% else %}
-    <div class="alert alert-info mt-3">
-        <h4>No Reviews Yet! 🚀</h4>
-        <p class="mb-0">Be the first to share your amazing travel experience with us!</p>
+                </div>
+            </div>
+
+        </div>
     </div>
-    {% endif %}
 </div>
 
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteReviewModal" tabindex="-1" role="dialog" aria-labelledby="deleteReviewModalLabel"
+    aria-hidden="true" style="margin-top: 50px;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content delete-modal">
+            <div class="modal-header">
+                <div class="modal-title-wrapper">
+                    <div class="warning-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h5 class="modal-title" id="deleteReviewModalLabel">Confirm Delete</h5>
+                </div>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="delete-icon-wrapper">
+                    <div class="delete-icon">
+                        <i class="fas fa-trash-alt"></i>
+                    </div>
+                </div>
+                <div class="delete-message">
+                    <h6 class="delete-title">Delete Review</h6>
+                    <p class="delete-description">
+                        Are you sure you want to delete this review? This action cannot be undone and will permanently remove the review from the system.
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary cancel-btn" data-dismiss="modal">
+                    <i class="fas fa-times"></i>
+                    <span>Cancel</span>
+                </button>
+                <button type="button" class="btn btn-danger delete-btn" id="confirmDeleteReview">
+                    <i class="fas fa-trash"></i>
+                    <span>Delete Review</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
 <script>
-    // Add smooth hover effects to table rows
+    let currentReviewId = null;
+
+    function viewReview(button) {
+        const reviewId = button.getAttribute('data-review-id');
+        // Implement view review functionality
+        console.log('View review:', reviewId);
+    }
+
+    function approveReview(button) {
+        const reviewId = button.getAttribute('data-review-id');
+        const icon = button.querySelector('i');
+        const originalIcon = icon.className;
+        
+        // Show loading state
+        icon.className = 'fas fa-spinner fa-spin';
+        button.disabled = true;
+        
+        // Implement approve functionality
+        fetch(`/admin/reviews/${reviewId}/approve`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token() }}'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.message || "Failed to approve review.");
+                icon.className = originalIcon;
+                button.disabled = false;
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert("An error occurred while approving the review.");
+            icon.className = originalIcon;
+            button.disabled = false;
+        });
+    }
+
+    function unapproveReview(button) {
+        const reviewId = button.getAttribute('data-review-id');
+        const icon = button.querySelector('i');
+        const originalIcon = icon.className;
+        
+        // Show loading state
+        icon.className = 'fas fa-spinner fa-spin';
+        button.disabled = true;
+        
+        // Implement unapprove functionality
+        fetch(`/admin/reviews/${reviewId}/unapprove`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token() }}'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.message || "Failed to unapprove review.");
+                icon.className = originalIcon;
+                button.disabled = false;
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert("An error occurred while unapproving the review.");
+            icon.className = originalIcon;
+            button.disabled = false;
+        });
+    }
+
+    function handleDeleteReview(button) {
+        currentReviewId = button.getAttribute('data-review-id');
+        $('#deleteReviewModal').modal('show');
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
-        const tableRows = document.querySelectorAll('tbody tr');
-        tableRows.forEach(row => {
-            row.addEventListener('mouseenter', function () {
-                this.style.transform = 'translateX(5px)';
-            });
-            row.addEventListener('mouseleave', function () {
-                this.style.transform = 'translateX(0)';
-            });
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        document.getElementById('confirmDeleteReview').addEventListener('click', function () {
+            if (!currentReviewId) return;
+            
+            const button = this;
+            const originalText = button.innerHTML;
+            
+            // Show loading state
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Deleting...';
+            button.disabled = true;
+            
+            // Redirect to delete URL
+            window.location.href = `/admin/reviews/${currentReviewId}/delete`;
         });
     });
 </script>
