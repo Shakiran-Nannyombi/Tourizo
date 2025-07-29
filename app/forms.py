@@ -14,7 +14,7 @@ from wtforms.widgets import TextArea, Input
 from datetime import date
 
 
-# ✅ Fixed: Custom telephone input with validation_attrs
+#  Fixed: Custom telephone input with validation_attrs
 class TelInput(Input):
     input_type = 'tel'
     validation_attrs = frozenset(['required', 'maxlength', 'minlength', 'pattern'])
@@ -253,3 +253,17 @@ class ContactForm(FlaskForm):
     email = StringField('Your Email', validators=[DataRequired(), Email()])
     message = TextAreaField('Your Message', validators=[DataRequired()])
     submit = SubmitField('Send Message')
+
+
+class EditUserForm(FlaskForm):
+    first_name = StringField('First Name', validators=[DataRequired(), Length(max=50)])
+    last_name = StringField('Last Name', validators=[DataRequired(), Length(max=50)])
+    username = StringField('Username', validators=[DataRequired(), Length(min=3, max=80)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    phone = StringField('Phone Number', validators=[Optional(), Length(min=7, max=15)])
+    is_admin = BooleanField('Admin')
+    is_active = BooleanField('Active')
+    bio = TextAreaField('Bio', validators=[Optional(), Length(max=500)])
+    password = PasswordField('New Password', validators=[Optional(), Length(min=6)])
+    confirm_password = PasswordField('Confirm Password', validators=[Optional(), EqualTo('password', message='Passwords must match')])
+    submit = SubmitField('Update User')

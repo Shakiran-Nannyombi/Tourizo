@@ -148,24 +148,24 @@ def login():
                         # Enhanced redirect logic
                         next_page = request.args.get('next')
                         if next_page and is_safe_url(next_page):
-                            print(f"✅ Redirecting to: {next_page}")
+                            print(f" Redirecting to: {next_page}")
                             return redirect(next_page)
                         elif user.is_admin:
                             return redirect(url_for('admin.dashboard'))
                         else:
                             return redirect(url_for('auth.user_dashboard'))
                     else:
-                        print("❌ Flask-Login failed")
+                        print("Flask-Login failed")
                         flash('Login failed. Please try again.', 'danger')
                 else:
-                    print("❌ Password is incorrect")
+                    print("Password is incorrect")
                     flash('Invalid email or password.', 'danger')
                     
             except Exception as password_error:
-                            print(f"❌ Password check exception: {password_error}")
+                            print(f"Password check exception: {password_error}")
             flash('An error occurred during login. Please try again.', 'danger')
         else:
-            print(f"❌ No user found with email: {email}")
+            print(f"No user found with email: {email}")
             flash('Invalid email or password.', 'danger')
     
     # GET request - pass next parameter to template
@@ -259,7 +259,7 @@ def register():
             db.session.add(user)
             db.session.commit()
             
-            print(f"✅ User registered successfully: {email}")
+            print(f"User registered successfully: {email}")
             
             # Auto-login after registration
             login_user(user)
@@ -270,7 +270,7 @@ def register():
             # Enhanced redirect logic after registration
             next_page = request.args.get('next')
             if next_page and is_safe_url(next_page):
-                print(f"✅ Redirecting new user to: {next_page}")
+                print(f"Redirecting new user to: {next_page}")
                 return redirect(next_page)
             elif user.is_admin:
                 return redirect(url_for('admin.dashboard'))
@@ -279,7 +279,7 @@ def register():
             
         except Exception as e:
             db.session.rollback()
-            print(f"❌ Registration error: {e}")
+            print(f"Registration error: {e}")
             flash('An error occurred during registration. Please try again.', 'danger')
     
     # GET request - pass next parameter to template
@@ -340,7 +340,7 @@ def profile():
         
         db.session.commit()
         flash('Profile updated successfully!', 'success')
-        return redirect(url_for('auth.profile'))
+        return redirect(url_for('user_dashboard'))
     
     elif request.method == 'GET':
         form.first_name.data = current_user.first_name
@@ -484,7 +484,7 @@ def delete_account():
 @nocache
 def logout():
     """Enhanced logout with complete session cleanup"""
-    print(f"🚪 User {current_user.username} logging out")
+    print(f"User {current_user.username} logging out")
     
     # Store user info before logout for flash message
     username = current_user.username
@@ -508,7 +508,7 @@ def logout():
     response.headers['Expires'] = '-1'
     
     flash(f'You have been logged out successfully, {username}. Come back soon!', 'info')
-    print(f"✅ User {username} logged out successfully")
+    print(f"User {username} logged out successfully")
     
     return response
 
@@ -539,14 +539,14 @@ def forgot_password():
                     flash('A password reset code has been sent to your email.', 'success')
                 else:
                     # Fallback: show OTP in debug mode (remove in production)
-                    print(f"🔑 OTP for {email}: {otp}")
+                    print(f"OTP for {email}: {otp}")
                     flash('Password reset token sent. Please check your email. If you don\'t see it, check your spam folder.', 'info')
                 
                 return redirect(url_for('auth.reset_password', email=email))
                 
             except Exception as e:
                 db.session.rollback()
-                print(f"❌ OTP generation error: {e}")
+                print(f"OTP generation error: {e}")
                 flash('An error occurred. Please try again.', 'danger')
         else:
             # Security: Don't reveal if email exists
@@ -574,14 +574,14 @@ def reset_password():
                 if send_otp_email(email, otp):
                     flash('A new reset code has been sent to your email.', 'success')
                 else:
-                    print(f"🔑 New OTP for {email}: {otp}")
+                    print(f"New OTP for {email}: {otp}")
                     flash('New reset code sent. Please check your email. If you don\'t see it, check your spam folder.', 'info')
                 
                 return render_template('auth/reset_password.html', email=email)
                 
             except Exception as e:
                 db.session.rollback()
-                print(f"❌ OTP resend error: {e}")
+                print(f"OTP resend error: {e}")
                 flash('An error occurred while resending the code.', 'danger')
         
         # Handle password reset
@@ -622,7 +622,7 @@ def reset_password():
                     
                 except Exception as e:
                     db.session.rollback()
-                    print(f"❌ Password reset error: {e}")
+                    print(f"Password reset error: {e}")
                     flash('An error occurred while resetting your password.', 'danger')
             else:
                 flash('Invalid or expired reset code.', 'danger')

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, send_file
 from app.models.Review import Review   # ✅ CORRECT
 from flask_login import login_required
 from app.models.Tour import Tour
@@ -15,6 +15,11 @@ from app.models.Booking import Booking
 from app.models import ChatbotSettings, db
 from flask import abort
 from flask_login import login_required, current_user
+import csv
+import io
+import json
+from app.forms import EditUserForm
+from app.models.User import User
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -144,6 +149,12 @@ def manage_users():
     users = User.query.all()
     return render_template('admin/manage_users.html', users=users)
 
+@admin_bp.route('/invite-user', methods=['GET', 'POST'])
+@login_required
+def invite_user():
+    # You can add POST handling here if you want to process the form
+    return render_template('admin/invite_user.html')
+
 @admin_bp.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
@@ -169,12 +180,24 @@ def contact():
 @admin_bp.route('/reports/booking-report')
 @login_required
 def booking_report():
+    # Get date range filter from query parameters
+    months_filter = request.args.get('months', '12')
+    try:
+        months_filter = int(months_filter)
+    except (ValueError, TypeError):
+        months_filter = 12
+    
+    # Calculate the date range
+    end_date = datetime.datetime.utcnow()
+    start_date = end_date - datetime.timedelta(days=30 * months_filter)
+    
     bookings_by_month = (
         db.session.query(
             extract('year', Booking.booking_date).label('year'),
             extract('month', Booking.booking_date).label('month'),
             func.count(Booking.id).label('total_bookings')
         )
+        .filter(Booking.booking_date >= start_date)
         .group_by('year', 'month')
         .order_by('year', 'month')
         .all()
@@ -183,27 +206,50 @@ def booking_report():
     return render_template(
         'admin/reports/bookings.html',
         bookings_by_month=bookings_by_month,
-        now=datetime.datetime.utcnow()
+        now=datetime.datetime.utcnow(),
+        months_filter=months_filter
     )
 
 @admin_bp.route('/reports/revenue-report')
 @login_required
 def revenue_report():
+    # Get date range filter from query parameters
+    months_filter = request.args.get('months', '12')
+    try:
+        months_filter = int(months_filter)
+    except (ValueError, TypeError):
+        months_filter = 12
+    
+    # Calculate the date range
+    end_date = datetime.datetime.utcnow()
+    start_date = end_date - datetime.timedelta(days=30 * months_filter)
+    
     revenue_by_month = (
         db.session.query(
             extract('year', Booking.booking_date).label('year'),
             extract('month', Booking.booking_date).label('month'),
             func.sum(Booking.total_amount).label('total_revenue')  
         )
+        .filter(Booking.booking_date >= start_date)
         .group_by('year', 'month')
         .order_by('year', 'month')
         .all()
     )
 
+    # Convert Decimal values to float for template rendering
+    revenue_by_month_processed = []
+    for row in revenue_by_month:
+        revenue_by_month_processed.append({
+            'year': row.year,
+            'month': row.month,
+            'total_revenue': float(row.total_revenue or 0)
+        })
+    
     return render_template(
         'admin/reports/revenue.html',
-        revenue_by_month=revenue_by_month,
-        now=datetime.datetime.utcnow()
+        revenue_by_month=revenue_by_month_processed,
+        now=datetime.datetime.utcnow(),
+        months_filter=months_filter
     )
 
 @admin_bp.route('/users/<int:user_id>')
@@ -218,6 +264,17 @@ def admin_user_detail(user_id):
 @admin_bp.route('/reports/popular-destinations')
 @login_required
 def popular_destinations():
+    # Get date range filter from query parameters
+    months_filter = request.args.get('months', '12')
+    try:
+        months_filter = int(months_filter)
+    except (ValueError, TypeError):
+        months_filter = 12
+    
+    # Calculate the date range
+    end_date = datetime.datetime.utcnow()
+    start_date = end_date - datetime.timedelta(days=30 * months_filter)
+    
     # Query to get popular destinations based on booking counts
     popular_destinations = (
         db.session.query(
@@ -226,6 +283,7 @@ def popular_destinations():
             func.count(Booking.id).label('booking_count')
         )
         .join(Booking, Tour.id == Booking.tour_id)
+        .filter(Booking.booking_date >= start_date)
         .group_by(Tour.destination, Tour.title)
         .order_by(func.count(Booking.id).desc())
         .limit(10)  # Top 10 popular destinations
@@ -234,13 +292,292 @@ def popular_destinations():
     
     return render_template(
         'admin/reports/popular_destinations.html', 
-        popular_destinations=popular_destinations
+        popular_destinations=popular_destinations,
+        now=datetime.datetime.utcnow(),
+        months_filter=months_filter
+    )
+
+# Export Routes
+@admin_bp.route('/reports/export/bookings')
+@login_required
+def export_bookings():
+    # Get date range filter from query parameters
+    months_filter = request.args.get('months', '12')
+    try:
+        months_filter = int(months_filter)
+    except (ValueError, TypeError):
+        months_filter = 12
+    
+    # Calculate the date range
+    end_date = datetime.datetime.utcnow()
+    start_date = end_date - datetime.timedelta(days=30 * months_filter)
+    
+    bookings_by_month = (
+        db.session.query(
+            extract('year', Booking.booking_date).label('year'),
+            extract('month', Booking.booking_date).label('month'),
+            func.count(Booking.id).label('total_bookings')
+        )
+        .filter(Booking.booking_date >= start_date)
+        .group_by('year', 'month')
+        .order_by('year', 'month')
+        .all()
+    )
+    
+    # Create CSV data
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(['Year', 'Month', 'Total Bookings'])
+    
+    for row in bookings_by_month:
+        writer.writerow([row.year, row.month, row.total_bookings])
+    
+    output.seek(0)
+    return send_file(
+        io.BytesIO(output.getvalue().encode('utf-8')),
+        mimetype='text/csv',
+        as_attachment=True,
+        download_name=f'bookings_report_{datetime.datetime.now().strftime("%Y%m%d_%H%M%S")}.csv'
+    )
+
+@admin_bp.route('/reports/export/revenue')
+@login_required
+def export_revenue():
+    # Get date range filter from query parameters
+    months_filter = request.args.get('months', '12')
+    try:
+        months_filter = int(months_filter)
+    except (ValueError, TypeError):
+        months_filter = 12
+    
+    # Calculate the date range
+    end_date = datetime.datetime.utcnow()
+    start_date = end_date - datetime.timedelta(days=30 * months_filter)
+    
+    revenue_by_month = (
+        db.session.query(
+            extract('year', Booking.booking_date).label('year'),
+            extract('month', Booking.booking_date).label('month'),
+            func.sum(Booking.total_amount).label('total_revenue')
+        )
+        .filter(Booking.booking_date >= start_date)
+        .group_by('year', 'month')
+        .order_by('year', 'month')
+        .all()
+    )
+    
+    # Create CSV data
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(['Year', 'Month', 'Total Revenue (USD)'])
+    
+    for row in revenue_by_month:
+        writer.writerow([row.year, row.month, f"${float(row.total_revenue or 0):.2f}"])
+    
+    output.seek(0)
+    return send_file(
+        io.BytesIO(output.getvalue().encode('utf-8')),
+        mimetype='text/csv',
+        as_attachment=True,
+        download_name=f'revenue_report_{datetime.datetime.now().strftime("%Y%m%d_%H%M%S")}.csv'
+    )
+
+@admin_bp.route('/reports/export/destinations')
+@login_required
+def export_destinations():
+    # Get date range filter from query parameters
+    months_filter = request.args.get('months', '12')
+    try:
+        months_filter = int(months_filter)
+    except (ValueError, TypeError):
+        months_filter = 12
+    
+    # Calculate the date range
+    end_date = datetime.datetime.utcnow()
+    start_date = end_date - datetime.timedelta(days=30 * months_filter)
+    
+    popular_destinations = (
+        db.session.query(
+            Tour.destination,
+            Tour.title,
+            func.count(Booking.id).label('booking_count')
+        )
+        .join(Booking, Tour.id == Booking.tour_id)
+        .filter(Booking.booking_date >= start_date)
+        .group_by(Tour.destination, Tour.title)
+        .order_by(func.count(Booking.id).desc())
+        .all()
+    )
+    
+    # Create CSV data
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(['Rank', 'Destination', 'Tour Title', 'Booking Count', 'Popularity %'])
+    
+    for i, dest in enumerate(popular_destinations, 1):
+        total_bookings = sum(d.booking_count for d in popular_destinations)
+        popularity = (dest.booking_count / total_bookings * 100) if total_bookings > 0 else 0
+        writer.writerow([i, dest.destination, dest.title, dest.booking_count, f"{popularity:.1f}%"])
+    
+    output.seek(0)
+    return send_file(
+        io.BytesIO(output.getvalue().encode('utf-8')),
+        mimetype='text/csv',
+        as_attachment=True,
+        download_name=f'destinations_report_{datetime.datetime.now().strftime("%Y%m%d_%H%M%S")}.csv'
+    )
+
+# Analytics Routes
+@admin_bp.route('/reports/analytics/bookings')
+@login_required
+def analytics_bookings():
+    # Get date range filter from query parameters
+    months_filter = request.args.get('months', '12')
+    try:
+        months_filter = int(months_filter)
+    except (ValueError, TypeError):
+        months_filter = 12
+    
+    # Calculate the date range
+    end_date = datetime.datetime.utcnow()
+    start_date = end_date - datetime.timedelta(days=30 * months_filter)
+    
+    # Get booking data for charts
+    bookings_by_month = (
+        db.session.query(
+            extract('year', Booking.booking_date).label('year'),
+            extract('month', Booking.booking_date).label('month'),
+            func.count(Booking.id).label('total_bookings')
+        )
+        .filter(Booking.booking_date >= start_date)
+        .group_by('year', 'month')
+        .order_by('year', 'month')
+        .all()
+    )
+    
+    # Format data for charts
+    chart_data = {
+        'labels': [f"{row.month}/{row.year}" for row in bookings_by_month],
+        'data': [row.total_bookings for row in bookings_by_month],
+        'total_bookings': sum(row.total_bookings for row in bookings_by_month),
+        'avg_bookings': sum(row.total_bookings for row in bookings_by_month) / len(bookings_by_month) if bookings_by_month else 0
+    }
+    
+    return render_template(
+        'admin/reports/analytics_bookings.html',
+        chart_data=chart_data,
+        bookings_by_month=bookings_by_month,
+        now=datetime.datetime.utcnow(),
+        months_filter=months_filter
+    )
+
+@admin_bp.route('/reports/analytics/revenue')
+@login_required
+def analytics_revenue():
+    # Get date range filter from query parameters
+    months_filter = request.args.get('months', '12')
+    try:
+        months_filter = int(months_filter)
+    except (ValueError, TypeError):
+        months_filter = 12
+    
+    # Calculate the date range
+    end_date = datetime.datetime.utcnow()
+    start_date = end_date - datetime.timedelta(days=30 * months_filter)
+    
+    # Get revenue data for charts
+    revenue_by_month = (
+        db.session.query(
+            extract('year', Booking.booking_date).label('year'),
+            extract('month', Booking.booking_date).label('month'),
+            func.sum(Booking.total_amount).label('total_revenue')
+        )
+        .filter(Booking.booking_date >= start_date)
+        .group_by('year', 'month')
+        .order_by('year', 'month')
+        .all()
+    )
+    
+    # Format data for charts
+    chart_data = {
+        'labels': [f"{row.month}/{row.year}" for row in revenue_by_month],
+        'data': [float(row.total_revenue or 0) for row in revenue_by_month],
+        'total_revenue': float(sum(float(row.total_revenue or 0) for row in revenue_by_month)),
+        'avg_revenue': float(sum(float(row.total_revenue or 0) for row in revenue_by_month) / len(revenue_by_month)) if revenue_by_month else 0.0
+    }
+    
+    # Convert Decimal values to float for template rendering
+    revenue_by_month_processed = []
+    for row in revenue_by_month:
+        revenue_by_month_processed.append({
+            'year': row.year,
+            'month': row.month,
+            'total_revenue': float(row.total_revenue or 0)
+        })
+    
+    return render_template(
+        'admin/reports/analytics_revenue.html',
+        chart_data=chart_data,
+        revenue_by_month=revenue_by_month_processed,
+        now=datetime.datetime.utcnow(),
+        months_filter=months_filter
+    )
+
+@admin_bp.route('/reports/analytics/destinations')
+@login_required
+def analytics_destinations():
+    # Get date range filter from query parameters
+    months_filter = request.args.get('months', '12')
+    try:
+        months_filter = int(months_filter)
+    except (ValueError, TypeError):
+        months_filter = 12
+    
+    # Calculate the date range
+    end_date = datetime.datetime.utcnow()
+    start_date = end_date - datetime.timedelta(days=30 * months_filter)
+    
+    # Get destination data for charts
+    popular_destinations = (
+        db.session.query(
+            Tour.destination,
+            Tour.title,
+            func.count(Booking.id).label('booking_count')
+        )
+        .join(Booking, Tour.id == Booking.tour_id)
+        .filter(Booking.booking_date >= start_date)
+        .group_by(Tour.destination, Tour.title)
+        .order_by(func.count(Booking.id).desc())
+        .limit(10)
+        .all()
+    )
+    
+    # Format data for charts
+    chart_data = {
+        'labels': [dest.destination for dest in popular_destinations],
+        'data': [dest.booking_count for dest in popular_destinations],
+        'total_bookings': sum(dest.booking_count for dest in popular_destinations),
+        'top_destination': popular_destinations[0].destination if popular_destinations else 'N/A'
+    }
+    
+    return render_template(
+        'admin/reports/analytics_destinations.html',
+        chart_data=chart_data,
+        popular_destinations=popular_destinations,
+        now=datetime.datetime.utcnow(),
+        months_filter=months_filter
     )
 @admin_bp.route('/users/<int:user_id>/edit', methods=['GET', 'POST'])
 @login_required
 def admin_edit_user(user_id):
-    # Your logic here
-    return render_template('admin/edit_user.html', user_id=user_id)
+    user = User.query.get_or_404(user_id)
+    form = EditUserForm(obj=user)
+    if form.validate_on_submit():
+        form.populate_obj(user)
+        db.session.commit()
+        flash('User updated successfully!', 'success')
+        return redirect(url_for('admin.admin_user_detail', user_id=user.id))
+    return render_template('admin/edit_user.html', user_id=user_id, user=user, form=form)
 
 @admin_bp.route('/reviews/<int:review_id>/approve')
 @login_required

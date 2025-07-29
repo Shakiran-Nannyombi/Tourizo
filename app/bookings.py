@@ -41,7 +41,7 @@ def register_routes():
                     num_people=form.num_people.data,
                     total_amount=float(selected_tour.price) * form.num_people.data,
                     payment_method=payment_method,
-                    payment_status='paid',  # ✅ Mark as paid immediately
+                    payment_status='paid',  #  Mark as paid immediately
                     tour_id=selected_tour.id,
                     user_id=current_user.id if current_user.is_authenticated else None,
                     special_requests=form.special_requests.data if hasattr(form, 'special_requests') else None
@@ -65,8 +65,8 @@ def register_routes():
                 except Exception as e:
                     print(f"Email error: {e}")
 
-                flash("Booking successful! Please review your tour.", "info")
-                return redirect(url_for('reviews.add_review', tour_id=selected_tour.id))
+                flash("Booking successful!", "info")
+                return redirect(url_for('user_dashboard'))
 
             except Exception as e:
                 db.session.rollback()
