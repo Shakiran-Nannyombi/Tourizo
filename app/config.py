@@ -5,11 +5,16 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
+
+# Get the base directory
+basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'your-secret-key-here'
     
-    # Forced MySQL connection (no SQLite fallback)
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'mysql+pymysql://root:@localhost/travel_app'
+    # SQLite database configuration with absolute path
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+        'sqlite:///' + os.path.join(basedir, 'instance', 'travel_app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER') or 'static/uploads'
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024
