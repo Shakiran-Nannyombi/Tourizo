@@ -7,9 +7,9 @@ echo "Building project..."
 # Install dependencies
 pip install -r requirements.txt
 
-# Verify build (ensure all dependencies are importable)
-echo "Verifying build..."
-python scripts/verify_build.py
+# Verify build (ensure all dependencies and entry points are valid)
+echo "Running build tests..."
+python -m pytest tests/test_build.py
 
 # Create instance folder if it doesn't exist
 mkdir -p instance
