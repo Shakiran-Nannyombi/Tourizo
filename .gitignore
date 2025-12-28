@@ -30,7 +30,6 @@ env/
 venv/
 
 # Flask stuff
-instance/
 .webassets-cache
 
 # Pytest
