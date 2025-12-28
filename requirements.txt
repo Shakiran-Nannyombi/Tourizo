@@ -54,7 +54,7 @@ cryptography==41.0.7
 requests==2.31.0
 
 # Image processing (optional)
-Pillow==10.0.1
+Pillow==10.2.0
 
 # Development tools
 python-decouple==3.8  # For configuration management
