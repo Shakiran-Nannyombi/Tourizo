@@ -1,5 +1,7 @@
 # Tourizo: Tour and Travels Web App
 
+**Live Demo: [https://tourizo.onrender.com](https://tourizo.onrender.com)**
+
 ## Project Overview
 
 Tourizo is a full-featured web application for managing tour packages, bookings, reviews, and admin analytics. Built with Flask, it features a modular architecture using Blueprints, SQLAlchemy models, and a modern, responsive UI. The platform supports both travelers and administrators, with robust authentication, payment simulation, chatbot integration, and analytics.
