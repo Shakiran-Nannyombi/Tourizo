@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: tourizo
+    env: python
+    buildCommand: ./build.sh
+    startCommand: gunicorn run:app
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: FLASK_ENV
+        value: production
+      - key: PYTHON_VERSION
+        value: 3.12.0
