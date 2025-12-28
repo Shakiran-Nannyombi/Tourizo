@@ -29,14 +29,14 @@ The easiest way is to use the provided `render.yaml` Blueprint:
 2. Connect your repository.
 3. **Environment**: `Python`
 4. **Build Command**: `./build.sh`
-5. **Start Command**: `gunicorn run:app` (or `gunicorn app:app`)
+5. **Start Command**: `gunicorn wsgi:app`
 6. Add the following **Environment Variables**:
    - `SECRET_KEY`: A long random string.
    - `FLASK_ENV`: `production`
    - `PYTHON_VERSION`: `3.12.8`
 
 > [!IMPORTANT]
-> **Start Command**: If you see an error like `Failed to find attribute 'app' in 'app'`, ensure your Render Start Command is set to `gunicorn run:app`. I have also added an `app.py` file to ensure `gunicorn app:app` works as a fallback.
+> **Start Command**: Ensure your Render Start Command is set to `gunicorn wsgi:app`. Do NOT use `gunicorn app:app` as it will conflict with the `app/` directory and fail to start.
 
 ### 3. Post-Deployment: Database Initialization
 By default, the `build.sh` script automatically seeds the database with demo data during every deployment. This ensures your app is ready to use immediately.

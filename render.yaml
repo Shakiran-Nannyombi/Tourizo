@@ -3,7 +3,7 @@ services:
     name: tourizo
     env: python
     buildCommand: ./build.sh
-    startCommand: gunicorn run:app
+    startCommand: gunicorn wsgi:app
     envVars:
       - key: SECRET_KEY
         generateValue: true
