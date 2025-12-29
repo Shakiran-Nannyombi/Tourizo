@@ -11,12 +11,5 @@ services:
         value: production
       - key: PYTHON_VERSION
         value: 3.12.0
-      - key: DATABASE_URL
-        fromDatabase:
-          name: tourizo-db
-          property: connectionString
 
-databases:
-  - name: tourizo-db
-    databaseName: tourizo
-    user: tourizo
+# Database will be configured via DATABASE_URL environment variable from Supabase

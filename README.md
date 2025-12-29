@@ -95,13 +95,48 @@ Tourizo/
    pip install -r requirements.txt
    ```
 
-4. **Run the app:**
+4. **Configure environment variables:**
+
+   Create a `.env` file (see `.env.example` for template):
+   ```bash
+   cp .env.example .env
+   ```
+   
+   For local development, you can use SQLite (default) or connect to Supabase:
+   - **SQLite** (default): No configuration needed
+   - **Supabase**: Set `DATABASE_URL` to your Supabase connection string
+
+5. **Run database migrations:**
+
+   ```bash
+   export FLASK_APP=run.py
+   flask db upgrade
+   ```
+
+6. **Seed demo data (optional):**
+
+   ```bash
+   python create_admin.py
+   python scripts/seed_tours.py
+   ```
+
+7. **Run the app:**
 
    ```bash
    python run.py
    ```
 
    The app will be available at [http://127.0.0.1:5000/](http://127.0.0.1:5000/).
+
+---
+
+## Database
+
+- **Local Development**: Uses SQLite by default (`instance/travel_app.db`)
+- **Production (Render)**: Uses Supabase PostgreSQL for data persistence
+- **Migrations**: Managed with Flask-Migrate (Alembic)
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for production deployment instructions.
 
 ---
 
@@ -143,6 +178,7 @@ Tourizo/
 - Blueprints are registered in `app/__init__.py`.
 - Use `base.html` for template inheritance.
 - Update `config.py` for production settings (secret key, database URI, email, etc).
+- **Database**: Configure `DATABASE_URL` in `.env` for Supabase PostgreSQL (production) or use SQLite (local development).
 - For email, configure Flask-Mail in `config.py` and `email_service.py`.
 - Chatbot settings are managed in the admin dashboard.
 
