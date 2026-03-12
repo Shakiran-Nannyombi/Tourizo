@@ -12,4 +12,5 @@ services:
       - key: PYTHON_VERSION
         value: 3.12.0
 
-# Database will be configured via DATABASE_URL environment variable from Supabase
+# Database: Uses SQLite (no external database needed)
+# Data persists in the instance/ directory

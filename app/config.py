@@ -13,7 +13,8 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'your-secret-key-here'
     
     # Database configuration
-    # Render provides postgres:// protocol, but SQLAlchemy requires postgresql://
+    # Uses SQLite by default (no external database needed)
+    # Optional: Set DATABASE_URL environment variable to use a different database
     db_url = os.environ.get('DATABASE_URL')
     if db_url and db_url.startswith('postgres://'):
         db_url = db_url.replace('postgres://', 'postgresql://', 1)
