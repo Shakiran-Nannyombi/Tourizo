@@ -11,7 +11,7 @@ from sqlalchemy.dialects import mysql
 
 # revision identifiers, used by Alembic.
 revision = 'd181f4666337'
-down_revision = None
+down_revision = 'create_all_tables'  # Now runs AFTER create_all_tables
 branch_labels = None
 depends_on = None
 
@@ -21,32 +21,47 @@ def upgrade():
     # Drop inquiry table if it exists (for migrations from older schema)
     conn = op.get_bind()
     inspector = sa.inspect(conn)
-    if 'inquiry' in inspector.get_table_names():
+    existing_tables = inspector.get_table_names()
+    
+    if 'inquiry' in existing_tables:
         op.drop_table('inquiry')
-    with op.batch_alter_table('booking', schema=None) as batch_op:
-        batch_op.create_foreign_key(None, 'tour', ['tour_id'], ['id'])
-        batch_op.create_foreign_key(None, 'user', ['user_id'], ['id'])
+    
+    # Only alter tables if they exist
+    if 'booking' in existing_tables:
+        with op.batch_alter_table('booking', schema=None) as batch_op:
+            batch_op.create_foreign_key(None, 'tour', ['tour_id'], ['id'])
+            batch_op.create_foreign_key(None, 'user', ['user_id'], ['id'])
 
-    with op.batch_alter_table('review', schema=None) as batch_op:
-        batch_op.create_foreign_key(None, 'tour', ['tour_id'], ['id'])
-        batch_op.create_foreign_key(None, 'user', ['user_id'], ['id'])
+    if 'review' in existing_tables:
+        with op.batch_alter_table('review', schema=None) as batch_op:
+            batch_op.create_foreign_key(None, 'tour', ['tour_id'], ['id'])
+            batch_op.create_foreign_key(None, 'user', ['user_id'], ['id'])
 
-    with op.batch_alter_table('tour', schema=None) as batch_op:
-        batch_op.create_foreign_key(None, 'category', ['category_id'], ['id'])
+    if 'tour' in existing_tables:
+        with op.batch_alter_table('tour', schema=None) as batch_op:
+            batch_op.create_foreign_key(None, 'category', ['category_id'], ['id'])
 
-    with op.batch_alter_table('tour_date', schema=None) as batch_op:
-        batch_op.create_foreign_key(None, 'tour', ['tour_id'], ['id'])
+    if 'tour_date' in existing_tables:
+        with op.batch_alter_table('tour_date', schema=None) as batch_op:
+            batch_op.create_foreign_key(None, 'tour', ['tour_id'], ['id'])
 
-    with op.batch_alter_table('tour_itinerary_day', schema=None) as batch_op:
-        batch_op.create_foreign_key(None, 'tour', ['tour_id'], ['id'])
+    if 'tour_itinerary_day' in existing_tables:
+        with op.batch_alter_table('tour_itinerary_day', schema=None) as batch_op:
+            batch_op.create_foreign_key(None, 'tour', ['tour_id'], ['id'])
 
-    with op.batch_alter_table('user', schema=None) as batch_op:
-        batch_op.add_column(sa.Column('otp_code', sa.String(length=8), nullable=True))
-        batch_op.add_column(sa.Column('otp_expiry', sa.DateTime(), nullable=True))
+    if 'user' in existing_tables:
+        with op.batch_alter_table('user', schema=None) as batch_op:
+            # Check if columns already exist before adding
+            user_columns = {col['name'] for col in inspector.get_columns('user')}
+            if 'otp_code' not in user_columns:
+                batch_op.add_column(sa.Column('otp_code', sa.String(length=8), nullable=True))
+            if 'otp_expiry' not in user_columns:
+                batch_op.add_column(sa.Column('otp_expiry', sa.DateTime(), nullable=True))
 
-    with op.batch_alter_table('wishlist', schema=None) as batch_op:
-        batch_op.create_foreign_key(None, 'user', ['user_id'], ['id'])
-        batch_op.create_foreign_key(None, 'tour', ['tour_id'], ['id'])
+    if 'wishlist' in existing_tables:
+        with op.batch_alter_table('wishlist', schema=None) as batch_op:
+            batch_op.create_foreign_key(None, 'user', ['user_id'], ['id'])
+            batch_op.create_foreign_key(None, 'tour', ['tour_id'], ['id'])
 
     # ### end Alembic commands ###
 
