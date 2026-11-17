@@ -14,16 +14,10 @@ python -m pytest tests/test_build.py
 # Create instance folder if it doesn't exist
 mkdir -p instance
 
-# Flask DB migrations
-export FLASK_APP=run.py
-flask db upgrade
-
-# Seed database with demo data (essential for SQLite persistence on Render)
-echo "Seeding database..."
-python create_admin.py
-python scripts/seed_tours.py
-python scripts/add_demo_bookings.py
-python scripts/add_demo_reviews.py
-python scripts/add_image_galleries.py
+# Create missing tables and demo data. The committed SQLite file is already
+# stamped at the Alembic head, and those migrations only alter existing
+# tables, so `flask db upgrade` leaves the database empty.
+echo "Preparing database..."
+python -c "from app import create_app; create_app()"
 
 echo "Build complete!"
